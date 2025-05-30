@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.babel.repository.BabelTranslationMapper">
+
+  <insert id="insertBabelTranslation">
+    INSERT INTO T_BABEL_TRANSLATION (
+    URN,
+    LANGUAGE_CODE,
+    TRANSLATED_TEXT,
+    IS_DEFAULT
+    )  VALUES (
+    #{urn},
+    #{languageCode},
+    #{translatedText},
+    #{defaultTranslation}
+    )
+    ON CONFLICT (URN, LANGUAGE_CODE) DO UPDATE SET
+    TRANSLATED_TEXT = EXCLUDED.TRANSLATED_TEXT,
+    IS_DEFAULT = EXCLUDED.IS_DEFAULT
+  </insert>
+
+  <insert id="updateBabelTranslation">
+    UPDATE T_BABEL_TRANSLATION SET
+    TRANSLATED_TEXT = #{translatedText},
+    IS_DEFAULT = #{defaultTranslation}
+    WHERE URN = #{urn} AND LANGUAGE_CODE = #{languageCode}
+  </insert>
+
+  <delete id="deleteBabelTextTranslation">
+    DELETE FROM T_BABEL_TEXT_TRANSLATION WHERE URN = #{urn} AND
+    LANGUAGE_CODE = #{languageCode}
+  </delete>
+
+</mapper>

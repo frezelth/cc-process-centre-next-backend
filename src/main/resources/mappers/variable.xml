@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.repository.ProcessVariableMapper">
+
+  <insert id="insertOrUpdateProcessVariables" parameterType="collection">
+    INSERT INTO T_PROCESS_VARIABLE (
+    PROCESS_INSTANCE_ID,
+    NAME,
+    MIME_TYPE,
+    VALUE_STRING,
+    VALUE_INTEGER,
+    VALUE_LONG,
+    VALUE_DOUBLE,
+    VALUE_BOOLEAN,
+    VALUE_JSON,
+    VALUE_BYTE,
+    VALUE_DATE
+    )  VALUES
+    <foreach collection="variables" item="variable" separator=",">
+      (#{variable.processInstanceId},
+      #{variable.name},
+      #{variable.mimeType},
+      #{variable.valueString},
+      #{variable.valueInteger},
+      #{variable.valueLong},
+      #{variable.valueDouble},
+      #{variable.valueBoolean},
+      CAST(#{variable.valueJson} AS jsonb),
+      #{variable.valueByte},
+      #{variable.valueDate}
+      )
+    </foreach>
+    ON CONFLICT (PROCESS_INSTANCE_ID,NAME) DO UPDATE SET
+    VALUE_STRING = EXCLUDED.VALUE_STRING,
+    VALUE_INTEGER = EXCLUDED.VALUE_INTEGER,
+    VALUE_LONG = EXCLUDED.VALUE_LONG,
+    VALUE_DOUBLE = EXCLUDED.VALUE_DOUBLE,
+    VALUE_BOOLEAN = EXCLUDED.VALUE_BOOLEAN,
+    VALUE_JSON = EXCLUDED.VALUE_JSON,
+    VALUE_BYTE = EXCLUDED.VALUE_BYTE,
+    VALUE_DATE = EXCLUDED.VALUE_DATE
+  </insert>
+
+  <delete id="deleteProcessVariables" parameterType="collection">
+    DELETE FROM T_PROCESS_VARIABLE WHERE (PROCESS_INSTANCE_ID, NAME) IN
+    <foreach collection="variables" item="variable" open="(" separator="," close=")">
+      (#{variable.processInstanceId}, #{variable.name})
+    </foreach>
+  </delete>
+
+</mapper>
