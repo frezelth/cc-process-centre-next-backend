@@ -5,6 +5,7 @@ import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.repository.model.UpdateProcessSecurityQueryParam;
+import eu.europa.ec.cc.processcentre.template.TemplateService;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProcessSecurityService {
 
   private final ProcessMapper processMapper;
+  private final TemplateService templateService;
 
-  public ProcessSecurityService(ProcessMapper processMapper) {
+  public ProcessSecurityService(ProcessMapper processMapper,
+      TemplateService templateService) {
     this.processMapper = processMapper;
+    this.templateService = templateService;
   }
 
   @Transactional
@@ -37,22 +41,31 @@ public class ProcessSecurityService {
     UpdateProcessSecurityQueryParam param;
     if (!accessRights.isEmpty()) {
       param = accessRights.stream().findFirst().map(
-          right -> new UpdateProcessSecurityQueryParam(
-              processInstanceId,
-              StringUtils.isNotEmpty(right.applicationId()) ? right.applicationId() : AccessRight.PROCESS_CENTRE,
-              right.permissionId(),
-              right.scopeTypeId(),
-              right.scopeId()
-          )
+          right -> fillProcessSecurityQueryParam(processInstanceId, right)
       ).orElseThrow();
     } else {
       param = new UpdateProcessSecurityQueryParam(
           processInstanceId,
           AccessRight.PROCESS_CENTRE,
           processTypeConfig.secundaTask(),
-          null, null
+          null, null, null
       );
     }
     processMapper.updateProcessSecurity(param);
+  }
+
+  private UpdateProcessSecurityQueryParam fillProcessSecurityQueryParam(String processInstanceId, AccessRight right){
+    String scopeIdVal = null;
+    if (StringUtils.isNotEmpty(right.scopeTypeId()) && StringUtils.isNotEmpty(right.scopeId())){
+      scopeIdVal = templateService.processAccessRightsScopeIdTemplate(processInstanceId, right.scopeId());
+    }
+    return new UpdateProcessSecurityQueryParam(
+        processInstanceId,
+        StringUtils.isNotEmpty(right.applicationId()) ? right.applicationId() : AccessRight.PROCESS_CENTRE,
+        right.permissionId(),
+        right.scopeTypeId(),
+        right.scopeId(),
+        scopeIdVal
+    );
   }
 }

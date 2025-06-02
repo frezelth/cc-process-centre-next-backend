@@ -39,7 +39,7 @@ public class TranslationService {
   private void insertOrUpdateInternalTranslations(TranslationObjectType objectType, String objectId,
       TranslationAttribute attribute, BabelText text) {
     // delete current translations for the object
-    translationMapper.deleteTranslations(new DeleteTranslationsParam(objectType, objectId,
+    translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(objectType, objectId,
         attribute));
 
     if (text.getTranslations() == null || text.getTranslations().isEmpty()) {

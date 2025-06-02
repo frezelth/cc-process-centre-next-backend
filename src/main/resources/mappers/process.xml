@@ -60,8 +60,7 @@
     UPDATE T_PROCESS SET SECURITY_APPLICATION_ID = #{applicationId}, SECURITY_SECUNDA_TASK = #{secundaTask},
     SECURITY_SCOPE_TYPE_ID = #{scopeTypeId},
     SECURITY_SCOPE_ID = #{scopeId},
-    SECURITY_SCOPE_ID_VALUE = #{scopeIdVal},
-    TITLE_TEMPLATE = #{titleTemplate}
+    SECURITY_SCOPE_ID_VALUE = #{scopeIdVal}
   </update>
 
 </mapper>

@@ -51,4 +51,15 @@
     </foreach>
   </delete>
 
+  <select id="findProcessVariable" resultType="eu.europa.ec.cc.processcentre.repository.model.FindProcessVariableQueryResponse">
+    SELECT PROCESS_INSTANCE_ID as "processInstanceId",
+    NAME as "name",
+    VALUE_STRING as "valueString",
+    VALUE_INTEGER as "valueInteger",
+    VALUE_LONG as "valueLong",
+    VALUE_DOUBLE as "valueDouble",
+    VALUE_BOOLEAN as "valueBoolean"
+    FROM T_PROCESS_VARIABLE WHERE PROCESS_INSTANCE_ID = #{processInstanceId} AND NAME = #{name}
+  </select>
+
 </mapper>

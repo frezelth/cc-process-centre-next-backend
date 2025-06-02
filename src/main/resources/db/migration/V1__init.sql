@@ -7,6 +7,7 @@ CREATE TABLE T_STATIC_TRANSLATION
     attribute_name  TEXT        NOT NULL,
     language_code   VARCHAR(10) NOT NULL,
     translated_text TEXT        NOT NULL,
+    is_default      BOOLEAN DEFAULT FALSE,
     updated_at      TIMESTAMPTZ DEFAULT now(),
 
     PRIMARY KEY (object_type, object_id, attribute_name, language_code)
@@ -65,6 +66,7 @@ CREATE TABLE T_PROCESS
     SECURITY_APPLICATION_ID       TEXT,
     SECURITY_SECUNDA_TASK         TEXT,
     SECURITY_SCOPE_TYPE_ID        TEXT,
+    SECURITY_SCOPE_ID       TEXT,
     SECURITY_SCOPE_ID_VALUE       TEXT,
     PARENT_ID                     VARCHAR(50),
     ASSOCIATED_PORTFOLIO_ITEM_IDS  TEXT[],

@@ -5,6 +5,12 @@
     },
     "defaultLanguage": "en"
   },
+  "titleTemplate":{
+    "translations": {
+      "en": "MARE - Examination of accounts 2021-2027 - ${processVariables.YEAR}"
+    },
+    "defaultLanguage": "en"
+  },
   "accessRights": {
     "VIEW": [
       {

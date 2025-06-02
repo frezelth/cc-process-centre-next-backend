@@ -1,6 +1,7 @@
 package eu.europa.ec.cc.processcentre.translation;
 
 import eu.europa.ec.cc.processcentre.babel.BabelText;
+import eu.europa.ec.cc.processcentre.translation.repository.FindTranslationsForAttributeQueryParam;
 import eu.europa.ec.cc.processcentre.translation.repository.TranslationMapper;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,9 @@ public class TranslationQuery {
   }
 
   @Transactional(readOnly = true)
-  public Map<String, String> findTranslations(String processInstanceId, TranslationAttribute attribute) {
-    return translationMapper.findTranslationsForAttribute(processInstanceId, attribute);
+  public Map<String, String> findTranslations(String processInstanceId, TranslationObjectType objectType, TranslationAttribute attribute) {
+    return translationMapper.findTranslationsForAttribute(
+        new FindTranslationsForAttributeQueryParam(objectType, processInstanceId, attribute));
   }
 
 }

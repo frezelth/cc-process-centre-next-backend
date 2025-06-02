@@ -5,7 +5,8 @@ public record UpdateProcessSecurityQueryParam(
     String applicationId,
     String secundaTask,
     String scopeTypeId,
-    String scopeId
+    String scopeId,
+    String scopeIdVal
 ) {
 
 }
