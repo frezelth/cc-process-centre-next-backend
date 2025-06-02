@@ -56,4 +56,12 @@
     ASSOCIATED_PORTFOLIO_ITEM_IDS = EXCLUDED.ASSOCIATED_PORTFOLIO_ITEM_IDS
   </insert>
 
+  <update id="updateProcessSecurity">
+    UPDATE T_PROCESS SET SECURITY_APPLICATION_ID = #{applicationId}, SECURITY_SECUNDA_TASK = #{secundaTask},
+    SECURITY_SCOPE_TYPE_ID = #{scopeTypeId},
+    SECURITY_SCOPE_ID = #{scopeId},
+    SECURITY_SCOPE_ID_VALUE = #{scopeIdVal},
+    TITLE_TEMPLATE = #{titleTemplate}
+  </update>
+
 </mapper>

@@ -21,7 +21,7 @@
     URN = EXCLUDED.URN
   </insert>
 
-  <insert id="insertOrUpdateTranslation">
+  <insert id="insertOrUpdateTranslations" parameterType="collection">
     INSERT INTO T_STATIC_TRANSLATION (
     OBJECT_TYPE,
     OBJECT_ID,
@@ -29,14 +29,17 @@
     LANGUAGE_CODE,
     TRANSLATION,
     IS_DEFAULT
-    ) VALUES (
-    #{objectType},
-    #{objectId},
-    #{attributeName},
-    #{languageCode},
-    #{translation},
-    #{defaultTranslation},
+    ) VALUES
+    <foreach collection="translations" item="translation" separator=",">
+    (
+    #{translation.objectType},
+    #{translation.objectId},
+    #{translation.attribute},
+    #{translation.languageCode},
+    #{translation.translation},
+    #{translation.defaultTranslation},
     )
+    </foreach>
     ON CONFLICT (OBJECT_TYPE, OBJECT_ID, ATTRIBUTE_NAME, LANGUAGE_CODE) DO UPDATE SET
     TRANSLATION = EXCLUDED.TRANSLATION
     DEFAULT_TRANSLATION = EXCLUDED.DEFAULT_TRANSLATION
@@ -44,7 +47,12 @@
 
   <delete id="deleteTranslationsForAttribute">
     DELETE FROM T_STATIC_TRANSLATION WHERE OBJECT_TYPE = #{objectType} AND
-    OBJECT_ID = #{objectId} AND ATTRIBUTE_NAME = #{attributeName}
+    OBJECT_ID = #{objectId} AND ATTRIBUTE_NAME = #{attributeName} AND object_type = #{objectType}
   </delete>
+
+  <select id="findTranslationsForAttribute" resultType="eu.europa.ec.cc.processcentre.babel.BabelText">
+    SELECT language_code, translated_text FROM V_RESOLVED_TRANSLATION WHERE object_id = #{processInstanceId}
+    AND attribute_name = #{attributeName} AND object_type = #{objectType}
+  </select>
 
 </mapper>

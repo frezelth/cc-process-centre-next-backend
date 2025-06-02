@@ -14,6 +14,10 @@ import eu.europa.ec.cc.processcentre.proto.UpdateProcessContext;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcessVariables;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
+import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
+import eu.europa.ec.cc.processcentre.translation.TranslationQuery;
+import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import java.time.Instant;
@@ -38,13 +42,17 @@ public class ProcessService {
   private final DomainConfigService domainConfigService;
 
   private final ObjectMapper objectMapper;
+  private final TranslationService translationService;
+
+  private final TranslationQuery translationQuery;
 
   public ProcessService(
       ApplicationEventPublisher eventPublisher,
       ProcessMapper processMapper, ProcessVariableService processVariableService, CommandConverter commandConverter,
       DomainConfigService domainConfigService,
       ProcessSecurityService processSecurityService,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, TranslationService translationService,
+      TranslationQuery translationQuery) {
     this.eventPublisher = eventPublisher;
     this.processMapper = processMapper;
     this.processVariableService = processVariableService;
@@ -52,6 +60,8 @@ public class ProcessService {
     this.domainConfigService = domainConfigService;
     this.processSecurityService = processSecurityService;
     this.objectMapper = objectMapper;
+    this.translationService = translationService;
+    this.translationQuery = translationQuery;
   }
 
   @Transactional
@@ -129,7 +139,18 @@ public class ProcessService {
         return;
       }
 
+      // insert security rules
       processSecurityService.updateProcessSecurity(command.getProcessInstanceId(), processTypeConfig);
+
+      // create translations for the type name
+      translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+          command.getProcessInstanceId(), TranslationAttribute.PROCESS_TYPE_NAME,
+          processTypeConfig.name());
+
+      // create translations for the title template
+      translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+          command.getProcessInstanceId(), TranslationAttribute.PROCESS_TITLE_TEMPLATE,
+          processTypeConfig.titleTemplate());
     }
   }
 

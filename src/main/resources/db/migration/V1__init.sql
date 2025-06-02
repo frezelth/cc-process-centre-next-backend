@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE TABLE T_STATIC_TRANSLATION
 (
     object_type     TEXT        NOT NULL,
-    object_id       INTEGER     NOT NULL,
+    object_id       VARCHAR(100)     NOT NULL,
     attribute_name  TEXT        NOT NULL,
     language_code   VARCHAR(10) NOT NULL,
     translated_text TEXT        NOT NULL,
@@ -70,6 +70,7 @@ CREATE TABLE T_PROCESS
     ASSOCIATED_PORTFOLIO_ITEM_IDS  TEXT[],
     STARTED_BY VARCHAR(100),
     STARTED_ON_BEHALF_OF VARCHAR(100),
+    TITLE_TEMPLATE TEXT,
 
     FOREIGN KEY (PARENT_ID) REFERENCES T_PROCESS (PROCESS_INSTANCE_ID)
 );
@@ -176,3 +177,29 @@ CREATE TABLE T_PROCESS_TAG
     PRIMARY KEY (process_instance_id, catalog_id, tag_id),
     FOREIGN KEY (process_instance_id) REFERENCES T_PROCESS (process_instance_id)
 );
+
+CREATE VIEW V_RESOLVED_TRANSLATION AS
+-- Internal translations
+SELECT
+    'static' AS source,
+    t.object_type,
+    t.object_id,
+    t.attribute_name,
+    t.language_code,
+    t.translated_text,
+    NULL AS urn,
+    t.updated_at
+FROM T_STATIC_TRANSLATION t
+UNION ALL
+-- External translations
+SELECT
+    'babel' AS source,
+    l.object_type,
+    l.object_id,
+    l.attribute_name,
+    e.language_code,
+    e.translated_text,
+    l.urn,
+    e.updated_at
+FROM T_BABEL_TRANSLATION_LINK l
+         JOIN T_BABEL_TRANSLATION e ON l.urn = e.urn;

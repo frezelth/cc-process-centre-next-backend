@@ -51,6 +51,8 @@
 		<cc-internal-communication-proto.version>1.4.1</cc-internal-communication-proto.version>
 		<cc-participant-proto.version>1.19.0</cc-participant-proto.version>
 
+		<commons-text.version>1.11.0</commons-text.version>
+
 		<cc-embedded-configuration-lib.version>5.16.0</cc-embedded-configuration-lib.version>
 
 		<mapstruct.version>1.6.3</mapstruct.version>
@@ -108,6 +110,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>${commons-text.version}</version>
 		</dependency>
 
 		<dependency>
