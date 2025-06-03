@@ -1,10 +1,7 @@
 package eu.europa.ec.cc.processcentre.repository;
 
-import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
-import eu.europa.ec.cc.processcentre.repository.model.FindProcessByIdQueryResponse;
-import eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryParam;
-import eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse;
-import eu.europa.ec.cc.processcentre.repository.model.UpdateProcessSecurityQueryParam;
+import eu.europa.ec.cc.processcentre.repository.model.*;
+
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,4 +18,6 @@ public interface ProcessMapper {
   List<SearchProcessQueryResponse> search(SearchProcessQueryParam param);
 
   void updateProcessSecurity(UpdateProcessSecurityQueryParam param);
+
+  void cancelProcess(CancelProcessQueryParam param);
 }

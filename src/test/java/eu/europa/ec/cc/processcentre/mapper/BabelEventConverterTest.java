@@ -3,6 +3,7 @@ package eu.europa.ec.cc.processcentre.mapper;
 import com.google.protobuf.Timestamp;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcess;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import java.time.Instant;
 import org.junit.jupiter.api.Assertions;
@@ -24,9 +25,10 @@ public class BabelEventConverterTest {
         .setProcessTypeKey("processTypeKey")
         .setCreatedOn(Timestamp.newBuilder().setSeconds(now.getEpochSecond()).build())
         .setUserId("frezeth")
+            .setCreatedOn(ProtoUtils.instantToTimestamp(now))
         .build();
 
-    CreateProcessQueryParam queryParam = converter.toCreateProcessQueryParam(command, now);
+    CreateProcessQueryParam queryParam = converter.toCreateProcessQueryParam(command);
 
     Assertions.assertEquals(command.getProcessInstanceId(), queryParam.processInstanceId());
     Assertions.assertEquals(command.getDomainKey(), queryParam.domainKey());

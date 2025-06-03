@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.repository.TaskMapper">
+
+    <insert id="insertOrUpdateTask">
+        INSERT INTO T_PROCESS (
+        PROCESS_INSTANCE_ID,
+        DOMAIN_KEY,
+        PROVIDER_ID,
+        PROCESS_TYPE_KEY,
+        STARTED_ON,
+        BUSINESS_STATUS,
+        RESPONSIBLE_ORGANISATION_ID,
+        STARTED_BY,
+        STARTED_ON_BEHALF_OF,
+        ASSOCIATED_PORTFOLIO_ITEM_IDS
+        )  VALUES (
+        #{processInstanceId},
+        #{domainKey},
+        #{providerId},
+        #{processTypeKey},
+        #{startedOn},
+        #{businessStatus},
+        #{responsibleOrganisationId},
+        #{startedBy},
+        #{startedOnBehalfOf},
+        #{associatedPortfolioItemIds}
+        )
+        ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
+        DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
+        PROVIDER_ID = EXCLUDED.PROVIDER_ID,
+        PROCESS_TYPE_KEY = EXCLUDED.PROCESS_TYPE_KEY,
+        STARTED_ON = EXCLUDED.STARTED_ON,
+        BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
+        RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
+        STARTED_BY = EXCLUDED.STARTED_BY,
+        STARTED_ON_BEHALF_OF = EXCLUDED.STARTED_ON_BEHALF_OF,
+        ASSOCIATED_PORTFOLIO_ITEM_IDS = EXCLUDED.ASSOCIATED_PORTFOLIO_ITEM_IDS
+    </insert>
+
+</mapper>

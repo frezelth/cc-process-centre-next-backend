@@ -63,47 +63,6 @@ public class ProcessService {
     this.translationQuery = translationQuery;
   }
 
-  @Transactional
-  public void handle(ProcessCreated event) {
-
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Handling createProcess for process {}", event.getProcessInstanceId());
-    }
-
-    Instant startedOn = ProtoUtils.timestampToInstant(event.getCreatedOn());
-    if (startedOn == null) {
-      startedOn = Instant.now();
-    }
-
-    CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event, startedOn);
-    processMapper.insertOrUpdateProcess(createProcessQueryParam);
-
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Process {} persisted", event.getProcessInstanceId());
-    }
-
-    // handle process variables, create the dedicated command
-    UpdateProcessVariables updateVariablesCommand = UpdateProcessVariables.newBuilder()
-        .setProcessInstanceId(event.getProcessInstanceId())
-        .putAllProcessVariables(event.getProcessVariablesMap())
-        .build();
-    processVariableService.updateVariables(updateVariablesCommand);
-
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
-    }
-
-    eventPublisher.publishEvent(new ProcessRegistered(
-        event.getProcessInstanceId(),
-        event.getProviderId(),
-        event.getDomainKey(),
-        event.getProcessTypeKey(),
-        event.getUserId(),
-        event.getOnBehalfOfUserId(),
-        startedOn
-    ));
-  }
-
   /**
    * This method is used to load the process configuration and update all configuration
    * aspects that are stored locally (access rights, title, description, type name...)

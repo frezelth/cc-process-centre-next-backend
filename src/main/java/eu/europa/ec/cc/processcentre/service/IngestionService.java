@@ -2,14 +2,15 @@ package eu.europa.ec.cc.processcentre.service;
 
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.mapper.EventConverter;
-import eu.europa.ec.cc.processcentre.proto.UpdateProcessVariables;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.repository.ProcessVariableMapper;
+import eu.europa.ec.cc.processcentre.repository.model.CancelProcessQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.DeleteProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.InsertOrUpdateProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
-import eu.europa.ec.cc.provider.proto.ProcessCreated;
+import eu.europa.ec.cc.provider.proto.*;
+import eu.europa.ec.cc.provider.task.event.proto.TaskCreated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -47,26 +48,17 @@ public class IngestionService {
   public void handle(ProcessCreated event) {
 
     if (LOG.isDebugEnabled()){
-      LOG.debug("Handling createProcess for process {}", event.getProcessInstanceId());
+      LOG.debug("Handling ProcessCreated for process {}", event.getProcessInstanceId());
     }
 
-    Instant startedOn = ProtoUtils.timestampToInstant(event.getCreatedOn());
-    if (startedOn == null) {
-      startedOn = Instant.now();
-    }
-
-    CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event, startedOn);
+    CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event);
     processMapper.insertOrUpdateProcess(createProcessQueryParam);
 
     if (LOG.isDebugEnabled()){
       LOG.debug("Process {} persisted", event.getProcessInstanceId());
     }
 
-    // handle process variables, create the dedicated command
-    UpdateProcessVariables updateVariablesCommand = UpdateProcessVariables.newBuilder()
-        .setProcessInstanceId(event.getProcessInstanceId())
-        .putAllProcessVariables(event.getProcessVariablesMap())
-        .build();
+    // store process variables
     updateProcessVariables(event.getProcessInstanceId(), event.getProcessVariablesMap());
 
     if (LOG.isDebugEnabled()){
@@ -80,8 +72,59 @@ public class IngestionService {
         event.getProcessTypeKey(),
         event.getUserId(),
         event.getOnBehalfOfUserId(),
-        startedOn
+        ProtoUtils.timestampToInstant(event.getCreatedOn())
     ));
+  }
+
+  @Transactional
+  public void handle(ProcessVariablesUpdated event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessVariablesUpdated for process {}", event.getProcessId());
+    }
+
+    // store process variables
+    updateProcessVariables(event.getProcessId(), event.getProcessVariablesMap());
+  }
+
+  @Transactional
+  public void handle(ProcessVariableUpdated event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessVariableUpdated for process {}", event.getProcessId());
+    }
+
+    // store process variables
+    updateProcessVariables(event.getProcessId(), Map.of(event.getName(), event.getValue()));
+  }
+
+  @Transactional
+  public void handle(ProcessCancelled event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessCancelled for process {}", event.getProcessInstanceId());
+    }
+
+    CancelProcessQueryParam cancelProcessQueryParam = eventConverter.toCancelProcessQueryParam(event);
+    processMapper.cancelProcess(cancelProcessQueryParam);
+  }
+
+  @Transactional
+  public void handle(ProcessDeleted event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessDeleted for process {}", event.getProcessInstanceId());
+    }
+
+  }
+
+  @Transactional
+  public void handle(TaskCreated event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling TaskCreated for process {}", event.getProcessInstanceId());
+    }
+
+    if (event.getProcessInstanceId().isEmpty()){
+      return;
+    }
+
+
   }
 
   private void updateProcessVariables(String processInstanceId, Map<String, VariableValue> variables) {
