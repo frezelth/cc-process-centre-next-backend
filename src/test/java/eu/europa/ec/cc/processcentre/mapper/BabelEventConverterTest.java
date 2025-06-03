@@ -3,20 +3,21 @@ package eu.europa.ec.cc.processcentre.mapper;
 import com.google.protobuf.Timestamp;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcess;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import java.time.Instant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-public class BabelCommandConverterTest {
+public class BabelEventConverterTest {
 
-  private final CommandConverter converter = Mappers.getMapper(CommandConverter.class);
+  private final EventConverter converter = Mappers.getMapper(EventConverter.class);
 
   @Test
   void testConvertUpdateCommand(){
     Instant now = Instant.now();
 
-    UpdateProcess command = UpdateProcess.newBuilder()
+    ProcessCreated command = ProcessCreated.newBuilder()
         .setProcessInstanceId("1")
         .setProviderId("providerId")
         .setDomainKey("domainKey")
@@ -25,7 +26,7 @@ public class BabelCommandConverterTest {
         .setUserId("frezeth")
         .build();
 
-    CreateProcessQueryParam queryParam = converter.toQueryParam(command, now);
+    CreateProcessQueryParam queryParam = converter.toCreateProcessQueryParam(command, now);
 
     Assertions.assertEquals(command.getProcessInstanceId(), queryParam.processInstanceId());
     Assertions.assertEquals(command.getDomainKey(), queryParam.domainKey());

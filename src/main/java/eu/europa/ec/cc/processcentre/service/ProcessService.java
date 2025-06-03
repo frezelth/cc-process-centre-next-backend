@@ -8,8 +8,7 @@ import eu.europa.ec.cc.configuration.service.MergeStrategy;
 import eu.europa.ec.cc.configuration.service.SearchStrategy;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
-import eu.europa.ec.cc.processcentre.mapper.CommandConverter;
-import eu.europa.ec.cc.processcentre.proto.UpdateProcess;
+import eu.europa.ec.cc.processcentre.mapper.EventConverter;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcessContext;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcessVariables;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
@@ -20,9 +19,9 @@ import eu.europa.ec.cc.processcentre.translation.TranslationQuery;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
+import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import java.time.Instant;
 import java.util.Map;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class ProcessService {
 
   private final ProcessMapper processMapper;
   private final ProcessVariableService processVariableService;
-  private final CommandConverter commandConverter;
+  private final EventConverter eventConverter;
   private final ProcessSecurityService processSecurityService;
 
   private final DomainConfigService domainConfigService;
@@ -48,7 +47,7 @@ public class ProcessService {
 
   public ProcessService(
       ApplicationEventPublisher eventPublisher,
-      ProcessMapper processMapper, ProcessVariableService processVariableService, CommandConverter commandConverter,
+      ProcessMapper processMapper, ProcessVariableService processVariableService, EventConverter eventConverter,
       DomainConfigService domainConfigService,
       ProcessSecurityService processSecurityService,
       ObjectMapper objectMapper, TranslationService translationService,
@@ -56,7 +55,7 @@ public class ProcessService {
     this.eventPublisher = eventPublisher;
     this.processMapper = processMapper;
     this.processVariableService = processVariableService;
-    this.commandConverter = commandConverter;
+    this.eventConverter = eventConverter;
     this.domainConfigService = domainConfigService;
     this.processSecurityService = processSecurityService;
     this.objectMapper = objectMapper;
@@ -65,42 +64,42 @@ public class ProcessService {
   }
 
   @Transactional
-  public void createProcess(UpdateProcess command) {
+  public void handle(ProcessCreated event) {
 
     if (LOG.isDebugEnabled()){
-      LOG.debug("Handling createProcess for process {}", command.getProcessInstanceId());
+      LOG.debug("Handling createProcess for process {}", event.getProcessInstanceId());
     }
 
-    Instant startedOn = ProtoUtils.timestampToInstant(command.getCreatedOn());
+    Instant startedOn = ProtoUtils.timestampToInstant(event.getCreatedOn());
     if (startedOn == null) {
       startedOn = Instant.now();
     }
 
-    CreateProcessQueryParam createProcessQueryParam = commandConverter.toQueryParam(command, startedOn);
+    CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event, startedOn);
     processMapper.insertOrUpdateProcess(createProcessQueryParam);
 
     if (LOG.isDebugEnabled()){
-      LOG.debug("Process {} persisted", command.getProcessInstanceId());
+      LOG.debug("Process {} persisted", event.getProcessInstanceId());
     }
 
     // handle process variables, create the dedicated command
     UpdateProcessVariables updateVariablesCommand = UpdateProcessVariables.newBuilder()
-        .setProcessInstanceId(command.getProcessInstanceId())
-        .putAllProcessVariables(command.getProcessVariablesMap())
+        .setProcessInstanceId(event.getProcessInstanceId())
+        .putAllProcessVariables(event.getProcessVariablesMap())
         .build();
     processVariableService.updateVariables(updateVariablesCommand);
 
     if (LOG.isDebugEnabled()){
-      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", command.getProcessInstanceId());
+      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
     }
 
     eventPublisher.publishEvent(new ProcessRegistered(
-        command.getProcessInstanceId(),
-        command.getProviderId(),
-        command.getDomainKey(),
-        command.getProcessTypeKey(),
-        command.getUserId(),
-        command.getOnBehalfOfUserId(),
+        event.getProcessInstanceId(),
+        event.getProviderId(),
+        event.getDomainKey(),
+        event.getProcessTypeKey(),
+        event.getUserId(),
+        event.getOnBehalfOfUserId(),
         startedOn
     ));
   }
