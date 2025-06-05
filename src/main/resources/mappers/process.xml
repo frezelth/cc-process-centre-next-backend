@@ -14,12 +14,6 @@
     WHERE PROCESS_INSTANCE_ID = #{value}
   </select>
 
-  <insert id="ensureProcessExists" parameterType="string">
-    INSERT INTO T_PROCESS (PROCESS_INSTANCE_ID)
-    VALUES (#{value})
-    ON CONFLICT (PROCESS_INSTANCE_ID) DO NOTHING;
-  </insert>
-
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
       PROCESS_INSTANCE_ID,
@@ -30,7 +24,7 @@
       BUSINESS_STATUS,
       RESPONSIBLE_ORGANISATION_ID,
       STARTED_BY,
-      STARTED_ON_BEHALF_OF,
+      STARTED_BY_ON_BEHALF_OF,
       ASSOCIATED_PORTFOLIO_ITEM_IDS
     )  VALUES (
     #{processInstanceId},
@@ -41,7 +35,7 @@
     #{businessStatus},
     #{responsibleOrganisationId},
     #{startedBy},
-    #{startedOnBehalfOf},
+    #{startedByOnBehalfOf},
     #{associatedPortfolioItemIds}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
@@ -52,7 +46,7 @@
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
     RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
     STARTED_BY = EXCLUDED.STARTED_BY,
-    STARTED_ON_BEHALF_OF = EXCLUDED.STARTED_ON_BEHALF_OF,
+    STARTED_BY_ON_BEHALF_OF = EXCLUDED.STARTED_BY_ON_BEHALF_OF,
     ASSOCIATED_PORTFOLIO_ITEM_IDS = EXCLUDED.ASSOCIATED_PORTFOLIO_ITEM_IDS
   </insert>
 
@@ -64,8 +58,39 @@
   </update>
 
   <update id="cancelProcess">
-    UPDATE T_PROCESS SET CANCELLED = TRUE, CANCELLED_BY = #{cancelledBy}, CANCELLED_ON = #{cancelledOn}
+    UPDATE T_PROCESS SET CANCELLED_BY = #{cancelledBy}, CANCELLED_ON =
+    <choose>
+      <when test="cancelledOn != null">
+        #{cancelledOn}
+      </when>
+      <otherwise>
+        now()
+      </otherwise>
+    </choose>,
+    CANCELLED_BY_ON_BEHALF_OF = #{cancelledByOnBehalfOf}
     WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
+
+  <update id="deleteProcess">
+    UPDATE T_PROCESS SET DELETED_BY = #{deletedBy},
+    DELETED_ON =
+    <choose>
+    <when test="deletedOn != null">
+      #{deletedOn}
+    </when>
+    <otherwise>
+      now()
+    </otherwise>
+  </choose>,
+    DELETED_BY_ON_BEHALF_OF = #{deletedByOnBehalfOf}
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <insert id="insertChangeProcessState">
+    INSERT INTO T_PROCESS_ACTIVITY (
+
+
+    ) VALUES ()
+  </insert>
 
 </mapper>

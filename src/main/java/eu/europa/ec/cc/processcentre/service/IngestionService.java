@@ -5,15 +5,21 @@ import eu.europa.ec.cc.processcentre.mapper.EventConverter;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.repository.ProcessVariableMapper;
 import eu.europa.ec.cc.processcentre.repository.model.CancelProcessQueryParam;
+import eu.europa.ec.cc.processcentre.repository.model.ChangeProcessStateQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.repository.model.DeleteProcessQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.DeleteProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.InsertOrUpdateProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
-import eu.europa.ec.cc.provider.proto.*;
+import eu.europa.ec.cc.provider.proto.ProcessCancelled;
+import eu.europa.ec.cc.provider.proto.ProcessCreated;
+import eu.europa.ec.cc.provider.proto.ProcessDeleted;
+import eu.europa.ec.cc.provider.proto.ProcessStateChanged;
+import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
+import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
 import eu.europa.ec.cc.provider.task.event.proto.TaskCreated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -112,6 +118,17 @@ public class IngestionService {
       LOG.debug("Handling ProcessDeleted for process {}", event.getProcessInstanceId());
     }
 
+    DeleteProcessQueryParam deleteProcessQueryParam = eventConverter.toDeleteProcessQueryParam(event);
+    processMapper.deleteProcess(deleteProcessQueryParam);
+  }
+
+  @Transactional
+  public void handle(ProcessStateChanged event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessStateChanged for process {}", event.getProcessInstanceId());
+    }
+
+    ChangeProcessStateQueryParam changeProcessStateQueryParam = eventConverter.toChangeProcessStateQueryParam(event);
   }
 
   @Transactional
@@ -121,6 +138,7 @@ public class IngestionService {
     }
 
     if (event.getProcessInstanceId().isEmpty()){
+      // tasks without process, not handled inside process centre
       return;
     }
 
@@ -139,8 +157,6 @@ public class IngestionService {
             )
         ).filter(Objects::nonNull).collect(Collectors.toSet());
     if (!variablesToInsertOrUpdate.isEmpty()) {
-      // first we should ensure that the process already exists (out of order messages)
-      processMapper.ensureProcessExists(processInstanceId);
       processVariableMapper.insertOrUpdateProcessVariables(variablesToInsertOrUpdate);
     }
 

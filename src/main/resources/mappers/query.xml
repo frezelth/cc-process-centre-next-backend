@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.babel.repository.QueryMapper">
+
+  <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
+    <id property="processInstanceId" column="process_instance_id"/>
+    <result property="translations" column="process_translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>
+
+    <collection property="tasks" ofType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask" javaType="java.util.ArrayList">
+      <id property="taskInstanceId" column="task_instance_id"/>
+      <result property="translations" column="task_translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>
+    </collection>
+  </resultMap>
+
+  <sql id="translationsCte">
+    WITH process_translations AS (
+    SELECT
+    object_id,
+    jsonb_object_agg(attribute_name, value) AS translations_json
+    FROM (
+    SELECT
+    object_type,
+    object_id,
+    attribute_name,
+    value,
+    ROW_NUMBER() OVER (
+    PARTITION BY object_type, object_id, attribute_name
+    ORDER BY
+    CASE
+    WHEN language_code = #{languageCode} THEN 1
+    WHEN is_default THEN 2
+    ELSE 3
+    END
+    ) AS rn
+    FROM resolved_translations
+    WHERE object_type = 'process'
+    AND attribute_name IN ('process_title', 'process_name', 'process_description')
+    AND (language_code = #{languageCode} OR is_default)
+    ) ranked
+    WHERE rn = 1
+    GROUP BY object_id
+    ),
+    task_translations AS (
+    SELECT
+    object_id,
+    jsonb_object_agg(attribute_name, value) AS translations_json
+    FROM (
+    SELECT
+    object_type,
+    object_id,
+    attribute_name,
+    value,
+    ROW_NUMBER() OVER (
+    PARTITION BY object_type, object_id, attribute_name
+    ORDER BY
+    CASE
+    WHEN language_code = #{languageCode} THEN 1
+    WHEN is_default THEN 2
+    ELSE 3
+    END
+    ) AS rn
+    FROM resolved_translations
+    WHERE object_type = 'task'
+    AND attribute_name IN ('task_title')
+    AND (language_code = is_default OR is_default)
+    ) ranked
+    WHERE rn = 1
+    GROUP BY object_id
+    )
+  </sql>
+
+  <sql id="whereClause">
+    <where>
+      <if test="searchText != null and searchText != ''">
+        AND p.NAME ILIKE CONCAT('%', #{searchText}, '%')
+        AND EXISTS (
+        SELECT 1
+        FROM V_RESOLVED_TRANSLATION rt
+        WHERE rt.OBJECT_ID = p.PROCESS_INSTANCE_ID
+        AND pv.translated_text = ILIKE CONCAT('%', #{searchText}, '%')
+        )
+      </if>
+    </where>
+  </sql>
+
+  <select id="searchProcesses" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
+    SELECT p.processInstanceId as processInstanceId,
+    COALESCE(pt.translations_json, '{}'::jsonb) AS process_translations,
+    t.task_instance_id,
+    COALESCE(tt.translations_json, '{}'::jsonb) AS task_translations
+    FROM T_PROCESS p
+    LEFT JOIN process_translations pt ON pt.object_id = p.object_id
+    LEFT JOIN T_USER_TASK t ON t.process_instance_id = p.process_instance_id AND t.completed_on is null AND t.cancelled_on is null
+    LEFT JOIN task_translations tt ON tt.object_id = t.task_instance_id
+    <include refid="whereClause"/>
+  </select>
+
+<!--  <select id="countStations" resultType="eu.europa.ec.cc.processcentre.repository.model.MetroLineStationStats">-->
+<!--    WITH RECURSIVE process_tree AS (-->
+<!--    SELECT-->
+<!--    p.PROCESS_INSTANCE_ID,-->
+<!--    p.PROCESS_TYPE_ID,-->
+<!--    p.COMPLETED,-->
+<!--    p.PARENT_ID-->
+<!--    FROM-->
+<!--    T_PROCESS p-->
+<!--    UNION ALL-->
+<!--    SELECT-->
+<!--    child.PROCESS_INSTANCE_ID,-->
+<!--    child.PROCESS_TYPE_ID,-->
+<!--    child.COMPLETED,-->
+<!--    child.PARENT_ID-->
+<!--    FROM-->
+<!--    T_PROCESS child-->
+<!--    JOIN process_tree parent-->
+<!--    ON child.PARENT_ID = parent.PROCESS_INSTANCE_ID-->
+<!--    ),-->
+<!--    ongoing_processes AS (-->
+<!--    SELECT-->
+<!--    m.STATION_NAME,-->
+<!--    COUNT(DISTINCT p.PROCESS_INSTANCE_ID) AS count_ongoing_processes-->
+<!--    FROM-->
+<!--    process_tree p-->
+<!--    JOIN-->
+<!--    T_METRO_LINE_MAPPING m-->
+<!--    ON p.PROCESS_TYPE_ID = m.PROCESS_TYPE_ID-->
+<!--    WHERE-->
+<!--    p.COMPLETED = FALSE-->
+<!--    GROUP BY-->
+<!--    m.STATION_NAME-->
+<!--    ),-->
+<!--    completed_processes AS (-->
+<!--    SELECT-->
+<!--    m.STATION_NAME,-->
+<!--    COUNT(DISTINCT p.PROCESS_INSTANCE_ID) AS count_completed_processes-->
+<!--    FROM-->
+<!--    process_tree p-->
+<!--    JOIN-->
+<!--    T_METRO_LINE_MAPPING m-->
+<!--    ON p.PROCESS_TYPE_ID = m.PROCESS_TYPE_ID-->
+<!--    WHERE-->
+<!--    p.COMPLETED = TRUE-->
+<!--    GROUP BY-->
+<!--    m.STATION_NAME-->
+<!--    ),-->
+<!--    ongoing_tasks AS (-->
+<!--    SELECT-->
+<!--    m.STATION_NAME,-->
+<!--    COUNT(DISTINCT t.TASK_INSTANCE_ID) AS count_ongoing_tasks-->
+<!--    FROM-->
+<!--    process_tree p-->
+<!--    JOIN-->
+<!--    T_USER_TASK t-->
+<!--    ON p.PROCESS_INSTANCE_ID = t.PROCESS_INSTANCE_ID-->
+<!--    JOIN-->
+<!--    T_METRO_LINE_MAPPING m-->
+<!--    ON t.TASK_TYPE_ID = m.TASK_TYPE_ID-->
+<!--    WHERE-->
+<!--    t.COMPLETED = FALSE-->
+<!--    GROUP BY-->
+<!--    m.STATION_NAME-->
+<!--    ),-->
+<!--    processes_in_business_state AS (-->
+<!--    SELECT-->
+<!--    m.STATION_NAME,-->
+<!--    COUNT(DISTINCT pbs.PROCESS_INSTANCE_ID) AS count_processes_in_business_state-->
+<!--    FROM-->
+<!--    process_tree p-->
+<!--    JOIN-->
+<!--    T_PROCESS_BUSINESS_STATE pbs-->
+<!--    ON p.PROCESS_INSTANCE_ID = pbs.PROCESS_INSTANCE_ID-->
+<!--    JOIN-->
+<!--    T_METRO_LINE_MAPPING m-->
+<!--    ON pbs.BUSINESS_STATE = m.BUSINESS_STATE-->
+<!--    GROUP BY-->
+<!--    m.STATION_NAME-->
+<!--    )-->
+<!--    SELECT-->
+<!--    m.STATION_NAME AS stationName,-->
+<!--    COALESCE(op.count_ongoing_processes, 0) AS ongoingProcesses,-->
+<!--    COALESCE(cp.count_completed_processes, 0) AS completedProcesses,-->
+<!--    COALESCE(ot.count_ongoing_tasks, 0) AS ongoingTasks,-->
+<!--    COALESCE(pbs.count_processes_in_business_state, 0) AS processesInBusinessState-->
+<!--    FROM-->
+<!--    (SELECT DISTINCT STATION_NAME FROM T_METRO_LINE_MAPPING) m-->
+<!--    LEFT JOIN-->
+<!--    ongoing_processes op ON m.STATION_NAME = op.STATION_NAME-->
+<!--    LEFT JOIN-->
+<!--    completed_processes cp ON m.STATION_NAME = cp.STATION_NAME-->
+<!--    LEFT JOIN-->
+<!--    ongoing_tasks ot ON m.STATION_NAME = ot.STATION_NAME-->
+<!--    LEFT JOIN-->
+<!--    processes_in_business_state pbs ON m.STATION_NAME = pbs.STATION_NAME-->
+<!--    ORDER BY-->
+<!--    m.STATION_NAME-->
+<!--  </select>-->
+
+</mapper>

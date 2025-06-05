@@ -14,7 +14,7 @@ public record CreateProcessQueryParam(
     String processTypeKey,
     String responsibleUserId,
     String startedBy,
-    String startedOnBehalfOf,
+    String startedByOnBehalfOf,
     String businessStatus
 ) {
 

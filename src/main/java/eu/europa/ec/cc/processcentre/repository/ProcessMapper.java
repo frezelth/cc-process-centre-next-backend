@@ -9,8 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ProcessMapper {
 
-  void ensureProcessExists(String processInstanceId);
-
   void insertOrUpdateProcess(CreateProcessQueryParam process);
 
   Optional<FindProcessByIdQueryResponse> findById(String id);
@@ -20,4 +18,6 @@ public interface ProcessMapper {
   void updateProcessSecurity(UpdateProcessSecurityQueryParam param);
 
   void cancelProcess(CancelProcessQueryParam param);
+
+  void deleteProcess(DeleteProcessQueryParam deleteProcessQueryParam);
 }
