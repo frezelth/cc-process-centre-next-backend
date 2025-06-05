@@ -3,7 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="eu.europa.ec.cc.processcentre.babel.repository.QueryMapper">
+<mapper namespace="eu.europa.ec.cc.processcentre.repository.QueryMapper">
+
+  <select id="findById">
+    SELECT PROCESS_INSTANCE_ID FROM T_PROCESS WHERE PROCESS_INSTANCE_ID = #{value}
+  </select>
 
   <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
@@ -19,26 +23,25 @@
     WITH process_translations AS (
     SELECT
     object_id,
-    jsonb_object_agg(attribute_name, value) AS translations_json
+    jsonb_object_agg(attribute_name, translated_text) AS translations_json
     FROM (
     SELECT
     object_type,
     object_id,
     attribute_name,
-    value,
+    translated_text,
     ROW_NUMBER() OVER (
     PARTITION BY object_type, object_id, attribute_name
     ORDER BY
     CASE
-    WHEN language_code = #{languageCode} THEN 1
+    WHEN language_code = #{locale} THEN 1
     WHEN is_default THEN 2
     ELSE 3
     END
     ) AS rn
-    FROM resolved_translations
-    WHERE object_type = 'process'
-    AND attribute_name IN ('process_title', 'process_name', 'process_description')
-    AND (language_code = #{languageCode} OR is_default)
+    FROM v_resolved_translation
+    WHERE object_type = 'PROCESS'
+    AND (language_code = #{locale} OR is_default)
     ) ranked
     WHERE rn = 1
     GROUP BY object_id
@@ -46,26 +49,25 @@
     task_translations AS (
     SELECT
     object_id,
-    jsonb_object_agg(attribute_name, value) AS translations_json
+    jsonb_object_agg(attribute_name, translated_text) AS translations_json
     FROM (
     SELECT
     object_type,
     object_id,
     attribute_name,
-    value,
+    translated_text,
     ROW_NUMBER() OVER (
     PARTITION BY object_type, object_id, attribute_name
     ORDER BY
     CASE
-    WHEN language_code = #{languageCode} THEN 1
+    WHEN language_code = #{locale} THEN 1
     WHEN is_default THEN 2
     ELSE 3
     END
     ) AS rn
-    FROM resolved_translations
-    WHERE object_type = 'task'
-    AND attribute_name IN ('task_title')
-    AND (language_code = is_default OR is_default)
+    FROM v_resolved_translation
+    WHERE object_type = 'TASK'
+    AND (language_code = #{locale} OR is_default)
     ) ranked
     WHERE rn = 1
     GROUP BY object_id
@@ -75,27 +77,28 @@
   <sql id="whereClause">
     <where>
       <if test="searchText != null and searchText != ''">
-        AND p.NAME ILIKE CONCAT('%', #{searchText}, '%')
         AND EXISTS (
         SELECT 1
         FROM V_RESOLVED_TRANSLATION rt
         WHERE rt.OBJECT_ID = p.PROCESS_INSTANCE_ID
-        AND pv.translated_text = ILIKE CONCAT('%', #{searchText}, '%')
+        AND rt.translated_text ILIKE ('%' || #{searchText} || '%')
         )
       </if>
     </where>
   </sql>
 
-  <select id="searchProcesses" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
-    SELECT p.processInstanceId as processInstanceId,
+  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
+    <include refid="translationsCte"/>
+    SELECT p.process_instance_id as process_instance_id,
     COALESCE(pt.translations_json, '{}'::jsonb) AS process_translations,
-    t.task_instance_id,
+    t.task_instance_id as task_instance_id,
     COALESCE(tt.translations_json, '{}'::jsonb) AS task_translations
     FROM T_PROCESS p
-    LEFT JOIN process_translations pt ON pt.object_id = p.object_id
+    LEFT JOIN process_translations pt ON pt.object_id = p.process_instance_id
     LEFT JOIN T_USER_TASK t ON t.process_instance_id = p.process_instance_id AND t.completed_on is null AND t.cancelled_on is null
     LEFT JOIN task_translations tt ON tt.object_id = t.task_instance_id
     <include refid="whereClause"/>
+    ORDER BY p.process_instance_id, t.task_instance_id
   </select>
 
 <!--  <select id="countStations" resultType="eu.europa.ec.cc.processcentre.repository.model.MetroLineStationStats">-->

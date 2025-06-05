@@ -11,10 +11,6 @@ public interface ProcessMapper {
 
   void insertOrUpdateProcess(CreateProcessQueryParam process);
 
-  Optional<FindProcessByIdQueryResponse> findById(String id);
-
-  List<SearchProcessQueryResponse> search(SearchProcessQueryParam param);
-
   void updateProcessSecurity(UpdateProcessSecurityQueryParam param);
 
   void cancelProcess(CancelProcessQueryParam param);

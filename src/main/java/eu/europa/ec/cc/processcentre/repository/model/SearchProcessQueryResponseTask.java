@@ -1,10 +1,13 @@
 package eu.europa.ec.cc.processcentre.repository.model;
 
+import lombok.Data;
+
 import java.util.Map;
 
-public record SearchProcessQueryResponseTask(
-    String taskInstanceId,
-    Map<String, String> translations
-){
+@Data
+public class SearchProcessQueryResponseTask {
+
+    private String taskInstanceId;
+    private Map<String, String> translations;
 
 }

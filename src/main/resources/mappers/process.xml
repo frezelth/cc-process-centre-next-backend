@@ -5,15 +5,6 @@
 
 <mapper namespace="eu.europa.ec.cc.processcentre.repository.ProcessMapper">
 
-  <select id="findById">
-    SELECT PROCESS_INSTANCE_ID FROM T_PROCESS WHERE PROCESS_INSTANCE_ID = #{value}
-  </select>
-
-  <select id="search" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
-    SELECT PROCESS_INSTANCE_ID FROM T_PROCESS
-    WHERE PROCESS_INSTANCE_ID = #{value}
-  </select>
-
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
       PROCESS_INSTANCE_ID,
