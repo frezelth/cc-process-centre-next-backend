@@ -7,6 +7,6 @@ public record CreateTaskQueryParam(
         String taskInstanceId,
         String taskTypeKey,
         Instant createdOn
-
 ) {
+
 }

@@ -5,11 +5,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Maps;
 import eu.europa.ec.cc.babel.proto.BabelText.Literal;
 import eu.europa.ec.cc.babel.proto.BabelText.Literal.LiteralValue;
 import eu.europa.ec.cc.babel.proto.ISO6391LanguageCode;
 import jakarta.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -122,7 +122,7 @@ public class BabelText {
       babelText.setUrn(proto.getUrn());
     }
     if (proto.hasLiteral()){
-      Map<String, String> translations = Maps.newHashMap();
+      Map<String, String> translations = new HashMap<>();
       if (!CollectionUtils.isEmpty(proto.getLiteral().getLiteralValuesList())) {
         for (LiteralValue literalValue : proto.getLiteral().getLiteralValuesList()) {
           translations.put(literalValue.getLanguageCode().name(), literalValue.getText());
@@ -146,7 +146,7 @@ public class BabelText {
     BabelText babelText = new BabelText();
 
 
-    Map<String, String> translations = Maps.newHashMap();
+    Map<String, String> translations = new HashMap<>();
     if (!CollectionUtils.isEmpty(literal.getLiteralValuesList())) {
       for (LiteralValue literalValue : literal.getLiteralValuesList()) {
         translations.put(literalValue.getLanguageCode().name(), literalValue.getText());

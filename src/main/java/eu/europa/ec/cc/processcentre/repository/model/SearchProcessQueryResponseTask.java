@@ -7,6 +7,7 @@ import java.util.Map;
 @Data
 public class SearchProcessQueryResponseTask {
 
+    private String processInstanceId;
     private String taskInstanceId;
     private Map<String, String> translations;
 

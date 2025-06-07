@@ -6,7 +6,23 @@
 <mapper namespace="eu.europa.ec.cc.processcentre.repository.TaskMapper">
 
     <insert id="insertOrUpdateTask">
+        insert into T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, CREATED_ON)
+        VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey}, #{createdOn}) ON CONFLICT
+        DO NOTHING
+    </insert>
 
+    <insert id="completeTask">
+        UPDATE T_USER_TASK SET COMPLETED_ON =
+        <choose>
+        <when test="completedOn != null">
+            #{completedOn}
+        </when>
+        <otherwise>
+            now()
+        </otherwise>
+        </choose>,
+        COMPLETED = TRUE
+        WHERE TASK_INSTANCE_ID = #{taskInstanceId}
     </insert>
 
 </mapper>

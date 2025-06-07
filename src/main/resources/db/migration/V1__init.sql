@@ -13,8 +13,20 @@ CREATE TABLE T_STATIC_TRANSLATION
     PRIMARY KEY (object_type, object_id, attribute_name, language_code)
 );
 
-CREATE INDEX IDX_STATIC_TRANSLATION
-    ON T_STATIC_TRANSLATION (object_type, object_id, attribute_name, language_code);
+-- CREATE INDEX IDX_STATIC_TRANSLATION
+--     ON T_STATIC_TRANSLATION (object_type, object_id, attribute_name, language_code);
+
+-- CREATE INDEX idx_t_static_translation_object_lang
+--     ON t_static_translation (object_type, object_id, language_code);
+
+-- CREATE INDEX idx_t_static_translation_object_id
+--     ON t_static_translation (object_id);
+
+CREATE INDEX idx_t_static_translation_object_id_type
+    ON t_static_translation (object_id, object_type);
+
+-- CREATE INDEX idx_t_static_translation_object_lang_default
+--     ON t_static_translation (object_type, object_id, language_code, is_default);
 
 CREATE INDEX IDX_STATIC_TRANSLATION_TEXT_TRGM
     ON T_STATIC_TRANSLATION
@@ -45,8 +57,11 @@ CREATE TABLE T_BABEL_TRANSLATION_LINK
     PRIMARY KEY (object_type, object_id, attribute_name)
 );
 
+-- CREATE INDEX idx_t_static_translation_object_lang
+--     ON t_static_translation (object_type, object_id, language_code);
+
 CREATE INDEX IDX_BABEL_TRANSLATION_LINK
-    ON T_BABEL_TRANSLATION_LINK (object_type, object_id, attribute_name);
+    ON T_BABEL_TRANSLATION_LINK (object_type, object_id);
 
 CREATE TABLE T_PROCESS
 (
@@ -76,7 +91,9 @@ CREATE TABLE T_PROCESS
     ASSOCIATED_PORTFOLIO_ITEM_IDS  TEXT[],
     STARTED_BY VARCHAR(100),
     STARTED_BY_ON_BEHALF_OF VARCHAR(100),
-    TITLE_TEMPLATE TEXT
+    TITLE_TEMPLATE TEXT,
+    CANCELLED BOOLEAN DEFAULT FALSE,
+    COMPLETED BOOLEAN DEFAULT FALSE
 );
 
 CREATE INDEX IDX_PROCESS
@@ -121,11 +138,19 @@ CREATE TABLE T_USER_TASK
     COMPLETED_ON_BEHALF_OF            VARCHAR(100),
     COMPLETED_ON_BEHALF_OF_FIRST_NAME VARCHAR(500),
     COMPLETED_ON_BEHALF_OF_LAST_NAME  VARCHAR(500),
-    COMPLETED_ON_BEHALF_OF_USER_ORG   VARCHAR(200)
+    COMPLETED_ON_BEHALF_OF_USER_ORG   VARCHAR(200),
+        CANCELLED BOOLEAN DEFAULT FALSE,
+    COMPLETED BOOLEAN DEFAULT FALSE
 );
 
-CREATE INDEX IDX_USER_TASK
+CREATE INDEX IDX_USER_TASK_PROCESS_INSTANCE_ID
     ON T_USER_TASK (PROCESS_INSTANCE_ID);
+
+CREATE INDEX IDX_USER_TASK_CANCELLED
+    ON T_USER_TASK (CANCELLED);
+
+CREATE INDEX IDX_USER_TASK_COMPLETED
+    ON T_USER_TASK (COMPLETED);
 
 CREATE TABLE T_SERVICE_TASK
 (

@@ -1,15 +1,21 @@
 package eu.europa.ec.cc.processcentre.service;
 
+import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.mapper.EventConverter;
 import eu.europa.ec.cc.processcentre.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.repository.ProcessVariableMapper;
+import eu.europa.ec.cc.processcentre.repository.TaskMapper;
 import eu.europa.ec.cc.processcentre.repository.model.CancelProcessQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.ChangeProcessStateQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.repository.model.CreateTaskQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.DeleteProcessQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.DeleteProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.repository.model.InsertOrUpdateProcessVariableQueryParam;
+import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
+import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
+import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCancelled;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
@@ -18,6 +24,7 @@ import eu.europa.ec.cc.provider.proto.ProcessStateChanged;
 import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
 import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
 import eu.europa.ec.cc.provider.task.event.proto.TaskCreated;
+import eu.europa.ec.cc.taskcenter.event.proto.TaskRegistered;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -39,15 +46,20 @@ public class IngestionService {
   private final ProcessVariableMapper processVariableMapper;
   private final EventConverter eventConverter;
   private final ApplicationEventPublisher eventPublisher;
+  private final TaskMapper taskMapper;
+  private final TranslationService translationService;
 
   public IngestionService(ProcessMapper processMapper,
       EventConverter eventConverter,
       ProcessVariableMapper processVariableMapper,
-      ApplicationEventPublisher eventPublisher) {
+      ApplicationEventPublisher eventPublisher, TaskMapper taskMapper,
+      TranslationService translationService) {
     this.processMapper = processMapper;
     this.eventConverter = eventConverter;
     this.processVariableMapper = processVariableMapper;
     this.eventPublisher = eventPublisher;
+    this.taskMapper = taskMapper;
+    this.translationService = translationService;
   }
 
   @Transactional
@@ -142,7 +154,22 @@ public class IngestionService {
       return;
     }
 
+    CreateTaskQueryParam param = eventConverter.toCreateTaskQueryParam(event);
+    taskMapper.insertOrUpdateTask(param);
 
+    translationService.insertOrUpdateTranslations(
+        TranslationObjectType.TASK,
+        event.getTaskInstanceId(),
+        TranslationAttribute.TASK_TITLE,
+        BabelText.convert(event.getTitle())
+    );
+  }
+
+  @Transactional
+  public void handle(TaskRegistered event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling TaskRegistered for process {}", event.getProcessInstanceId());
+    }
   }
 
   private void updateProcessVariables(String processInstanceId, Map<String, VariableValue> variables) {

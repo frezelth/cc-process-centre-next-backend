@@ -26,6 +26,9 @@ public class TranslationService {
       String objectId,
       TranslationAttribute attribute,
       BabelText text){
+    if (text == null){
+      return;
+    }
 
     if (StringUtils.isNotEmpty(text.getUrn())){
       // handle babel text
