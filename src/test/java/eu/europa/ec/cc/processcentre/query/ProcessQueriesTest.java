@@ -26,17 +26,30 @@ import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import eu.europa.ec.cc.provider.task.event.proto.TaskCreated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Set;
+
+import lombok.SneakyThrows;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.postgresql.copy.CopyManager;
+import org.postgresql.core.BaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +62,9 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
     private IngestionService ingestionService;
   @Autowired
   private ProcessService processService;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
@@ -81,94 +97,72 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 //                            "values ('TASK', 'T2', 'title', 'en', 'task 2', true)"
 //
 //            })
+    @SneakyThrows
     void testQuickSearch(){
 
         // insert thousands of rows
-        List<CreateProcessQueryParam> processCreated = new ArrayList<>();
-        List<InsertOrUpdateProcessVariableQueryParam> insertVariables = new ArrayList<>();
-        List<CreateTaskQueryParam> taskCreated = new ArrayList<>();
-        List<CompleteTaskQueryParam> completeTasks = new ArrayList<>();
-        List<InsertOrUpdateTranslationsParam> insertOrUpdateTranslationsParams = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            processCreated.add(
-                new CreateProcessQueryParam(String.valueOf(i), Instant.now(), "Flex", "processType1", null, null, null, "PM_AGRI", "processType1", null, "frezeth", null, null)
-            );
 
-            insertVariables.add(
-                new InsertOrUpdateProcessVariableQueryParam(String.valueOf(i), "YEAR", null, String.valueOf(i), null, null, null, null, null, null, null)
-            );
-
-            insertOrUpdateTranslationsParams.add(
-                new InsertOrUpdateTranslationsParam(TranslationObjectType.PROCESS, String.valueOf(i), TranslationAttribute.PROCESS_TITLE_TEMPLATE, "en", "Process title "+i, true)
-            );
-
-            for (int j = 0; j < 100; j++) {
-                taskCreated.add(
-                    new CreateTaskQueryParam(String.valueOf(i), i + "_" + j, "typeKey", Instant.now())
-                );
-
-                insertOrUpdateTranslationsParams.add(
-                    new InsertOrUpdateTranslationsParam(TranslationObjectType.TASK, i + "_" + j, TranslationAttribute.TASK_TITLE, "en", "Task title "+(i+"_"+j), true)
-                );
-
-                if (j > 10){
-                    completeTasks.add(new CompleteTaskQueryParam(String.valueOf(i), Instant.now()));
-                }
-            }
-        }
-
-        try (SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
+        /*try (SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
             ProcessMapper mapper = session.getMapper(ProcessMapper.class);
             ProcessVariableMapper variableMapper = session.getMapper(ProcessVariableMapper.class);
             TranslationMapper translationMapper = session.getMapper(TranslationMapper.class);
             TaskMapper taskMapper = session.getMapper(TaskMapper.class);
 
-            int i = 0;
-            for (CreateProcessQueryParam p : processCreated){
-                i++;
-                mapper.insertOrUpdateProcess(p);
-                if (i % 1000 == 0) {
+            for (int i = 0; i < 10000; i++) {
+                mapper.insertOrUpdateProcess(
+                        new CreateProcessQueryParam(String.valueOf(i), Instant.now(), "Flex", "processType1", null, null, null, "PM_AGRI", "processType1", null, "frezeth", null, null)
+                );
+
+                variableMapper.insertOrUpdateProcessVariables(
+                        Collections.singleton(new InsertOrUpdateProcessVariableQueryParam(String.valueOf(i), "YEAR", null, String.valueOf(i), null, null, null, null, null, null, null))
+                );
+
+                translationMapper.insertOrUpdateTranslations(
+                        Collections.singleton(new InsertOrUpdateTranslationsParam(TranslationObjectType.PROCESS, String.valueOf(i), TranslationAttribute.PROCESS_TITLE_TEMPLATE, "en", "Process title "+i, true))
+                );
+
+                for (int j = 0; j < 100; j++) {
+                    taskMapper.insertOrUpdateTask(
+                            new CreateTaskQueryParam(String.valueOf(i), i + "_" + j, "typeKey", Instant.now())
+                    );
+
+                    translationMapper.insertOrUpdateTranslations(
+                            Collections.singleton(new InsertOrUpdateTranslationsParam(TranslationObjectType.TASK, i + "_" + j, TranslationAttribute.TASK_TITLE, "en", "Task title "+(i+"_"+j), true))
+                    );
+
+                    if (j > 10){
+                        taskMapper.completeTask(new CompleteTaskQueryParam(String.valueOf(i), Instant.now()));
+                    }
+                }
+
+                if (i % 100 == 0) {
                     session.flushStatements();
                 }
             }
-
-            for (InsertOrUpdateProcessVariableQueryParam p : insertVariables){
-                i++;
-                variableMapper.insertOrUpdateProcessVariables(Set.of(p));
-                if (i % 1000 == 0) {
-                    session.flushStatements();
-                }
-            }
-
-            for (CreateTaskQueryParam p : taskCreated){
-                i++;
-                taskMapper.insertOrUpdateTask(p);
-                if (i % 1000 == 0) {
-                    session.flushStatements();
-                }
-            }
-
-            for (CompleteTaskQueryParam p : completeTasks){
-                i++;
-                taskMapper.completeTask(p);
-                if (i % 1000 == 0) {
-                    session.flushStatements();
-                }
-            }
-
-            for (InsertOrUpdateTranslationsParam p : insertOrUpdateTranslationsParams){
-                i++;
-                translationMapper.insertOrUpdateTranslations(Collections.singleton(p));
-                if (i % 1000 == 0) {
-                    session.flushStatements();
-                }
-            }
-
             session.flushStatements();
             session.commit();
+        }*/
+
+        try (Connection conn = dataSource.getConnection()) {
+            CopyManager copyManager = new CopyManager((BaseConnection) conn.unwrap(BaseConnection.class));
+
+            insertProcesses(copyManager);
+            insertProcessesLabels(copyManager);
+
+            // Run ANALYZE
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("ANALYZE T_PROCESS");
+                stmt.execute("ANALYZE T_STATIC_TRANSLATION");
+                stmt.execute("REINDEX TABLE T_PROCESS");
+                stmt.execute("REINDEX TABLE T_STATIC_TRANSLATION");
+                // Optional: also run REINDEX if needed
+                // stmt.execute("REINDEX TABLE your_table");
+            }
         }
 
         System.out.println("push finished");
+
+        Thread.sleep(5000);
 
         long before = System.currentTimeMillis();
         List<SearchProcessQueryResponse> searchProcessQueryResponses = processQueries.searchProcesses(
@@ -176,7 +170,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                         null,
                         null,
                         null,
-                        "Process",
+                        "Proc:*",
                         Collections.emptyList(),
                         Collections.emptyList(),
                         null,
@@ -199,11 +193,129 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                 ),
                 0,
                 20,
-                Locale.FRENCH,
+                Locale.ENGLISH,
+                "frezeth"
+        );
+        System.out.println("results:"+searchProcessQueryResponses);
+        System.out.println(System.currentTimeMillis() - before);
+
+        before = System.currentTimeMillis();
+        searchProcessQueryResponses = processQueries.searchProcesses(
+                new SearchProcessRequestDto(
+                        null,
+                        null,
+                        null,
+                        "titl:*",
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        null
+                ),
+                0,
+                20,
+                Locale.ENGLISH,
                 "frezeth"
         );
         System.out.println(System.currentTimeMillis() - before);
+        System.out.println("number of results:"+searchProcessQueryResponses);
+
         Assertions.assertEquals(1, searchProcessQueryResponses.size());
+    }
+
+    private static void insertProcesses(CopyManager copyManager) throws SQLException, IOException {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder taskBuilder = new StringBuilder();
+        StringBuilder taskTitleBuilder = new StringBuilder();
+        for (int i=0;i<500;i++) {
+            sb.append(i)
+                    .append(',')
+                    .append("Flex")
+                    .append(',')
+                    .append("PM_AGRI")
+                    .append(',')
+                    .append("processType1")
+                    .append(',')
+                    .append("process title ").append(i)
+                    .append('\n');
+
+            for (int j=0;j<30;j++) {
+
+                if (j > 10){
+                    taskBuilder.append(i).append("_").append(j)
+                            .append(',')
+                            .append(i)
+                            .append(',')
+                            .append("typeKey")
+                            .append(',')
+                            .append("true")
+                            .append('\n');
+                } else {
+                    taskBuilder.append(i).append("_").append(j)
+                            .append(',')
+                            .append(i)
+                            .append(',')
+                            .append("typeKey")
+                            .append(',')
+                            .append("false")
+                            .append('\n');
+                }
+
+                taskTitleBuilder.append(i).append("_").append(j)
+                        .append(',')
+                        .append("TASK")
+                        .append(',')
+                        .append("TASK_TITLE")
+                        .append(',').append("en")
+                        .append(',').append("task title title ").append(i).append("_").append(j)
+                        .append('\n');
+            }
+        }
+
+        byte[] data = sb.toString().getBytes(StandardCharsets.UTF_8);
+        InputStream is = new ByteArrayInputStream(data);
+        copyManager.copyIn("COPY T_PROCESS (PROCESS_INSTANCE_ID, PROVIDER_ID, DOMAIN_KEY, PROCESS_TYPE_KEY, DEFAULT_TITLE) FROM STDIN WITH (FORMAT csv)", is);
+
+
+        byte[] dataTask = taskBuilder.toString().getBytes(StandardCharsets.UTF_8);
+        InputStream isTask = new ByteArrayInputStream(dataTask);
+        copyManager.copyIn("COPY T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, COMPLETED) FROM STDIN WITH (FORMAT csv)", isTask);
+
+        byte[] dataTranslation = taskTitleBuilder.toString().getBytes(StandardCharsets.UTF_8);
+        InputStream isTranslation = new ByteArrayInputStream(dataTranslation);
+        copyManager.copyIn("COPY T_STATIC_TRANSLATION (OBJECT_ID, OBJECT_TYPE, ATTRIBUTE_NAME, LANGUAGE_CODE, TRANSLATED_TEXT) FROM STDIN WITH (FORMAT csv)", isTranslation);
+    }
+
+    private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {
+        StringBuilder sb = new StringBuilder();
+        for (int i=0;i<100;i++) {
+            sb.append(i)
+                    .append(',')
+                    .append("PROCESS")
+                    .append(',')
+                    .append("PROCESS_TITLE")
+                    .append(',').append("en")
+                    .append(',').append("process title ").append(i)
+                    .append('\n');
+        }
+
+        byte[] data = sb.toString().getBytes(StandardCharsets.UTF_8);
+        InputStream is = new ByteArrayInputStream(data);
+        copyManager.copyIn("COPY T_STATIC_TRANSLATION (OBJECT_ID, OBJECT_TYPE, ATTRIBUTE_NAME, LANGUAGE_CODE, TRANSLATED_TEXT) FROM STDIN WITH (FORMAT csv)", is);
     }
 
 }

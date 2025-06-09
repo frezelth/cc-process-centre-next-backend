@@ -9,6 +9,6 @@ public class SearchProcessQueryResponseTask {
 
     private String processInstanceId;
     private String taskInstanceId;
-    private Map<String, String> translations;
+    private String title;
 
 }

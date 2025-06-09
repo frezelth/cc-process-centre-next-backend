@@ -11,129 +11,98 @@
 
   <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
-    <result property="translations" column="process_translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>
-    <result property="tasks" column="tasks" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToListOfTaskTypeHandler"/>
+    <result property="title" column="process_title"/>
+    <result property="tasks" column="tasks"/>
+    <result property="totalCount" column="total_count"/>
+    <!--<collection property="tasks" javaType="java.util.ArrayList"
+                ofType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask">
+      <id property="taskInstanceId" column="task_instance_id"/>
+      <result property="processInstanceId" column="process_instance_id"/>
+      <result property="title" column="task_title"/>
+    </collection>-->
   </resultMap>
 
   <sql id="processesCte">
-    WITH RECURSIVE
-    matching_roots AS (
-    SELECT p.process_instance_id
+    WITH RECURSIVE matching_roots AS (
+    SELECT p.process_instance_id,
+    COUNT(*) OVER() AS total_count
     FROM t_process p
     <include refid="whereClause"/>
-    ),
-    descendants AS (
-    SELECT p.process_instance_id, p.parent_id
+    LIMIT #{limit} OFFSET #{offset}),
+    descendants AS (SELECT p.process_instance_id, p.parent_id
     FROM t_process p
     JOIN matching_roots r ON p.process_instance_id = r.process_instance_id
     UNION ALL
     SELECT tp.process_instance_id, tp.parent_id
     FROM t_process tp
-    JOIN descendants d ON tp.parent_id = d.process_instance_id
-    ),
-    process_translations AS (
-    SELECT
-    object_id,
-    jsonb_object_agg(attribute_name, translated_text) AS translations_json
-    FROM (
-    SELECT
-    object_type,
-    object_id,
-    attribute_name,
-    translated_text,
-    ROW_NUMBER() OVER (
-    PARTITION BY object_type, object_id, attribute_name
-    ORDER BY
-    CASE
-    WHEN language_code = #{locale} THEN 1
-    WHEN is_default THEN 2
-    ELSE 3
-    END
-    ) AS rn
-    FROM v_resolved_translation
-    WHERE object_type = 'PROCESS'
-    AND object_id IN (SELECT process_instance_id FROM matching_roots)
-    AND (language_code = #{locale} OR is_default)
-    ) ranked
-    WHERE rn = 1
-    GROUP BY object_id
-    ),
+    JOIN descendants d ON tp.parent_id = d.process_instance_id),
     relevant_tasks AS (
-    SELECT t.task_instance_id
+    SELECT t.task_instance_id, t.process_instance_id
     FROM t_user_task t
-    WHERE t.process_instance_id IN (
-    SELECT process_instance_id
-    FROM descendants
-    )
-    AND t.cancelled = FALSE
-    AND t.completed = FALSE
+    JOIN descendants d ON t.process_instance_id = d.process_instance_id
+    WHERE t.cancelled = FALSE AND t.completed = FALSE
     ),
-    task_translations AS (
-    SELECT
-    object_id,
-    jsonb_object_agg(attribute_name, translated_text) AS translations_json
-    FROM (
-    SELECT
-    object_type,
-    object_id,
-    attribute_name,
-    translated_text,
-    ROW_NUMBER() OVER (
-    PARTITION BY object_type, object_id, attribute_name
-    ORDER BY
-    CASE
-    WHEN language_code = #{locale} THEN 1
-    WHEN is_default THEN 2
-    ELSE 3
-    END
-    ) AS rn
-    FROM v_resolved_translation
-    WHERE object_type = 'TASK'
-    AND object_id IN (SELECT task_instance_id FROM relevant_tasks)
-    AND (language_code = #{locale} OR is_default)
-    ) ranked
-    WHERE rn = 1
-    GROUP BY object_id
+    task_titles AS (
+    SELECT t.task_instance_id, t.process_instance_id, tt.translated_text AS task_title
+    FROM relevant_tasks t
+    LEFT JOIN t_static_translation tt
+    ON tt.object_id = t.task_instance_id
+    AND tt.language_code = #{locale}
+    AND tt.object_type = 'TASK'
+    AND tt.attribute_name = 'TASK_TITLE'
     ),
-    tasks_agg AS (
+    aggregated_tasks AS (
     SELECT
     t.process_instance_id,
-    jsonb_agg(
-    jsonb_build_object(
-    'taskInstanceId', t.task_instance_id
-    )
-    ) AS tasks_json
-    FROM t_user_task t
-    LEFT JOIN task_translations tt ON tt.object_id = t.task_instance_id
-    WHERE t.cancelled = FALSE AND t.completed = FALSE
-    AND t.process_instance_id IN (SELECT process_instance_id FROM descendants)
+    json_agg(json_build_object(
+    'task_instance_id', t.task_instance_id,
+    'task_title', t.task_title
+    )) AS tasks
+    FROM task_titles t
     GROUP BY t.process_instance_id
+    ),
+    processes AS (
+    SELECT
+    r.process_instance_id,
+    r.total_count,
+    pt.translated_text AS process_title,
+    COALESCE(at.tasks, '[]'::json) AS tasks
+    FROM matching_roots r
+    LEFT JOIN (
+    SELECT object_id, translated_text
+    FROM t_static_translation
+    WHERE language_code = #{locale}
+    AND object_type = 'PROCESS'
+    AND attribute_name = 'PROCESS_TITLE'
+    ) pt ON pt.object_id = r.process_instance_id
+    LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id
     )
   </sql>
 
   <sql id="whereClause">
     <where>
       <if test="searchText != null and searchText != ''">
-        AND EXISTS (
-        SELECT 1
-        FROM V_RESOLVED_TRANSLATION rt
-        WHERE rt.OBJECT_ID = p.PROCESS_INSTANCE_ID
-        AND rt.translated_text ILIKE ('%' || #{searchText} || '%')
-        )
+        AND p.default_title_fts @@ to_tsquery('simple', #{searchText})
       </if>
     </where>
   </sql>
 
   <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
     <include refid="processesCte"/>
-    SELECT p.process_instance_id as process_instance_id,
-    COALESCE(pt.translations_json, '{}'::jsonb) AS process_translations,
-    COALESCE(ta.tasks_json, '[]'::jsonb) AS tasks
-    FROM T_PROCESS p
-    LEFT JOIN process_translations pt ON pt.object_id = p.process_instance_id
-    LEFT JOIN tasks_agg ta ON ta.process_instance_id = p.process_instance_id
-    WHERE p.process_instance_id IN (SELECT process_instance_id FROM matching_roots)
-    LIMIT #{limit} OFFSET #{offset}
+    SELECT r.process_instance_id as process_instance_id,
+    r.total_count as total_count,
+    pt.translated_text    AS process_title,
+    COALESCE(at.tasks, '[]'::json) AS tasks
+    FROM matching_roots r
+    LEFT JOIN (SELECT object_id, translated_text
+    FROM t_static_translation
+    WHERE language_code = #{locale}
+    AND object_type = 'PROCESS'
+    AND attribute_name = 'PROCESS_TITLE'
+    AND object_id IN (SELECT process_instance_id FROM matching_roots)) pt
+    ON pt.object_id = r.process_instance_id
+    LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id
+      ORDER BY r.process_instance_id
   </select>
 
   <!--  <select id="countStations" resultType="eu.europa.ec.cc.processcentre.repository.model.MetroLineStationStats">-->

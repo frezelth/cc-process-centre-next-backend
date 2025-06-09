@@ -13,25 +13,6 @@ CREATE TABLE T_STATIC_TRANSLATION
     PRIMARY KEY (object_type, object_id, attribute_name, language_code)
 );
 
--- CREATE INDEX IDX_STATIC_TRANSLATION
---     ON T_STATIC_TRANSLATION (object_type, object_id, attribute_name, language_code);
-
--- CREATE INDEX idx_t_static_translation_object_lang
---     ON t_static_translation (object_type, object_id, language_code);
-
--- CREATE INDEX idx_t_static_translation_object_id
---     ON t_static_translation (object_id);
-
-CREATE INDEX idx_t_static_translation_object_id_type
-    ON t_static_translation (object_id, object_type);
-
--- CREATE INDEX idx_t_static_translation_object_lang_default
---     ON t_static_translation (object_type, object_id, language_code, is_default);
-
-CREATE INDEX IDX_STATIC_TRANSLATION_TEXT_TRGM
-    ON T_STATIC_TRANSLATION
-    USING gin (translated_text gin_trgm_ops);
-
 CREATE TABLE T_BABEL_TRANSLATION
 (
     urn TEXT        NOT NULL,
@@ -41,10 +22,6 @@ CREATE TABLE T_BABEL_TRANSLATION
     is_default      BOOLEAN     DEFAULT FALSE,
     PRIMARY KEY (urn, language_code)
 );
-
-CREATE INDEX IDX_BABEL_TRANSLATION_TEXT_TRGM
-    ON T_BABEL_TRANSLATION
-    USING gin (translated_text gin_trgm_ops);
 
 CREATE TABLE T_BABEL_TRANSLATION_LINK
 (
@@ -93,8 +70,16 @@ CREATE TABLE T_PROCESS
     STARTED_BY_ON_BEHALF_OF VARCHAR(100),
     TITLE_TEMPLATE TEXT,
     CANCELLED BOOLEAN DEFAULT FALSE,
-    COMPLETED BOOLEAN DEFAULT FALSE
+    COMPLETED BOOLEAN DEFAULT FALSE,
+    DEFAULT_TITLE TEXT
 );
+
+ALTER TABLE T_PROCESS
+    ADD COLUMN DEFAULT_TITLE_FTS tsvector GENERATED ALWAYS AS (
+        to_tsvector('simple', DEFAULT_TITLE)
+        ) STORED;
+
+CREATE INDEX T_PROCESS_FTS ON T_PROCESS USING GIN(DEFAULT_TITLE_FTS);
 
 CREATE INDEX IDX_PROCESS
     ON T_PROCESS (PARENT_ID);

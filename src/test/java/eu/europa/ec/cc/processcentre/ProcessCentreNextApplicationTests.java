@@ -20,6 +20,9 @@ public abstract class ProcessCentreNextApplicationTests {
 	@DynamicPropertySource
 	static void registerPgProperties(DynamicPropertyRegistry registry) {
 		SingletonPostgresContainer container = SingletonPostgresContainer.getInstance();
+		System.out.println("user:"+container.getUsername());
+		System.out.println("pass:"+container.getPassword());
+		System.out.println("url:"+container.getJdbcUrl());
 		registry.add("spring.datasource.url", container::getJdbcUrl);
 		registry.add("spring.datasource.username", container::getUsername);
 		registry.add("spring.datasource.password", container::getPassword);

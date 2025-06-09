@@ -11,7 +11,8 @@ import java.util.Map;
 public class SearchProcessQueryResponse{
 
     private String processInstanceId;
-    private Map<String, String> translations;
-    private List<SearchProcessQueryResponseTask> tasks;
+    private String title;
+    private String tasks;
+    private Long totalCount;
 
 }
