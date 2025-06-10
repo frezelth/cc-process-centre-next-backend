@@ -1,7 +1,7 @@
 package eu.europa.ec.cc.processcentre.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask;
+import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponseTask;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

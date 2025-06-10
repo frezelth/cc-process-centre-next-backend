@@ -7,6 +7,9 @@ import java.util.Map;
 
 public record ProcessTypeConfig(
 
+    // the process name is superseded by the title template,
+    // if title template is present, use it for the process title
+    // otherwise use the type name
     BabelText name,
 
     BabelText titleTemplate,

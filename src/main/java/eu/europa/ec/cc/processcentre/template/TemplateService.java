@@ -1,8 +1,8 @@
 package eu.europa.ec.cc.processcentre.template;
 
-import eu.europa.ec.cc.processcentre.repository.ProcessVariableMapper;
-import eu.europa.ec.cc.processcentre.repository.model.FindProcessVariableQueryParam;
-import eu.europa.ec.cc.processcentre.repository.model.FindProcessVariableQueryResponse;
+import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.util.Map;
@@ -15,10 +15,10 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 @Service
 public class TemplateService {
 
-  private ProcessVariableMapper processVariableMapper;
+  private ProcessMapper processMapper;
 
-  public TemplateService(ProcessVariableMapper processVariableMapper) {
-    this.processVariableMapper = processVariableMapper;
+  public TemplateService(ProcessMapper processMapper) {
+    this.processMapper = processMapper;
   }
 
   @SneakyThrows
@@ -38,7 +38,7 @@ public class TemplateService {
     String removeVarPrefix = StringUtils.replace(template, "${", "");
     String varName = StringUtils.replace(removeVarPrefix, "}", "");
 
-    FindProcessVariableQueryResponse processVariable = processVariableMapper.findProcessVariable(
+    FindProcessVariableQueryResponse processVariable = processMapper.findProcessVariable(
         new FindProcessVariableQueryParam(
             processInstanceId, varName
         ));

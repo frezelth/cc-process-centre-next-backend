@@ -42,7 +42,7 @@ public class KafkaEventHandler {
       LOG.debug("UpdateProcessContext sent for process {}", event.processInstanceId());
     }
 
-    // send an event to kafka with the process title
+    // send an event to kafka to notify the fact that the process has been registered in PC
     kafkaSender.sendToEventTopic(
         event.processInstanceId(), eu.europa.ec.cc.processcentre.event.proto.ProcessRegistered.newBuilder()
                 .setProcessInstanceId(event.processInstanceId())

@@ -3,7 +3,64 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="eu.europa.ec.cc.processcentre.repository.ProcessMapper">
+<mapper namespace="eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper">
+
+  <resultMap id="processVariable" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse">
+    <id property="processInstanceId" column="variable_process_instance_id"/>
+    <id property="name" column="name"/>
+    <result property="valueString" column="value_string"/>
+    <result property="valueInteger" column="value_integer"/>
+    <result property="valueLong" column="value_long"/>
+    <result property="valueDouble" column="value_double"/>
+    <result property="valueBoolean" column="value_boolean"/>
+  </resultMap>
+
+  <resultMap id="translation" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation">
+    <id property="objectId" column="object_id"/>
+    <id property="objectType" column="object_type"/>
+    <id property="attribute" column="attribute_name"/>
+    <id property="languageCode" column="language_code"/>
+    <result property="text" column="translated_text"/>
+    <result property="isDefault" column="is_default"/>
+  </resultMap>
+
+  <resultMap id="process" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse">
+    <id property="processInstanceId" column="process_instance_id"/>
+    <result property="providerId" column="provider_id"/>
+    <result property="domainKey" column="domain_key"/>
+    <result property="processTypeKey" column="process_type_key"/>
+    <result property="status" column="process_status"/>
+    <result property="translations" column="translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>
+    <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
+    <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
+  </resultMap>
+
+  <select id="findById" resultMap="process">
+    SELECT
+      p.PROCESS_INSTANCE_ID as process_instance_id,
+      p.PROVIDER_ID as provider_id,
+      p.DOMAIN_KEY as domain_key,
+      p.PROCESS_TYPE_KEY as process_type_key,
+      p.STATUS as process_status,
+      t.OBJECT_ID as object_id,
+      t.OBJECT_TYPE as object_type,
+      t.ATTRIBUTE_NAME as attribute_name,
+      t.LANGUAGE_CODE as language_code,
+      t.TRANSLATED_TEXT as translated_text,
+      t.IS_DEFAULT as is_default,
+      v.PROCESS_INSTANCE_ID as variable_process_instance_id,
+      v.NAME as name,
+      v.VALUE_STRING as value_string,
+      v.VALUE_INTEGER as value_integer,
+      v.VALUE_LONG as value_long,
+      v.VALUE_DOUBLE as value_double,
+      v.VALUE_BOOLEAN as value_boolean
+    FROM T_PROCESS p
+    LEFT JOIN V_RESOLVED_TRANSLATION t ON t.OBJECT_ID = p.PROCESS_INSTANCE_ID AND
+      t.OBJECT_TYPE = 'PROCESS'
+    LEFT JOIN T_PROCESS_VARIABLE v ON v.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    WHERE p.PROCESS_INSTANCE_ID = #{value}
+  </select>
 
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
@@ -83,5 +140,64 @@
 
     ) VALUES ()
   </insert>
+
+
+  <insert id="insertOrUpdateProcessVariables" parameterType="collection">
+    INSERT INTO T_PROCESS_VARIABLE (
+    PROCESS_INSTANCE_ID,
+    NAME,
+    MIME_TYPE,
+    VALUE_STRING,
+    VALUE_INTEGER,
+    VALUE_LONG,
+    VALUE_DOUBLE,
+    VALUE_BOOLEAN,
+    VALUE_JSON,
+    VALUE_BYTE,
+    VALUE_DATE
+    )  VALUES
+    <foreach collection="variables" item="variable" separator=",">
+      (#{variable.processInstanceId},
+      #{variable.name},
+      #{variable.mimeType},
+      #{variable.valueString},
+      #{variable.valueInteger},
+      #{variable.valueLong},
+      #{variable.valueDouble},
+      #{variable.valueBoolean},
+      CAST(#{variable.valueJson} AS jsonb),
+      #{variable.valueByte},
+      #{variable.valueDate}
+      )
+    </foreach>
+    ON CONFLICT (PROCESS_INSTANCE_ID,NAME) DO UPDATE SET
+    VALUE_STRING = EXCLUDED.VALUE_STRING,
+    VALUE_INTEGER = EXCLUDED.VALUE_INTEGER,
+    VALUE_LONG = EXCLUDED.VALUE_LONG,
+    VALUE_DOUBLE = EXCLUDED.VALUE_DOUBLE,
+    VALUE_BOOLEAN = EXCLUDED.VALUE_BOOLEAN,
+    VALUE_JSON = EXCLUDED.VALUE_JSON,
+    VALUE_BYTE = EXCLUDED.VALUE_BYTE,
+    VALUE_DATE = EXCLUDED.VALUE_DATE
+  </insert>
+
+  <delete id="deleteProcessVariables" parameterType="collection">
+    DELETE FROM T_PROCESS_VARIABLE WHERE (PROCESS_INSTANCE_ID, NAME) IN
+    <foreach collection="variables" item="variable" open="(" separator="," close=")">
+      (#{variable.processInstanceId}, #{variable.name})
+    </foreach>
+  </delete>
+
+  <select id="findProcessVariable" resultMap="processVariable">
+    SELECT
+    PROCESS_INSTANCE_ID
+    NAME,
+    VALUE_STRING,
+    VALUE_INTEGER,
+    VALUE_LONG,
+    VALUE_DOUBLE,
+    VALUE_BOOLEAN
+    FROM T_PROCESS_VARIABLE WHERE PROCESS_INSTANCE_ID = #{processInstanceId} AND NAME = #{name}
+  </select>
 
 </mapper>

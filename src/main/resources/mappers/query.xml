@@ -3,19 +3,15 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="eu.europa.ec.cc.processcentre.repository.QueryMapper">
+<mapper namespace="eu.europa.ec.cc.processcentre.process.query.repository.QueryMapper">
 
-  <select id="findById">
-    SELECT PROCESS_INSTANCE_ID FROM T_PROCESS WHERE PROCESS_INSTANCE_ID = #{value}
-  </select>
-
-  <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
+  <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
     <result property="title" column="process_title"/>
     <result property="tasks" column="tasks"/>
     <result property="totalCount" column="total_count"/>
     <!--<collection property="tasks" javaType="java.util.ArrayList"
-                ofType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask">
+                ofType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponseTask">
       <id property="taskInstanceId" column="task_instance_id"/>
       <result property="processInstanceId" column="process_instance_id"/>
       <result property="title" column="task_title"/>
@@ -82,12 +78,12 @@
   <sql id="whereClause">
     <where>
       <if test="searchText != null and searchText != ''">
-        AND p.default_title_fts @@ to_tsquery('simple', #{searchText})
+        AND p.SEARCH_VECTOR @@ to_tsquery('simple', #{searchText})
       </if>
     </where>
   </sql>
 
-  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">
+  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
     <include refid="processesCte"/>
     SELECT r.process_instance_id as process_instance_id,
     r.total_count as total_count,
@@ -211,18 +207,18 @@
 <!--  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
 <!--  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
 
-<!--<mapper namespace="eu.europa.ec.cc.processcentre.repository.QueryMapper">-->
+<!--<mapper namespace="eu.europa.ec.cc.processcentre.process.query.repository.QueryMapper">-->
 
 <!--  <select id="findById">-->
 <!--    SELECT PROCESS_INSTANCE_ID FROM T_PROCESS WHERE PROCESS_INSTANCE_ID = #{value}-->
 <!--  </select>-->
 
-<!--  <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">-->
+<!--  <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">-->
 <!--    <id property="processInstanceId" column="process_instance_id"/>-->
 <!--    <result property="translations" column="process_translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>-->
 <!--  </resultMap>-->
 
-<!--  <resultMap id="ProcessResultActiveTask" type="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask">-->
+<!--  <resultMap id="ProcessResultActiveTask" type="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponseTask">-->
 <!--    <id property="taskInstanceId" column="task_instance_id"/>-->
 <!--    <result property="processInstanceId" column="process_instance_id"/>-->
 <!--    <result property="translations" column="task_translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>-->
@@ -311,7 +307,7 @@
 <!--    </where>-->
 <!--  </sql>-->
 
-<!--  <select id="searchActiveTasks" resultMap="ProcessResultActiveTask" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponseTask">-->
+<!--  <select id="searchActiveTasks" resultMap="ProcessResultActiveTask" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponseTask">-->
 <!--    <include refid="activeTasksCte"/>-->
 <!--    SELECT t.task_instance_id as task_instance_id,-->
 <!--    t.process_instance_id as process_instance_id,-->
@@ -328,7 +324,7 @@
 <!--    </where>-->
 <!--  </select>-->
 
-<!--  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryResponse">-->
+<!--  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">-->
 <!--    <include refid="processesCte"/>-->
 <!--    SELECT p.process_instance_id as process_instance_id,-->
 <!--    COALESCE(pt.translations_json, '{}'::jsonb) AS process_translations-->

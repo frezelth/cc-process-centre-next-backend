@@ -1,7 +1,7 @@
 package eu.europa.ec.cc.processcentre.mapper;
 
 import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto;
-import eu.europa.ec.cc.processcentre.repository.model.SearchProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam;
 import java.util.Locale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
