@@ -14,6 +14,7 @@ import eu.europa.ec.cc.processcentre.translation.repository.TranslationMapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,8 +84,8 @@ public class ProcessTitleService {
                 .collect(Collectors.toMap(FindProcessVariableQueryResponse::getName,
                     FindProcessVariableQueryResponse::getVariableValue)));
         String computedTitle = FreeMarkerTemplateUtils.processTemplateIntoString(
-            Template.getPlainTextTemplate(null, titleTemplate.getText(),
-                new Configuration(Configuration.VERSION_2_3_30)),
+                new Template(null, new StringReader(titleTemplate.getText()),
+                        new Configuration(Configuration.VERSION_2_3_34)),
             model
         );
         newTitle.put(titleTemplate.getLanguageCode(), computedTitle);
