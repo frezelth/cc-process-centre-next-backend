@@ -24,15 +24,29 @@
     <result property="isDefault" column="is_default"/>
   </resultMap>
 
+  <resultMap id="processStatusLog" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryRunningStatusLog">
+    <id property="id" column="status_id"/>
+    <result property="process_instance_id" column="status_process_instance_id"/>
+    <result property="timestamp" column="status_timestamp"/>
+    <result property="status" column="status_process_status"/>
+  </resultMap>
+
   <resultMap id="process" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
     <result property="providerId" column="provider_id"/>
     <result property="domainKey" column="domain_key"/>
     <result property="processTypeKey" column="process_type_key"/>
     <result property="status" column="process_status"/>
-    <result property="translations" column="translations" typeHandler="eu.europa.ec.cc.processcentre.util.JsonbToMapTypeHandler"/>
+    <result property="businessStatus" column="business_status"/>
+    <result property="startedOn" column="started_on"/>
+    <result property="completedOn" column="completed_on"/>
+    <result property="cancelledOn" column="cancelled_on"/>
+    <result property="pausedOn" column="paused_on"/>
+    <result property="processTypeId" column="process_type_id"/>
     <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
     <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
+    <collection property="runningStatusLogs" javaType="java.util.ArrayList" resultMap="processStatusLog"/>
+    <collection property="portfolioItemIds" javaType="java.util.ArrayList" ofType="string"/>
   </resultMap>
 
   <select id="findById" resultMap="process">
@@ -41,7 +55,8 @@
       p.PROVIDER_ID as provider_id,
       p.DOMAIN_KEY as domain_key,
       p.PROCESS_TYPE_KEY as process_type_key,
-      p.STATUS as process_status,
+      p.BUSINESS_STATUS as business_status,
+      p.PROCESS_TYPE_ID as process_type_id,
       t.OBJECT_ID as object_id,
       t.OBJECT_TYPE as object_type,
       t.ATTRIBUTE_NAME as attribute_name,
@@ -54,12 +69,20 @@
       v.VALUE_INTEGER as value_integer,
       v.VALUE_LONG as value_long,
       v.VALUE_DOUBLE as value_double,
-      v.VALUE_BOOLEAN as value_boolean
+      v.VALUE_BOOLEAN as value_boolean,
+      r.PROCESS_INSTANCE_ID as status_process_instance_id,
+      r.STATUS as status_process_status,
+      r.TIMESTAMP as status_timestamp,
+      r.STATUS_ID as status_id,
+      pf.PORTFOLIO_ITEM_ID as portfolio_item_id
     FROM T_PROCESS p
     LEFT JOIN V_RESOLVED_TRANSLATION t ON t.OBJECT_ID = p.PROCESS_INSTANCE_ID AND
       t.OBJECT_TYPE = 'PROCESS'
     LEFT JOIN T_PROCESS_VARIABLE v ON v.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    LEFT JOIN T_PROCESS_RUNNING_STATUS_LOG r ON r.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    LEFT JOIN T_PROCESS_PORTFOLIO_ITEM pf ON pf.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
     WHERE p.PROCESS_INSTANCE_ID = #{value}
+    ORDER BY r.TIMESTAMP desc
   </select>
 
   <insert id="insertOrUpdateProcess">
@@ -68,34 +91,22 @@
       DOMAIN_KEY,
       PROVIDER_ID,
       PROCESS_TYPE_KEY,
-      STARTED_ON,
       BUSINESS_STATUS,
-      RESPONSIBLE_ORGANISATION_ID,
-      STARTED_BY,
-      STARTED_BY_ON_BEHALF_OF,
-      ASSOCIATED_PORTFOLIO_ITEM_IDS
+      RESPONSIBLE_ORGANISATION_ID
     )  VALUES (
     #{processInstanceId},
     #{domainKey},
     #{providerId},
     #{processTypeKey},
-    #{startedOn},
     #{businessStatus},
-    #{responsibleOrganisationId},
-    #{startedBy},
-    #{startedByOnBehalfOf},
-    #{associatedPortfolioItemIds}
+    #{responsibleOrganisationId}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
     PROVIDER_ID = EXCLUDED.PROVIDER_ID,
     PROCESS_TYPE_KEY = EXCLUDED.PROCESS_TYPE_KEY,
-    STARTED_ON = EXCLUDED.STARTED_ON,
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
-    RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
-    STARTED_BY = EXCLUDED.STARTED_BY,
-    STARTED_BY_ON_BEHALF_OF = EXCLUDED.STARTED_BY_ON_BEHALF_OF,
-    ASSOCIATED_PORTFOLIO_ITEM_IDS = EXCLUDED.ASSOCIATED_PORTFOLIO_ITEM_IDS
+    RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID
   </insert>
 
   <update id="updateProcessSecurity">
@@ -105,33 +116,9 @@
     SECURITY_SCOPE_ID_VALUE = #{scopeIdVal} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
-  <update id="cancelProcess">
-    UPDATE T_PROCESS SET CANCELLED_BY = #{cancelledBy}, CANCELLED_ON =
-    <choose>
-      <when test="cancelledOn != null">
-        #{cancelledOn}
-      </when>
-      <otherwise>
-        now()
-      </otherwise>
-    </choose>,
-    CANCELLED_BY_ON_BEHALF_OF = #{cancelledByOnBehalfOf}
-    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
-  </update>
-
   <update id="deleteProcess">
-    UPDATE T_PROCESS SET DELETED_BY = #{deletedBy},
-    DELETED_ON =
-    <choose>
-    <when test="deletedOn != null">
-      #{deletedOn}
-    </when>
-    <otherwise>
-      now()
-    </otherwise>
-  </choose>,
-    DELETED_BY_ON_BEHALF_OF = #{deletedByOnBehalfOf}
-    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+    DELETE FROM T_PROCESS
+      WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
   <insert id="insertChangeProcessState">
@@ -141,6 +128,13 @@
     ) VALUES ()
   </insert>
 
+  <update id="changeBusinessStatus">
+    UPDATE T_PROCESS SET BUSINESS_STATUS = #{businessStatus} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <update id="addPortfolioItem">
+    INSERT INTO
+  </update>
 
   <insert id="insertOrUpdateProcessVariables" parameterType="collection">
     INSERT INTO T_PROCESS_VARIABLE (
@@ -199,5 +193,28 @@
     VALUE_BOOLEAN
     FROM T_PROCESS_VARIABLE WHERE PROCESS_INSTANCE_ID = #{processInstanceId} AND NAME = #{name}
   </select>
+
+  <insert id="insertProcessRunningStatusLog">
+    INSERT INTO T_PROCESS_RUNNING_STATUS_LOG (
+      PROCESS_INSTANCE_ID,
+      TIMESTAMP,
+      STATUS,
+      USER_ID,
+      ON_BEHALF_OF_USER_ID
+    ) VALUES (
+      #{processInstanceId},
+    <choose>
+      <when test="timestamp != null">
+        #{timestamp},
+      </when>
+      <otherwise>
+        now(),
+      </otherwise>
+    </choose>
+      #{status}::PROCESS_STATUS,
+      #{userId},
+      #{onBehalfOfUserId}
+    )
+  </insert>
 
 </mapper>

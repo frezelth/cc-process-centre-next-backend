@@ -1,6 +1,8 @@
 package eu.europa.ec.cc.processcentre.process.command.repository;
 
 import eu.europa.ec.cc.processcentre.process.command.repository.model.CancelProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeBusinessStatusQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeProcessRunningStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateProcessQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessVariableQueryParam;
@@ -8,6 +10,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProces
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessVariableQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessRunningStatusLogQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessSecurityQueryParam;
 import java.util.Optional;
 import java.util.Set;
@@ -22,8 +25,6 @@ public interface ProcessMapper {
 
   void updateProcessSecurity(UpdateProcessSecurityQueryParam param);
 
-  void cancelProcess(CancelProcessQueryParam param);
-
   void deleteProcess(DeleteProcessQueryParam deleteProcessQueryParam);
 
   void insertOrUpdateProcessVariables(Set<InsertOrUpdateProcessVariableQueryParam> variables);
@@ -32,4 +33,7 @@ public interface ProcessMapper {
 
   FindProcessVariableQueryResponse findProcessVariable(FindProcessVariableQueryParam param);
 
+  void changeBusinessStatus(ChangeBusinessStatusQueryParam changeBusinessStatusQueryParam);
+
+  void insertProcessRunningStatusLog(InsertProcessRunningStatusLogQueryParam param);
 }

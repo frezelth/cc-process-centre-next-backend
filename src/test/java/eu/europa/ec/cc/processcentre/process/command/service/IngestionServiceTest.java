@@ -29,30 +29,14 @@ public class IngestionServiceTest extends ProcessCentreNextApplicationTests {
   void testInsertProcess(){
     ProcessCreated processCreated = ProcessCreated.newBuilder()
         .setProcessInstanceId("1")
+        .setDomainKey("PM_AGRI")
+        .setProviderId("Flex")
+        .setProcessTypeKey("processType1")
         .putProcessVariables("var1", VariableValue.newBuilder()
             .setStringValue("value1")
             .build())
         .build();
     ingestionService.handle(processCreated);
-  }
-
-  @Test
-  void testInsertTask(){
-    TaskCreated taskCreated = TaskCreated.newBuilder()
-        .setProcessInstanceId("1")
-        .setTaskInstanceId("1")
-        .setTaskTypeKey("taskTypeKey")
-        .setTitle(BabelText.newBuilder()
-            .setLiteral(Literal.newBuilder()
-                .addLiteralValues(LiteralValue.newBuilder()
-                    .setDefault(true)
-                    .setText("Task 1")
-                    .setLanguageCode(ISO6391LanguageCode.en)
-                    .build())
-                .build())
-            .build())
-        .build();
-    ingestionService.handle(taskCreated);
   }
 
   @Test

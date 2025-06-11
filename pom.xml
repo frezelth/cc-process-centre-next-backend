@@ -35,6 +35,8 @@
 		<mybatis.version>3.0.4</mybatis.version>
 		<testcontainers.version>1.21.0</testcontainers.version>
 
+		<access-token-filter.version>4.4.4</access-token-filter.version>
+
 		<cc-message-proto-version>1.2.0</cc-message-proto-version>
 		<cc-provider-proto.version>1.22.0</cc-provider-proto.version>
 		<cc-provider-task-proto.version>1.8.0</cc-provider-task-proto.version>
@@ -275,6 +277,55 @@
 		<dependency>
 			<groupId>eu.europa.ec.cc</groupId>
 			<artifactId>cc-embedded-configuration-lib</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.europa.ec.rtd.secunda</groupId>
+			<artifactId>author-rest-client</artifactId>
+			<version>2.0.0</version>
+			<classifier>shaded</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>eu.europa.ec.digit.apigw</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.nimbusds</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.httpcomponents.client5</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<!-- need to declare this explicitly, higher versions are not supported by secunda -->
+			<!-- because of java.lang.NoSuchMethodException: net.sf.ehcache.Cache.setStatisticsEnabled(boolean) -->
+			<version>2.6.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.europa.ec.digit.apigw</groupId>
+			<artifactId>access-token-filter</artifactId>
+			<version>${access-token-filter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+			<version>11.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>9.37.3</version>
 		</dependency>
 
 	</dependencies>

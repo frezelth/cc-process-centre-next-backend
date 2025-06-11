@@ -1,4 +1,4 @@
-package eu.europa.ec.cc.processcentre.process.command.repository.model;
+package eu.europa.ec.cc.processcentre.task.repository.model;
 
 import java.time.Instant;
 

@@ -1,11 +1,9 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
-import eu.europa.ec.cc.processcentre.config.service.ConfigService;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
-import eu.europa.ec.cc.processcentre.template.TemplateService;
 import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
 import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
 import eu.europa.ec.cc.processcentre.translation.repository.DeleteTranslationsParam;
@@ -28,34 +26,31 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 @Service
 public class ProcessTitleService {
 
-  private final ConfigService configService;
   private final TranslationMapper translationMapper;
   private final ProcessMapper processMapper;
-  private final TemplateService templateService;
 
   public ProcessTitleService(
-      ConfigService configService,
       TranslationMapper translationMapper,
-      ProcessMapper processMapper,
-      TemplateService templateService) {
-    this.configService = configService;
+      ProcessMapper processMapper) {
     this.translationMapper = translationMapper;
     this.processMapper = processMapper;
-    this.templateService = templateService;
   }
 
   @Transactional
   @SneakyThrows
   public void updateProcessTitle(String processInstanceId) {
-    FindProcessByIdQueryResponse findProcessByIdQueryResponse = processMapper.findById(
-        processInstanceId)
-        .orElseThrow();
+    processMapper.findById(processInstanceId).ifPresent(
+        this::updateTitle
+    );
+  }
 
+  @SneakyThrows
+  private void updateTitle(FindProcessByIdQueryResponse findProcessByIdQueryResponse) {
     Map<TranslationAttribute, List<FindProcessByIdQueryResponseTranslation>> allTranslations =
         findProcessByIdQueryResponse.getTranslations().stream()
-        .collect(Collectors.groupingBy(
-            FindProcessByIdQueryResponseTranslation::getAttribute
-        ));
+            .collect(Collectors.groupingBy(
+                FindProcessByIdQueryResponseTranslation::getAttribute
+            ));
 
     Map<String, String> existingProcessTitle = new HashMap<>();
 
@@ -92,16 +87,7 @@ public class ProcessTitleService {
       }
 
       if (!existingProcessTitle.equals(newTitle)) {
-        // need to update the title
-        translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(TranslationObjectType.PROCESS,
-            processInstanceId, TranslationAttribute.PROCESS_TITLE));
-        Set<InsertOrUpdateTranslationsParam> params = titleTemplates.stream()
-            .map(t -> new InsertOrUpdateTranslationsParam(
-                TranslationObjectType.PROCESS, processInstanceId,
-                TranslationAttribute.PROCESS_TITLE,
-                t.getLanguageCode(), newTitle.get(t.getLanguageCode()), t.getIsDefault()
-            )).collect(Collectors.toSet());
-        translationMapper.insertOrUpdateTranslations(params);
+        updateTitle(findProcessByIdQueryResponse.getProcessInstanceId(), titleTemplates, newTitle);
       }
     } else if (typeNames != null && !typeNames.isEmpty()) {
       // case for process type name
@@ -109,18 +95,23 @@ public class ProcessTitleService {
           .collect(Collectors.toMap(FindProcessByIdQueryResponseTranslation::getLanguageCode,
               FindProcessByIdQueryResponseTranslation::getText));
       if (!currentTypeNames.equals(existingProcessTitle)) {
-        translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(TranslationObjectType.PROCESS,
-            processInstanceId, TranslationAttribute.PROCESS_TITLE));
-        Set<InsertOrUpdateTranslationsParam> params = titleTemplates.stream()
-            .map(t -> new InsertOrUpdateTranslationsParam(
-                TranslationObjectType.PROCESS, processInstanceId,
-                TranslationAttribute.PROCESS_TITLE,
-                t.getLanguageCode(), currentTypeNames.get(t.getLanguageCode()), t.getIsDefault()
-            )).collect(Collectors.toSet());
-        translationMapper.insertOrUpdateTranslations(params);
+        updateTitle(findProcessByIdQueryResponse.getProcessInstanceId(), typeNames, currentTypeNames);
       }
     }
+  }
 
+  private void updateTitle(String processInstanceId,
+      List<FindProcessByIdQueryResponseTranslation> titleTemplates, Map<String, String> newTitle) {
+    // need to update the title
+    translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(TranslationObjectType.PROCESS,
+        processInstanceId, TranslationAttribute.PROCESS_TITLE));
+    Set<InsertOrUpdateTranslationsParam> params = titleTemplates.stream()
+        .map(t -> new InsertOrUpdateTranslationsParam(
+            TranslationObjectType.PROCESS, processInstanceId,
+            TranslationAttribute.PROCESS_TITLE,
+            t.getLanguageCode(), newTitle.get(t.getLanguageCode()), t.getIsDefault()
+        )).collect(Collectors.toSet());
+    translationMapper.insertOrUpdateTranslations(params);
   }
 
 }

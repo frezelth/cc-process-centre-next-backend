@@ -15,11 +15,13 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 @Service
 public class TemplateService {
 
-  private ProcessMapper processMapper;
+  private final ProcessMapper processMapper;
 
   public TemplateService(ProcessMapper processMapper) {
     this.processMapper = processMapper;
   }
+
+
 
   @SneakyThrows
   @Transactional(readOnly = true)

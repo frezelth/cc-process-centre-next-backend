@@ -25,20 +25,7 @@ public class ProcessQueries {
       int offset, int limit, Locale locale, String username){
     SearchProcessQueryParam queryParam = queryConverter.toQueryParam(searchProcessDto, locale,
         username, limit, offset);
-    List<SearchProcessQueryResponse> search = queryMapper.search(queryParam);
-    return search;
-//    List<String> foundProcessIds = search.stream().map(SearchProcessQueryResponse::getProcessInstanceId).toList();
-//    Map<String, List<SearchProcessQueryResponseTask>> tasksByProcessId = queryMapper.searchActiveTasks(
-//            foundProcessIds, locale.getLanguage()).stream()
-//        .collect(Collectors.groupingBy(SearchProcessQueryResponseTask::getProcessInstanceId));
-//
-//    return search.stream()
-//        .map(s -> new SearchProcessResponseDto(
-//            s.getProcessInstanceId(), s.getTranslations().get(TranslationAttribute.PROCESS_TITLE.name()),
-//            tasksByProcessId.get(s.getProcessInstanceId()).stream().map(
-//                t -> new SearchProcessResponseDtoActiveTask(t.getTaskInstanceId(), t.getTranslations().get(TranslationAttribute.TASK_TITLE.name()))
-//            ).toList()
-//        )).toList();
+    return queryMapper.search(queryParam);
 
   }
 

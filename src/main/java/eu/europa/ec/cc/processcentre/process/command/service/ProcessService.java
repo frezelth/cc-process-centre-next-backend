@@ -7,7 +7,7 @@ import eu.europa.ec.cc.configuration.service.DomainConfigService;
 import eu.europa.ec.cc.configuration.service.MergeStrategy;
 import eu.europa.ec.cc.configuration.service.SearchStrategy;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
-import eu.europa.ec.cc.processcentre.mapper.EventConverter;
+import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
 import eu.europa.ec.cc.processcentre.proto.UpdateProcessContext;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;

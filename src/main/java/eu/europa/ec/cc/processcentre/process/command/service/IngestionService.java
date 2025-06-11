@@ -1,29 +1,29 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
-import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
-import eu.europa.ec.cc.processcentre.mapper.EventConverter;
+import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
+import eu.europa.ec.cc.processcentre.model.ProcessRunningStatus;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
-import eu.europa.ec.cc.processcentre.process.command.repository.TaskMapper;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.CancelProcessQueryParam;
+import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeBusinessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeProcessStateQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateProcessQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateTaskQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessVariableQueryParam;
-import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
-import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessRunningStatusLogQueryParam;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
+import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
+import eu.europa.ec.cc.provider.proto.ProcessAssociatedPortfolioItemAdded;
+import eu.europa.ec.cc.provider.proto.ProcessBusinessStatusChanged;
 import eu.europa.ec.cc.provider.proto.ProcessCancelled;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import eu.europa.ec.cc.provider.proto.ProcessDeleted;
+import eu.europa.ec.cc.provider.proto.ProcessRunningStatusChanged;
 import eu.europa.ec.cc.provider.proto.ProcessStateChanged;
 import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
 import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
-import eu.europa.ec.cc.provider.task.event.proto.TaskCreated;
-import eu.europa.ec.cc.taskcenter.event.proto.TaskRegistered;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -65,6 +65,9 @@ public class IngestionService {
       LOG.debug("Handling ProcessCreated for process {}", event.getProcessInstanceId());
     }
 
+    Map<String, String> context = Context.context(event.getProviderId(), event.getDomainKey(), event.getProcessTypeKey());
+    Context.requireValidContext(context);
+
     CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event);
     processMapper.insertOrUpdateProcess(createProcessQueryParam);
 
@@ -74,6 +77,17 @@ public class IngestionService {
 
     // store process variables
     updateProcessVariables(event.getProcessInstanceId(), event.getProcessVariablesMap());
+
+    // store new status
+    processMapper.insertProcessRunningStatusLog(
+        new InsertProcessRunningStatusLogQueryParam(
+            event.getProcessInstanceId(),
+            ProcessRunningStatus.ONGOING,
+            ProtoUtils.timestampToInstant(event.getCreatedOn()),
+            event.getUserId(),
+            event.getOnBehalfOfUserId()
+        )
+    );
 
     if (LOG.isDebugEnabled()){
       LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
@@ -116,8 +130,36 @@ public class IngestionService {
       LOG.debug("Handling ProcessCancelled for process {}", event.getProcessInstanceId());
     }
 
-    CancelProcessQueryParam cancelProcessQueryParam = eventConverter.toCancelProcessQueryParam(event);
-    processMapper.cancelProcess(cancelProcessQueryParam);
+    InsertProcessRunningStatusLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toChangeProcessRunningStatusQueryParam(event);
+    processMapper.insertProcessRunningStatusLog(changeProcessRunningStatusQueryParam);
+  }
+
+  @Transactional
+  public void handle(ProcessAssociatedPortfolioItemAdded event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessAssociatedPortfolioItemAdded for process {}", event.getProcessInstanceId());
+    }
+
+  }
+
+  @Transactional
+  public void handle(ProcessRunningStatusChanged event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessRunningStatusChanged for process {}", event.getProcessInstanceId());
+    }
+
+    InsertProcessRunningStatusLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toChangeProcessRunningStatusQueryParam(event);
+    processMapper.insertProcessRunningStatusLog(changeProcessRunningStatusQueryParam);
+  }
+
+  @Transactional
+  public void handle(ProcessBusinessStatusChanged event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessBusinessStatusChanged for process {}", event.getProcessInstanceId());
+    }
+
+    ChangeBusinessStatusQueryParam changeBusinessStatusQueryParam = eventConverter.toChangeBusinessStatus(event);
+    processMapper.changeBusinessStatus(changeBusinessStatusQueryParam);
   }
 
   @Transactional
@@ -137,35 +179,6 @@ public class IngestionService {
     }
 
     ChangeProcessStateQueryParam changeProcessStateQueryParam = eventConverter.toChangeProcessStateQueryParam(event);
-  }
-
-  @Transactional
-  public void handle(TaskCreated event){
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Handling TaskCreated for process {}", event.getProcessInstanceId());
-    }
-
-    if (event.getProcessInstanceId().isEmpty()){
-      // tasks without process, not handled inside process centre
-      return;
-    }
-
-    CreateTaskQueryParam param = eventConverter.toCreateTaskQueryParam(event);
-    taskMapper.insertOrUpdateTask(param);
-
-    translationService.insertOrUpdateTranslations(
-        TranslationObjectType.TASK,
-        event.getTaskInstanceId(),
-        TranslationAttribute.TASK_TITLE,
-        BabelText.convert(event.getTitle())
-    );
-  }
-
-  @Transactional
-  public void handle(TaskRegistered event){
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Handling TaskRegistered for process {}", event.getProcessInstanceId());
-    }
   }
 
   private void updateProcessVariables(String processInstanceId, Map<String, VariableValue> variables) {

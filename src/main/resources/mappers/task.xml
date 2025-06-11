@@ -3,13 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="eu.europa.ec.cc.processcentre.process.command.repository.TaskMapper">
+<mapper namespace="eu.europa.ec.cc.processcentre.task.repository.TaskMapper">
 
     <insert id="insertOrUpdateTask">
-        insert into T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, CREATED_ON)
+        insert into T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY,
+          CURRENT_STATUS_TIMESTAMP)
         VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey}, #{createdOn}) ON CONFLICT
         DO NOTHING
     </insert>
+
+    <update id="changeTaskStatus">
+        UPDATE T_USER_TASK (STATUS, CURRENT_STATUS, CURRENT_STATUS_ON)
+        VALUES ()
+    </update>
 
     <insert id="completeTask">
         UPDATE T_USER_TASK SET COMPLETED_ON =

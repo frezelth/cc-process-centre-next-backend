@@ -1,6 +1,7 @@
 package eu.europa.ec.cc.processcentre.mapper;
 
 import com.google.protobuf.Timestamp;
+import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateProcessQueryParam;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;

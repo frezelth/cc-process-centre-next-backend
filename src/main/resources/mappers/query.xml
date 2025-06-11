@@ -36,7 +36,7 @@
     SELECT t.task_instance_id, t.process_instance_id
     FROM t_user_task t
     JOIN descendants d ON t.process_instance_id = d.process_instance_id
-    WHERE t.cancelled = FALSE AND t.completed = FALSE
+    WHERE t.current_status IN ('CREATED', 'CLAIMED')
     ),
     task_titles AS (
     SELECT t.task_instance_id, t.process_instance_id, tt.translated_text AS task_title
