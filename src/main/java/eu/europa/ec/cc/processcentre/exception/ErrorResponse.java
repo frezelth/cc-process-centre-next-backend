@@ -33,7 +33,7 @@ public class ErrorResponse {
   private int status = INTERNAL_SERVER_ERROR.value();
 
   /**
-   * Usually, the textual description (reason phrase) of the error code/status.
+   * Usually, the textual description (reason phrase) of the error code/action.
    */
   private String error = INTERNAL_SERVER_ERROR.getReasonPhrase();
 

@@ -267,7 +267,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
         byte[] dataTask = taskBuilder.toString().getBytes(StandardCharsets.UTF_8);
         InputStream isTask = new ByteArrayInputStream(dataTask);
-        copyManager.copyIn("COPY T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, CURRENT_STATUS) FROM STDIN WITH (FORMAT csv)", isTask);
+        copyManager.copyIn("COPY T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, STATUS) FROM STDIN WITH (FORMAT csv)", isTask);
 
         byte[] dataTranslation = taskTitleBuilder.toString().getBytes(StandardCharsets.UTF_8);
         InputStream isTranslation = new ByteArrayInputStream(dataTranslation);

@@ -2,16 +2,10 @@ package eu.europa.ec.cc.processcentre.process.command.repository.model;
 
 import java.time.Instant;
 
-public record ChangeProcessStateQueryParam(
+public record InsertProcessStateQueryParam(
     String processInstanceId,
-    Change change,
     String state,
     Instant changedOn
 ) {
-
-  public enum Change {
-    ENTERING,
-    LEAVING
-  }
 
 }

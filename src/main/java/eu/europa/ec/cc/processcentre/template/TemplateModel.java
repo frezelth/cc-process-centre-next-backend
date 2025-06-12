@@ -34,7 +34,7 @@ public class TemplateModel {
     DESCRIPTION("description"),
     RESPONSIBLE("responsible"),
     BUSINESS_STATUS("businessStatus"),
-    STATUS("status"),
+    STATUS("action"),
     START_DATE("startDate"),
     END_DATE("endDate"),
     PAUSE_DATE("pauseDate"),

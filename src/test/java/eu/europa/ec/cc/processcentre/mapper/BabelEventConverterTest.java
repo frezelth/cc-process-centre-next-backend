@@ -2,7 +2,7 @@ package eu.europa.ec.cc.processcentre.mapper;
 
 import com.google.protobuf.Timestamp;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessQueryParam;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import java.time.Instant;
@@ -28,13 +28,12 @@ public class BabelEventConverterTest {
             .setCreatedOn(ProtoUtils.instantToTimestamp(now))
         .build();
 
-    CreateProcessQueryParam queryParam = converter.toCreateProcessQueryParam(command);
+    InsertProcessQueryParam queryParam = converter.toInsertProcessQueryParam(command);
 
     Assertions.assertEquals(command.getProcessInstanceId(), queryParam.processInstanceId());
     Assertions.assertEquals(command.getDomainKey(), queryParam.domainKey());
     Assertions.assertEquals(command.getProcessTypeKey(), queryParam.processTypeKey());
     Assertions.assertEquals(command.getProviderId(), queryParam.providerId());
-    Assertions.assertEquals(now.getEpochSecond(), queryParam.startedOn().getEpochSecond());
-    Assertions.assertEquals(command.getUserId(), queryParam.startedBy());
+    Assertions.assertEquals(command.getProcessTypeId(), queryParam.processTypeId());
   }
 }

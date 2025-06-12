@@ -2,7 +2,7 @@ package eu.europa.ec.cc.processcentre.exception;
 
 /**
  * This is the exception to throw for authorization errors (e.g., missing or wrong Secunda/access rights, etc.).
- * It hints at using the proper HTTP (error) status code 403 Forbidden instead of 401 Unauthorized.
+ * It hints at using the proper HTTP (error) action code 403 Forbidden instead of 401 Unauthorized.
  *
  * @author <a href="mailto:Octavian.NITA@ext.ec.europa.eu">Octavian NITA</a>
  * @version $Id$

@@ -30,7 +30,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleAnyUncaughtException(Exception exception, HttpServletRequest request) {
 
-    // Determine an appropriate HTTP error status
+    // Determine an appropriate HTTP error action
     final var status = switch (exception) {
       case InvalidInputException ignored -> BAD_REQUEST;
       case UnauthorizedException ignored -> UNAUTHORIZED;

@@ -7,13 +7,13 @@
 
     <insert id="insertOrUpdateTask">
         insert into T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY,
-          CURRENT_STATUS_TIMESTAMP)
+          STATUS_TIMESTAMP)
         VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey}, #{createdOn}) ON CONFLICT
         DO NOTHING
     </insert>
 
     <update id="changeTaskStatus">
-        UPDATE T_USER_TASK (STATUS, CURRENT_STATUS, CURRENT_STATUS_ON)
+        UPDATE T_USER_TASK (STATUS, STATUS, STATUS_ON)
         VALUES ()
     </update>
 

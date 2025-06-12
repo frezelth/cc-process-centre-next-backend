@@ -1,8 +1,10 @@
 package eu.europa.ec.cc.processcentre.process.command.repository.model;
 
-public record ChangeBusinessStatusQueryParam(
+import java.util.List;
+
+public record DeleteProcessPortfolioItems(
     String processInstanceId,
-    String businessStatus
+    List<String> portfolioItemIds
 ) {
 
 }

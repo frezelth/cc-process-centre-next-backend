@@ -1,7 +1,9 @@
 package eu.europa.ec.cc.processcentre.process.query.repository.model;
 
 import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto.SpecificFilterValueDto;
+import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import java.util.List;
+import java.util.Set;
 
 public record SearchProcessQueryParam(
     String providerId,
@@ -16,8 +18,11 @@ public record SearchProcessQueryParam(
     Boolean completed,
     Boolean paused,
     Boolean cancelled,
+
+    Set<ProcessStatus> statuses,
+
     Boolean filterByUserOrganisation,
-    List<String> portfolioItemIds,
+    Set<String> portfolioItemIds,
     List<SpecificFilterValueDto> specificAttributes,
 
     List<String> dynamicFilters,

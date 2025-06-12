@@ -1,6 +1,7 @@
 package eu.europa.ec.cc.processcentre.process.command.repository.model;
 
-import eu.europa.ec.cc.processcentre.model.ProcessRunningStatus;
+import eu.europa.ec.cc.processcentre.model.ProcessAction;
+import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
 import java.time.Instant;
 import java.util.Collections;
@@ -19,13 +20,15 @@ public class FindProcessByIdQueryResponse {
     private String processResponsibleOrganisation;
     private String processResponsibleOrganisationCode;
 
+    private ProcessStatus status;
+
     private String businessStatus;
 
     private List<FindProcessByIdQueryResponseTranslation> translations;
     private List<FindProcessVariableQueryResponse> variables;
 
     // ordered by default DESC, latest logs first
-    private List<FindProcessByIdQueryRunningStatusLog> runningStatusLogs;
+    private List<FindProcessByIdQueryActionLog> runningStatusLogs;
 
     private List<String> portfolioItemIds;
 
@@ -40,34 +43,28 @@ public class FindProcessByIdQueryResponse {
                 ));
     }
 
-    public ProcessRunningStatus getStatus() {
-        return this.runningStatusLogs.stream().findFirst()
-            .map(FindProcessByIdQueryRunningStatusLog::getStatus)
-            .orElse(null);
-    }
-
     public Instant getStartedOn(){
-        // started on should be the first entry in the logs
+        // started on should be the first START action in the logs
         return this.runningStatusLogs.reversed().stream().filter(
-            f -> f.getStatus() == ProcessRunningStatus.ONGOING
-        ).findFirst().map(FindProcessByIdQueryRunningStatusLog::getTimestamp).orElse(null);
+            f -> f.getAction() == ProcessAction.START
+        ).findFirst().map(FindProcessByIdQueryActionLog::getTimestamp).orElse(null);
     }
 
     public Instant getCompletedOn(){
         return this.runningStatusLogs.stream().filter(
-            f -> f.getStatus() == ProcessRunningStatus.COMPLETED
-        ).findFirst().map(FindProcessByIdQueryRunningStatusLog::getTimestamp).orElse(null);
+            f -> f.getAction() == ProcessAction.COMPLETE
+        ).findFirst().map(FindProcessByIdQueryActionLog::getTimestamp).orElse(null);
     }
 
     public Instant getCancelledOn(){
         return this.runningStatusLogs.stream().filter(
-            f -> f.getStatus() == ProcessRunningStatus.CANCELLED
-        ).findFirst().map(FindProcessByIdQueryRunningStatusLog::getTimestamp).orElse(null);
+            f -> f.getAction() == ProcessAction.CANCEL
+        ).findFirst().map(FindProcessByIdQueryActionLog::getTimestamp).orElse(null);
     }
 
     public Instant getPausedOn(){
         return this.runningStatusLogs.stream().filter(
-            f -> f.getStatus() == ProcessRunningStatus.PAUSED
-        ).findFirst().map(FindProcessByIdQueryRunningStatusLog::getTimestamp).orElse(null);
+            f -> f.getAction() == ProcessAction.PAUSE
+        ).findFirst().map(FindProcessByIdQueryActionLog::getTimestamp).orElse(null);
     }
 }

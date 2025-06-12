@@ -1,8 +1,8 @@
 package eu.europa.ec.cc.processcentre.process.command.repository.model;
 
-public record AddProcessPortfolioItem(
+public record UpdateBusinessStatusQueryParam(
     String processInstanceId,
-    String portfolioItemId
+    String businessStatus
 ) {
 
 }

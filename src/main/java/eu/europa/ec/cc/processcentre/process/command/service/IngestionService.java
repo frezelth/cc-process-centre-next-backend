@@ -1,27 +1,37 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
+import eu.europa.ec.cc.processcentre.model.ProcessAction;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
-import eu.europa.ec.cc.processcentre.model.ProcessRunningStatus;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
-import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeBusinessStatusQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.ChangeProcessStateQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.CreateProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessPortfolioItems;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessStateQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessVariableQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessRunningStatusLogQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessActionLogQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessPortfolioItems;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessStateQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusinessStatusQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
+import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessAssociatedPortfolioItemAdded;
+import eu.europa.ec.cc.provider.proto.ProcessAssociatedPortfolioItemRemoved;
 import eu.europa.ec.cc.provider.proto.ProcessBusinessStatusChanged;
 import eu.europa.ec.cc.provider.proto.ProcessCancelled;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import eu.europa.ec.cc.provider.proto.ProcessDeleted;
+import eu.europa.ec.cc.provider.proto.ProcessResponsibleOrganisationChanged;
+import eu.europa.ec.cc.provider.proto.ProcessResponsibleUserChanged;
+import eu.europa.ec.cc.provider.proto.ProcessRestored;
 import eu.europa.ec.cc.provider.proto.ProcessRunningStatusChanged;
 import eu.europa.ec.cc.provider.proto.ProcessStateChanged;
+import eu.europa.ec.cc.provider.proto.ProcessStateChanged.Change;
 import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
 import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
@@ -68,8 +78,8 @@ public class IngestionService {
     Map<String, String> context = Context.context(event.getProviderId(), event.getDomainKey(), event.getProcessTypeKey());
     Context.requireValidContext(context);
 
-    CreateProcessQueryParam createProcessQueryParam = eventConverter.toCreateProcessQueryParam(event);
-    processMapper.insertOrUpdateProcess(createProcessQueryParam);
+    InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(event);
+    processMapper.insertOrUpdateProcess(insertProcessQueryParam);
 
     if (LOG.isDebugEnabled()){
       LOG.debug("Process {} persisted", event.getProcessInstanceId());
@@ -78,19 +88,29 @@ public class IngestionService {
     // store process variables
     updateProcessVariables(event.getProcessInstanceId(), event.getProcessVariablesMap());
 
-    // store new status
-    processMapper.insertProcessRunningStatusLog(
-        new InsertProcessRunningStatusLogQueryParam(
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
+    }
+
+    // store new action
+    processMapper.insertProcessActionLog(
+        new InsertProcessActionLogQueryParam(
             event.getProcessInstanceId(),
-            ProcessRunningStatus.ONGOING,
+            ProcessAction.START,
             ProtoUtils.timestampToInstant(event.getCreatedOn()),
             event.getUserId(),
             event.getOnBehalfOfUserId()
         )
     );
 
-    if (LOG.isDebugEnabled()){
-      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
+    if (!event.getAssociatedPortfolioItemIdsList().isEmpty()) {
+      InsertProcessPortfolioItems insertProcessPortfolioItem = eventConverter.toInsertProcessPortfolioItem(
+          ProcessAssociatedPortfolioItemAdded.newBuilder()
+              .setProcessInstanceId(event.getProcessInstanceId())
+              .addAllPortfolioItemIds(event.getAssociatedPortfolioItemIdsList())
+              .build()
+      );
+      processMapper.insertProcessPortfolioItems(insertProcessPortfolioItem);
     }
 
     eventPublisher.publishEvent(new ProcessRegistered(
@@ -130,14 +150,139 @@ public class IngestionService {
       LOG.debug("Handling ProcessCancelled for process {}", event.getProcessInstanceId());
     }
 
-    InsertProcessRunningStatusLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toChangeProcessRunningStatusQueryParam(event);
-    processMapper.insertProcessRunningStatusLog(changeProcessRunningStatusQueryParam);
+    InsertProcessActionLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toInsertProcessRunningStatusQueryParam(event);
+    processMapper.insertProcessActionLog(changeProcessRunningStatusQueryParam);
   }
 
   @Transactional
   public void handle(ProcessAssociatedPortfolioItemAdded event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessAssociatedPortfolioItemAdded for process {}", event.getProcessInstanceId());
+    }
+
+    if (event.getPortfolioItemIdsList().isEmpty()){
+      return;
+    }
+
+    InsertProcessPortfolioItems insertProcessPortfolioItems = eventConverter.toInsertProcessPortfolioItem(event);
+    processMapper.insertProcessPortfolioItems(insertProcessPortfolioItems);
+  }
+
+  @Transactional
+  public void handle(ProcessAssociatedPortfolioItemRemoved event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessAssociatedPortfolioItemRemoved for process {}", event.getProcessInstanceId());
+    }
+
+    if (event.getPortfolioItemIdsList().isEmpty()){
+      return;
+    }
+
+    DeleteProcessPortfolioItems deleteProcessPortfolioItems = eventConverter.toDeleteProcessPortfolioItem(event);
+    processMapper.deleteProcessPortfolioItems(deleteProcessPortfolioItems);
+  }
+
+  @Transactional
+  public void handle(ProcessResponsibleUserChanged event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessResponsibleUserChanged for process {}", event.getProcessInstanceId());
+    }
+
+    UpdateProcessResponsibleUserQueryParam updateProcessResponsibleUserQueryParam = eventConverter.toUpdateProcessResponsibleUserQueryParam(event);
+    processMapper.updateResponsibleUser(updateProcessResponsibleUserQueryParam);
+  }
+
+  @Transactional
+  public void handle(ProcessResponsibleOrganisationChanged event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessResponsibleOrganisationChanged for process {}", event.getProcessInstanceId());
+    }
+
+    UpdateProcessResponsibleOrganisationQueryParam updateProcessResponsibleOrganisationQueryParam =
+        eventConverter.toUpdateProcessResponsibleOrganisationQueryParam(event);
+    processMapper.updateResponsibleOrganisation(updateProcessResponsibleOrganisationQueryParam);
+  }
+
+  /**
+   * For the ProcessRestored use case, we delete the process along with all its linked objects
+   * (variables, portfolio items, states, running action log...)
+   * And we recreate a brand new one
+   * @param event
+   */
+  @Transactional
+  public void handle(ProcessRestored event){
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Handling ProcessRestored for process {}", event.getProcessInstanceId());
+    }
+
+    Map<String, String> context = Context.context(event.getProviderId(), event.getDomainKey(), event.getProcessTypeKey());
+    Context.requireValidContext(context);
+
+    // delete a process, all linked objects will be removed in cascade
+    processMapper.deleteProcess(new DeleteProcessQueryParam(event.getProcessInstanceId()));
+
+    InsertProcessQueryParam updateProcessQueryParam = eventConverter.toInsertProcessQueryParam(event);
+    processMapper.insertOrUpdateProcess(updateProcessQueryParam);
+
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Process {} persisted", event.getProcessInstanceId());
+    }
+
+    // store process variables
+    updateProcessVariables(event.getProcessInstanceId(), event.getProcessVariablesMap());
+
+    if (LOG.isDebugEnabled()){
+      LOG.debug("Process variables for process {} persisted, sending ProcessRegistered", event.getProcessInstanceId());
+    }
+
+    // store ongoing running action, and then potentially other statuses
+    processMapper.insertProcessActionLog(
+        new InsertProcessActionLogQueryParam(
+            event.getProcessInstanceId(),
+            ProcessAction.START,
+            ProtoUtils.timestampToInstant(event.getCreatedOn()),
+            event.getUserId(),
+            event.getOnBehalfOfUserId()
+        )
+    );
+
+    // process has been paused
+    if (event.getPausedOn().getSeconds() > 0){
+      processMapper.insertProcessActionLog(
+          new InsertProcessActionLogQueryParam(
+              event.getProcessInstanceId(),
+              ProcessAction.PAUSE,
+              ProtoUtils.timestampToInstant(event.getPausedOn()),
+              event.getUserId(),
+              event.getOnBehalfOfUserId()
+          )
+      );
+    }
+
+    // process has been restarted
+    if (event.getRestartedOn().getSeconds() > 0){
+      processMapper.insertProcessActionLog(
+          new InsertProcessActionLogQueryParam(
+              event.getProcessInstanceId(),
+              ProcessAction.START,
+              ProtoUtils.timestampToInstant(event.getCompletedOn()),
+              event.getUserId(),
+              event.getOnBehalfOfUserId()
+          )
+      );
+    }
+
+    // process has been completed
+    if (event.getCompletedOn().getSeconds() > 0){
+      processMapper.insertProcessActionLog(
+          new InsertProcessActionLogQueryParam(
+              event.getProcessInstanceId(),
+              ProcessAction.COMPLETE,
+              ProtoUtils.timestampToInstant(event.getCompletedOn()),
+              event.getUserId(),
+              event.getOnBehalfOfUserId()
+          )
+      );
     }
 
   }
@@ -148,8 +293,8 @@ public class IngestionService {
       LOG.debug("Handling ProcessRunningStatusChanged for process {}", event.getProcessInstanceId());
     }
 
-    InsertProcessRunningStatusLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toChangeProcessRunningStatusQueryParam(event);
-    processMapper.insertProcessRunningStatusLog(changeProcessRunningStatusQueryParam);
+    InsertProcessActionLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toInsertProcessRunningStatusQueryParam(event);
+    processMapper.insertProcessActionLog(changeProcessRunningStatusQueryParam);
   }
 
   @Transactional
@@ -158,8 +303,8 @@ public class IngestionService {
       LOG.debug("Handling ProcessBusinessStatusChanged for process {}", event.getProcessInstanceId());
     }
 
-    ChangeBusinessStatusQueryParam changeBusinessStatusQueryParam = eventConverter.toChangeBusinessStatus(event);
-    processMapper.changeBusinessStatus(changeBusinessStatusQueryParam);
+    UpdateBusinessStatusQueryParam updateBusinessStatusQueryParam = eventConverter.toUpdateBusinessStatus(event);
+    processMapper.updateBusinessStatus(updateBusinessStatusQueryParam);
   }
 
   @Transactional
@@ -178,7 +323,14 @@ public class IngestionService {
       LOG.debug("Handling ProcessStateChanged for process {}", event.getProcessInstanceId());
     }
 
-    ChangeProcessStateQueryParam changeProcessStateQueryParam = eventConverter.toChangeProcessStateQueryParam(event);
+    if (event.getChange() == Change.ENTERING){
+      // insert
+      InsertProcessStateQueryParam insertProcessStateQueryParam = eventConverter.toInsertProcessStateQueryParam(event);
+      processMapper.insertProcessState(insertProcessStateQueryParam);
+    } else if (event.getChange() == Change.LEAVING){
+      DeleteProcessStateQueryParam deleteProcessStateQueryParam = eventConverter.toDeleteProcessStateQueryParam(event);
+      processMapper.deleteProcessState(deleteProcessStateQueryParam);
+    }
   }
 
   private void updateProcessVariables(String processInstanceId, Map<String, VariableValue> variables) {

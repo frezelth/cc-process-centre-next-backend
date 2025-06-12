@@ -25,18 +25,18 @@
     FROM t_process p
     <include refid="whereClause"/>
     LIMIT #{limit} OFFSET #{offset}),
-    descendants AS (SELECT p.process_instance_id, p.parent_id
+    descendants AS (SELECT p.process_instance_id, p.parent_process_instance_id
     FROM t_process p
     JOIN matching_roots r ON p.process_instance_id = r.process_instance_id
     UNION ALL
-    SELECT tp.process_instance_id, tp.parent_id
+    SELECT tp.process_instance_id, tp.parent_process_instance_id
     FROM t_process tp
-    JOIN descendants d ON tp.parent_id = d.process_instance_id),
+    JOIN descendants d ON tp.parent_process_instance_id = d.process_instance_id),
     relevant_tasks AS (
     SELECT t.task_instance_id, t.process_instance_id
     FROM t_user_task t
     JOIN descendants d ON t.process_instance_id = d.process_instance_id
-    WHERE t.current_status IN ('CREATED', 'CLAIMED')
+    WHERE t.status IN ('CREATED', 'CLAIMED')
     ),
     task_titles AS (
     SELECT t.task_instance_id, t.process_instance_id, tt.translated_text AS task_title
@@ -79,6 +79,12 @@
     <where>
       <if test="searchText != null and searchText != ''">
         AND p.SEARCH_VECTOR @@ to_tsquery('simple', #{searchText})
+      </if>
+      <if test="statuses != null and statuses.size() > 0">
+        AND p.STATUS IN
+        <foreach item="status" collection="statuses" separator="," open="(" close=")">
+          #{runningStatus}
+        </foreach>
       </if>
     </where>
   </sql>

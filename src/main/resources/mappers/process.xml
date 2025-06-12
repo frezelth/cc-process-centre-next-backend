@@ -24,7 +24,7 @@
     <result property="isDefault" column="is_default"/>
   </resultMap>
 
-  <resultMap id="processStatusLog" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryRunningStatusLog">
+  <resultMap id="processStatusLog" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryActionLog">
     <id property="id" column="status_id"/>
     <result property="process_instance_id" column="status_process_instance_id"/>
     <result property="timestamp" column="status_timestamp"/>
@@ -38,10 +38,6 @@
     <result property="processTypeKey" column="process_type_key"/>
     <result property="status" column="process_status"/>
     <result property="businessStatus" column="business_status"/>
-    <result property="startedOn" column="started_on"/>
-    <result property="completedOn" column="completed_on"/>
-    <result property="cancelledOn" column="cancelled_on"/>
-    <result property="pausedOn" column="paused_on"/>
     <result property="processTypeId" column="process_type_id"/>
     <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
     <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
@@ -57,6 +53,7 @@
       p.PROCESS_TYPE_KEY as process_type_key,
       p.BUSINESS_STATUS as business_status,
       p.PROCESS_TYPE_ID as process_type_id,
+      p.STATUS as process_status,
       t.OBJECT_ID as object_id,
       t.OBJECT_TYPE as object_type,
       t.ATTRIBUTE_NAME as attribute_name,
@@ -70,16 +67,16 @@
       v.VALUE_LONG as value_long,
       v.VALUE_DOUBLE as value_double,
       v.VALUE_BOOLEAN as value_boolean,
-      r.PROCESS_INSTANCE_ID as status_process_instance_id,
-      r.STATUS as status_process_status,
-      r.TIMESTAMP as status_timestamp,
-      r.STATUS_ID as status_id,
+      r.PROCESS_INSTANCE_ID as action_process_instance_id,
+      r.ACTION as action_process_status,
+      r.TIMESTAMP as action_timestamp,
+      r.ACTION_ID as action_id,
       pf.PORTFOLIO_ITEM_ID as portfolio_item_id
     FROM T_PROCESS p
     LEFT JOIN V_RESOLVED_TRANSLATION t ON t.OBJECT_ID = p.PROCESS_INSTANCE_ID AND
       t.OBJECT_TYPE = 'PROCESS'
     LEFT JOIN T_PROCESS_VARIABLE v ON v.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
-    LEFT JOIN T_PROCESS_RUNNING_STATUS_LOG r ON r.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    LEFT JOIN T_PROCESS_ACTION_LOG r ON r.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
     LEFT JOIN T_PROCESS_PORTFOLIO_ITEM pf ON pf.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
     WHERE p.PROCESS_INSTANCE_ID = #{value}
     ORDER BY r.TIMESTAMP desc
@@ -88,26 +85,38 @@
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
       PROCESS_INSTANCE_ID,
+      PROCESS_TYPE_ID,
       DOMAIN_KEY,
       PROVIDER_ID,
       PROCESS_TYPE_KEY,
       BUSINESS_STATUS,
-      RESPONSIBLE_ORGANISATION_ID
+      RESPONSIBLE_ORGANISATION_ID,
+      RESPONSIBLE_USER_ID,
+      PARENT_PROCESS_INSTANCE_ID
     )  VALUES (
     #{processInstanceId},
+    #{processTypeId},
     #{domainKey},
     #{providerId},
     #{processTypeKey},
     #{businessStatus},
-    #{responsibleOrganisationId}
+    #{responsibleOrganisationId},
+    #{responsibleUserId},
+    #{parentProcessInstanceId}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
     PROVIDER_ID = EXCLUDED.PROVIDER_ID,
     PROCESS_TYPE_KEY = EXCLUDED.PROCESS_TYPE_KEY,
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
-    RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID
+    RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
+    RESPONSIBLE_USER_ID = EXCLUDED.RESPONSIBLE_USER_ID
   </insert>
+
+  <update id="updateProcess">
+    UPDATE T_PROCESS SET
+
+  </update>
 
   <update id="updateProcessSecurity">
     UPDATE T_PROCESS SET SECURITY_APPLICATION_ID = #{applicationId}, SECURITY_SECUNDA_TASK = #{secundaTask},
@@ -121,19 +130,18 @@
       WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
-  <insert id="insertChangeProcessState">
-    INSERT INTO T_PROCESS_ACTIVITY (
+  <update id="updateResponsibleOrganisation">
+    UPDATE T_PROCESS SET responsible_organisation_id = #{responsibleOrganisationId}
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
 
-
-    ) VALUES ()
-  </insert>
+  <update id="updateResponsibleUser">
+    UPDATE T_PROCESS SET responsible_user_id = #{responsibleUserId}
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
 
   <update id="changeBusinessStatus">
     UPDATE T_PROCESS SET BUSINESS_STATUS = #{businessStatus} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
-  </update>
-
-  <update id="addPortfolioItem">
-    INSERT INTO
   </update>
 
   <insert id="insertOrUpdateProcessVariables" parameterType="collection">
@@ -194,11 +202,11 @@
     FROM T_PROCESS_VARIABLE WHERE PROCESS_INSTANCE_ID = #{processInstanceId} AND NAME = #{name}
   </select>
 
-  <insert id="insertProcessRunningStatusLog">
-    INSERT INTO T_PROCESS_RUNNING_STATUS_LOG (
+  <insert id="insertProcessActionLog">
+    INSERT INTO T_PROCESS_ACTION_LOG (
       PROCESS_INSTANCE_ID,
       TIMESTAMP,
-      STATUS,
+      ACTION,
       USER_ID,
       ON_BEHALF_OF_USER_ID
     ) VALUES (
@@ -211,10 +219,36 @@
         now(),
       </otherwise>
     </choose>
-      #{status}::PROCESS_STATUS,
+      #{action},
       #{userId},
       #{onBehalfOfUserId}
     )
   </insert>
+
+  <insert id="insertProcessPortfolioItems">
+    INSERT INTO T_PROCESS_PORTFOLIO_ITEM (PROCESS_INSTANCE_ID, PORTFOLIO_ITEM_ID)
+    VALUES
+    <foreach collection="portfolioItemIds" item="portfolioItemId" separator=",">
+      (#{processInstanceId},#{portfolioItemId})
+    </foreach>
+  </insert>
+
+  <insert id="insertProcessState">
+    INSERT INTO T_PROCESS_BUSINESS_STATE (PROCESS_INSTANCE_ID, BUSINESS_STATE, TIMESTAMP)
+    VALUES (#{processInstanceId}, #{state}, #{timestamp})
+  </insert>
+
+  <delete id="deleteProcessState">
+    DELETE FROM T_PROCESS_BUSINESS_STATE WHERE BUSINESS_STATE = #{state}
+      AND PROCESS_INSTANCE_ID = #{processInstanceId}
+  </delete>
+
+  <delete id="deleteProcessPortfolioItems">
+    DELETE FROM T_PROCESS_PORTFOLIO_ITEM WHERE (PROCESS_INSTANCE_ID, PORTFOLIO_ITEM_ID)
+    IN
+    <foreach collection="portfolioItemIds" item="portfolioItemId" open="(" separator="," close=")">
+      (#{processInstanceId}, #{portfolioItemId})
+    </foreach>
+  </delete>
 
 </mapper>
