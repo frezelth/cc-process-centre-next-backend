@@ -1,5 +1,11 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.cc.processcentre.config.AccessRight;
+import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
+import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
+import eu.europa.ec.cc.processcentre.config.service.ConfigService;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
@@ -17,6 +23,10 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusi
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
 import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
+import eu.europa.ec.cc.processcentre.template.TemplateConverter;
+import eu.europa.ec.cc.processcentre.template.TemplateModel;
+import eu.europa.ec.cc.processcentre.template.TemplateModel.Model;
+import eu.europa.ec.cc.processcentre.template.TemplateModel.ModelGroup;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
@@ -36,6 +46,8 @@ import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
 import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -56,16 +68,25 @@ public class IngestionService {
   private final ApplicationEventPublisher eventPublisher;
   private final TaskMapper taskMapper;
   private final TranslationService translationService;
+  private final ConfigService configService;
+  private final TemplateConverter templateConverter;
+  private final ObjectMapper objectMapper;
 
   public IngestionService(ProcessMapper processMapper,
       EventConverter eventConverter,
       ApplicationEventPublisher eventPublisher, TaskMapper taskMapper,
-      TranslationService translationService) {
+      TranslationService translationService,
+      ConfigService configService,
+      TemplateConverter templateConverter,
+      ObjectMapper objectMapper) {
     this.processMapper = processMapper;
     this.eventConverter = eventConverter;
     this.eventPublisher = eventPublisher;
     this.taskMapper = taskMapper;
     this.translationService = translationService;
+    this.configService = configService;
+    this.templateConverter = templateConverter;
+    this.objectMapper = objectMapper;
   }
 
   @Transactional
@@ -76,9 +97,40 @@ public class IngestionService {
     }
 
     Map<String, String> context = Context.context(event.getProviderId(), event.getDomainKey(), event.getProcessTypeKey());
-    Context.requireValidContext(context);
 
-    InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(event);
+    // load the process type config
+    ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context);
+
+    // load the process result card config, not mandatory
+    String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context);
+
+    List<AccessRight> viewAccessRights = processTypeConfig.accessRights().getOrDefault(Right.VIEW,
+        Collections.emptyList());
+
+    AccessRight resolvedAccessRight = null;
+    if (viewAccessRights.isEmpty()) {
+      resolvedAccessRight = new AccessRight(processTypeConfig.secundaTask(), AccessRight.PROCESS_CENTRE, null, null, null);
+    } else {
+      AccessRight viewAccessRight = viewAccessRights.getFirst();
+
+      // to define access rights we support process variables and
+      TemplateModel model = new TemplateModel();
+      model.addProcessVariables(event.getProcessVariablesMap());
+      model.add(Model.RESPONSIBLE, event.getResponsibleOrganisationId());
+      // transform to string and parse the template back, we consider we can use process variables and responsible org in the model
+      try {
+        String convert = templateConverter.convert(event.getProcessInstanceId(),
+            objectMapper.writeValueAsString(viewAccessRight), model);
+
+        // parse it back to pojo
+        resolvedAccessRight = objectMapper.readValue(convert, AccessRight.class);
+
+      } catch (JsonProcessingException e){
+        LOG.error("Error while creating access rights", e);
+      }
+    }
+
+    InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(event, resolvedAccessRight);
     processMapper.insertOrUpdateProcess(insertProcessQueryParam);
 
     if (LOG.isDebugEnabled()){
@@ -221,7 +273,7 @@ public class IngestionService {
     // delete a process, all linked objects will be removed in cascade
     processMapper.deleteProcess(new DeleteProcessQueryParam(event.getProcessInstanceId()));
 
-    InsertProcessQueryParam updateProcessQueryParam = eventConverter.toInsertProcessQueryParam(event);
+    InsertProcessQueryParam updateProcessQueryParam = eventConverter.toInsertProcessQueryParam(event, null);
     processMapper.insertOrUpdateProcess(updateProcessQueryParam);
 
     if (LOG.isDebugEnabled()){
@@ -285,6 +337,25 @@ public class IngestionService {
       );
     }
 
+    if (!event.getAssociatedPortfolioItemIdsList().isEmpty()) {
+      InsertProcessPortfolioItems insertProcessPortfolioItem = eventConverter.toInsertProcessPortfolioItem(
+          ProcessAssociatedPortfolioItemAdded.newBuilder()
+              .setProcessInstanceId(event.getProcessInstanceId())
+              .addAllPortfolioItemIds(event.getAssociatedPortfolioItemIdsList())
+              .build()
+      );
+      processMapper.insertProcessPortfolioItems(insertProcessPortfolioItem);
+    }
+
+    eventPublisher.publishEvent(new ProcessRegistered(
+        event.getProcessInstanceId(),
+        event.getProviderId(),
+        event.getDomainKey(),
+        event.getProcessTypeKey(),
+        event.getUserId(),
+        event.getOnBehalfOfUserId(),
+        ProtoUtils.timestampToInstant(event.getCreatedOn())
+    ));
   }
 
   @Transactional

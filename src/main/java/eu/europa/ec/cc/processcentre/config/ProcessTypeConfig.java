@@ -26,4 +26,6 @@ public record ProcessTypeConfig(
 
 ) {
   public static String CONFIGURATION_TYPE_NAME = "processType";
+  public static String CONFIGURATION_RESULT_CARD_NAME = "processResult";
+  public static String PROCESS_VARIABLES_PREFIX = "processVariables.";
 }

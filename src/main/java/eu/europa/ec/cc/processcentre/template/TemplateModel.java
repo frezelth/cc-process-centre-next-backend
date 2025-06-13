@@ -4,6 +4,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
+import eu.europa.ec.cc.processcentre.util.ProtoUtils;
+import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class TemplateModel {
   private Map<String, Object> templateModel = new HashMap<>();
   public static final String TEMPLATE_MARKER = "${";
 
-  private enum Model {
+  public enum Model {
     ID("id"),
     PROCESS_ID("processId"),
     PROCESS_TYPE_ID("processTypeId"),
@@ -52,7 +54,7 @@ public class TemplateModel {
     }
   }
 
-  private enum ModelGroup {
+  public enum ModelGroup {
     PROCESS_VARIABLES("processVariables");
 
     public final String tag;
@@ -60,6 +62,10 @@ public class TemplateModel {
     ModelGroup(String tag) {
       this.tag = tag;
     }
+  }
+
+  public TemplateModel() {
+
   }
 
   public TemplateModel(FindProcessByIdQueryResponse process) {
@@ -108,14 +114,52 @@ public class TemplateModel {
   private static final String NAME_MUST_NOT_BE_NULL = "name must not be null";
   private static final String DOT = ".";
 
-  private void add(@NonNull TemplateModel.Model key, Object val) {
+  public void add(@NonNull TemplateModel.Model key, Object val) {
     Objects.requireNonNull(key.tag, "key must not be null");
     templateModel.put(key.tag, val);
   }
 
-  private void add(@NonNull String key, Object val) {
+  public void add(@NonNull String key, Object val) {
     Objects.requireNonNull(key, "key must not be null");
     templateModel.put(key, val);
+  }
+
+  public void addProcessVariables(Map<String, VariableValue> processVariables) {
+    Map<String,Object> variables = (Map<String,Object>)templateModel.getOrDefault(ModelGroup.PROCESS_VARIABLES.tag,
+        new HashMap<>());
+    processVariables.forEach((k, v) ->
+      variables.put(k, toValue(v))
+    );
+  }
+
+  public static Object toValue(VariableValue variableValue) {
+    if (variableValue != null && !variableValue.getDeleted()) {
+      switch (variableValue.getKindCase()) {
+        case BOOLEANVALUE -> {
+          return variableValue.getBooleanValue();
+        }
+        case INTEGERVALUE -> {
+          return variableValue.getIntegerValue();
+        }
+        case LONGVALUE -> {
+          return variableValue.getLongValue();
+        }
+        case DOUBLEVALUE -> {
+          return variableValue.getDoubleValue();
+        }
+        case TIMEVALUE -> {
+          return ProtoUtils.timestampToInstant(variableValue.getTimeValue());
+        }
+        case BYTESVALUE -> {
+          return variableValue.getBytesValue().toByteArray();
+        }
+        default -> {
+          return variableValue.getStringValue();
+        }
+      }
+    } else {
+      return null;
+    }
   }
 
 }

@@ -24,6 +24,8 @@ public class FindProcessByIdQueryResponse {
 
     private String businessStatus;
 
+    private String resultCard;
+
     private List<FindProcessByIdQueryResponseTranslation> translations;
     private List<FindProcessVariableQueryResponse> variables;
 

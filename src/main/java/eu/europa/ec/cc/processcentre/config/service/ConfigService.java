@@ -1,16 +1,20 @@
 package eu.europa.ec.cc.processcentre.config.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.cc.configuration.domain.ConfigurationSet;
 import eu.europa.ec.cc.configuration.service.DomainConfigService;
 import eu.europa.ec.cc.configuration.service.MergeStrategy;
 import eu.europa.ec.cc.configuration.service.SearchStrategy;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
+import eu.europa.ec.cc.processcentre.exception.ApplicationException;
 import eu.europa.ec.cc.processcentre.util.Context;
 import java.util.Map;
 import java.util.Optional;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,25 +30,42 @@ public class ConfigService {
     this.objectMapper = objectMapper;
   }
 
-  public Optional<ProcessTypeConfig> fetchProcessTypeConfig(Map<String, String> context) {
+  public ProcessTypeConfig fetchProcessTypeConfig(Map<String, String> context) {
+    return fetchConfig(ProcessTypeConfig.class, ProcessTypeConfig.CONFIGURATION_TYPE_NAME, context);
+  }
+
+  public String fetchResultCardLayoutConfig(Map<String, String> context) {
+    return fetchConfig(String.class, ProcessTypeConfig.CONFIGURATION_TYPE_NAME, context);
+  }
+
+  @SuppressWarnings("unchecked")
+  private @NotNull <T> T fetchConfig(Class<T> configClass, String configType, Map<String, String> context) {
     Context.requireValidContext(context);
 
-    ConfigurationSet processTypeConfigAsJson = domainConfigService.get(context, ProcessTypeConfig.CONFIGURATION_TYPE_NAME,
+    ConfigurationSet processTypeConfigAsJson = domainConfigService.get(context,
+        configType,
         SearchStrategy.BEST_MATCH,
         MergeStrategy.NO_MERGE_HIGHEST_SCORE_WINS);
 
-    try {
-      if (LOG.isDebugEnabled()){
-        LOG.debug("Config for context {} fetched, config is {}",
-            context, processTypeConfigAsJson.getContent());
-      }
-      return Optional.of(objectMapper.treeToValue(processTypeConfigAsJson.getContent(),
-          ProcessTypeConfig.class));
-    } catch (JsonProcessingException e) {
-      LOG.warn("Cannot convert process configuration for context {} into json, config is {}",
+    if (processTypeConfigAsJson == null || processTypeConfigAsJson.getContent() == null) {
+      LOG.warn("Config not found for type {} and context {}", configType, context);
+      throw new ApplicationException("Config is empty");
+    }
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Config for context {} fetched, config is {}",
           context, processTypeConfigAsJson.getContent());
-      return Optional.empty();
+    }
+
+    try {
+      if (configClass.isAssignableFrom(String.class)){
+        return (T) objectMapper.writeValueAsString(processTypeConfigAsJson.getContent());
+      } else {
+        return objectMapper.treeToValue(processTypeConfigAsJson.getContent(), configClass);
+      }
+    } catch (JsonProcessingException e) {
+      LOG.warn("Invalid config for type {} and context {}", configType, context);
+      throw new ApplicationException(e);
     }
   }
-
 }

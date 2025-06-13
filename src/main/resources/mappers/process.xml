@@ -39,6 +39,7 @@
     <result property="status" column="process_status"/>
     <result property="businessStatus" column="business_status"/>
     <result property="processTypeId" column="process_type_id"/>
+    <result property="resultCard" column="result_card"/>
     <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
     <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
     <collection property="runningStatusLogs" javaType="java.util.ArrayList" resultMap="processStatusLog"/>
@@ -54,6 +55,7 @@
       p.BUSINESS_STATUS as business_status,
       p.PROCESS_TYPE_ID as process_type_id,
       p.STATUS as process_status,
+      p.RESULT_CARD as result_card,
       t.OBJECT_ID as object_id,
       t.OBJECT_TYPE as object_type,
       t.ATTRIBUTE_NAME as attribute_name,
@@ -82,6 +84,13 @@
     ORDER BY r.TIMESTAMP desc
   </select>
 
+  <select id="findProcessConfigById">
+    SELECT PROCESS_INSTANCE_ID,
+      TYPE,
+      RESULT_CARD FROM T_PROCESS_CONFIG
+    WHERE PROCESS_INSTANCE_ID = #{value}
+  </select>
+
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
       PROCESS_INSTANCE_ID,
@@ -92,7 +101,12 @@
       BUSINESS_STATUS,
       RESPONSIBLE_ORGANISATION_ID,
       RESPONSIBLE_USER_ID,
-      PARENT_PROCESS_INSTANCE_ID
+      PARENT_PROCESS_INSTANCE_ID,
+      SECURITY_APPLICATION_ID,
+      SECURITY_SECUNDA_TASK,
+      SECURITY_SCOPE_TYPE_ID,
+      SECURITY_SCOPE_ID,
+      SECURITY_ORGANISATION_ID
     )  VALUES (
     #{processInstanceId},
     #{processTypeId},
@@ -102,7 +116,12 @@
     #{businessStatus},
     #{responsibleOrganisationId},
     #{responsibleUserId},
-    #{parentProcessInstanceId}
+    #{parentProcessInstanceId},
+    #{securityApplicationId},
+    #{securitySecundaTask},
+    #{securityScopeTypeId},
+    #{securityScopeId},
+    #{securityOrganisationId}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
@@ -110,7 +129,13 @@
     PROCESS_TYPE_KEY = EXCLUDED.PROCESS_TYPE_KEY,
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
     RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
-    RESPONSIBLE_USER_ID = EXCLUDED.RESPONSIBLE_USER_ID
+    RESPONSIBLE_USER_ID = EXCLUDED.RESPONSIBLE_USER_ID,
+    PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID,
+    SECURITY_APPLICATION_ID = EXCLUDED.SECURITY_APPLICATION_ID,
+    SECURITY_SECUNDA_TASK = EXCLUDED.SECURITY_SECUNDA_TASK,
+    SECURITY_SECUNDA_SCOPE_TYPE_ID = EXCLUDED.SECURITY_SECUNDA_SCOPE_TYPE_ID,
+    SECURITY_SECUNDA_SCOPE_ID = EXCLUDED.SECURITY_SECUNDA_SCOPE_ID,
+    SECURITY_ORGANISATION_ID = EXCLUDED.SECURITY_ORGANISATION_ID
   </insert>
 
   <update id="updateProcess">

@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 public class TemplateConverter {
 
   final TemplateEngine templateEngine;
+  static final String patternStr = "\\\\\"";
+  static final Pattern pattern = Pattern.compile(patternStr);
 
   @Autowired
   public TemplateConverter(TemplateEngine templateEngine) {
@@ -27,9 +29,7 @@ public class TemplateConverter {
   }
 
   public static String cleanSerializedTemplate(String template) {
-    String patternStr = "\\\\\"";
     String replacement = "\"";
-    Pattern pattern = Pattern.compile(patternStr);
     Matcher matcher = pattern.matcher(template);
 
     return matcher.replaceAll(replacement).replace("\\\\", "\\");

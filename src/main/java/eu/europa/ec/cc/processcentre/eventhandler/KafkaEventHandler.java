@@ -27,21 +27,6 @@ public class KafkaEventHandler {
       LOG.debug("Handling ProcessRegistered for process {}", event.processInstanceId());
     }
 
-    // send a command to kafka to handle load of configuration
-    // the process won't be visible until the config has been loaded
-    kafkaSender.sendAndWaitToCommandTopic(
-        event.processInstanceId(), UpdateProcessContext.newBuilder()
-            .setProcessInstanceId(event.processInstanceId())
-            .setProviderId(event.providerId())
-            .setDomainKey(event.domainKey())
-            .setProcessTypeKey(event.processTypeKey())
-            .build()
-    );
-
-    if (LOG.isDebugEnabled()){
-      LOG.debug("UpdateProcessContext sent for process {}", event.processInstanceId());
-    }
-
     // send an event to kafka to notify the fact that the process has been registered in PC
     kafkaSender.sendToEventTopic(
         event.processInstanceId(), eu.europa.ec.cc.processcentre.event.proto.ProcessRegistered.newBuilder()

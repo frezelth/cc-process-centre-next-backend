@@ -4,14 +4,20 @@ import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessSecurityQueryParam;
+import eu.europa.ec.cc.processcentre.template.TemplateExtractor;
 import eu.europa.ec.cc.processcentre.template.TemplateService;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @Slf4j
@@ -56,8 +62,12 @@ public class ProcessSecurityService {
 
   private UpdateProcessSecurityQueryParam fillProcessSecurityQueryParam(String processInstanceId, AccessRight right){
     String scopeIdVal = null;
+    String responsibleOrganisationIdVal = null;
     if (StringUtils.isNotEmpty(right.scopeTypeId()) && StringUtils.isNotEmpty(right.scopeId())){
-      scopeIdVal = templateService.processAccessRightsScopeIdTemplate(processInstanceId, right.scopeId());
+      scopeIdVal = getScopeIdVal(processInstanceId, right.scopeId());
+    }
+    if (StringUtils.isNotEmpty(right.organisationId())){
+
     }
     return new UpdateProcessSecurityQueryParam(
         processInstanceId,
@@ -67,5 +77,29 @@ public class ProcessSecurityService {
         right.scopeId(),
         scopeIdVal
     );
+  }
+
+  public @Nullable String getResponsibleOrganisationIdVal(String processInstanceId){
+    return null;
+  }
+
+  private @Nullable String getScopeIdVal(String processInstanceId, String scopeId) {
+    Set<String> usedVariables = TemplateExtractor.extractVariables(scopeId);
+
+    if (!CollectionUtils.isEmpty(usedVariables)){
+      // support only one variable
+      String processVariableName = usedVariables.iterator().next();
+      if (processVariableName.startsWith(ProcessTypeConfig.PROCESS_VARIABLES_PREFIX)){
+        processVariableName = processVariableName.substring(ProcessTypeConfig.PROCESS_VARIABLES_PREFIX.length());
+      }
+
+      FindProcessVariableQueryResponse processVariable = processMapper.findProcessVariable(
+          new FindProcessVariableQueryParam(
+              processInstanceId, processVariableName
+          ));
+      return processVariable.getValueString();
+    } else {
+      return scopeId;
+    }
   }
 }

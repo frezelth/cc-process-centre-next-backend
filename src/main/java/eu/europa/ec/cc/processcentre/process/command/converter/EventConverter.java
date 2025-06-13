@@ -1,6 +1,7 @@
 package eu.europa.ec.cc.processcentre.process.command.converter;
 
 import com.google.protobuf.Timestamp;
+import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessPortfolioItems;
@@ -34,9 +35,19 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface EventConverter {
 
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event);
+  @Mapping(source = "resolvedAccessRight.applicationId", target = "securityApplicationId")
+  @Mapping(source = "resolvedAccessRight.permissionId", target = "securitySecundaTask")
+  @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
+  @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
+  @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event, AccessRight resolvedAccessRight);
 
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event);
+  @Mapping(source = "resolvedAccessRight.applicationId", target = "securityApplicationId")
+  @Mapping(source = "resolvedAccessRight.permissionId", target = "securitySecundaTask")
+  @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
+  @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
+  @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event, AccessRight resolvedAccessRight);
 
   DeleteProcessQueryParam toDeleteProcessQueryParam(ProcessDeleted event);
 
