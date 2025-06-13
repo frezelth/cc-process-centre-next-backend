@@ -40,14 +40,14 @@ public interface EventConverter {
   @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
   @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
   @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event, AccessRight resolvedAccessRight);
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event, AccessRight resolvedAccessRight, String resultCard);
 
   @Mapping(source = "resolvedAccessRight.applicationId", target = "securityApplicationId")
   @Mapping(source = "resolvedAccessRight.permissionId", target = "securitySecundaTask")
   @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
   @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
   @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event, AccessRight resolvedAccessRight);
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event, AccessRight resolvedAccessRight, String resultCard);
 
   DeleteProcessQueryParam toDeleteProcessQueryParam(ProcessDeleted event);
 

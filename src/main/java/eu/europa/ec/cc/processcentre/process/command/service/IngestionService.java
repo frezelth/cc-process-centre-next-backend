@@ -1,7 +1,9 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
@@ -10,23 +12,14 @@ import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessPortfolioItems;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessStateQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessVariableQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessVariableQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessActionLogQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessPortfolioItems;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProcessStateQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusinessStatusQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.*;
 import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
 import eu.europa.ec.cc.processcentre.template.TemplateConverter;
 import eu.europa.ec.cc.processcentre.template.TemplateModel;
 import eu.europa.ec.cc.processcentre.template.TemplateModel.Model;
 import eu.europa.ec.cc.processcentre.template.TemplateModel.ModelGroup;
+import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
+import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.util.Context;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
@@ -46,11 +39,7 @@ import eu.europa.ec.cc.provider.proto.ProcessVariableUpdated;
 import eu.europa.ec.cc.provider.proto.ProcessVariablesUpdated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -104,34 +93,68 @@ public class IngestionService {
     // load the process result card config, not mandatory
     String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context);
 
-    List<AccessRight> viewAccessRights = processTypeConfig.accessRights().getOrDefault(Right.VIEW,
-        Collections.emptyList());
+    TemplateModel model = new TemplateModel(event);
 
     AccessRight resolvedAccessRight = null;
-    if (viewAccessRights.isEmpty()) {
-      resolvedAccessRight = new AccessRight(processTypeConfig.secundaTask(), AccessRight.PROCESS_CENTRE, null, null, null);
-    } else {
-      AccessRight viewAccessRight = viewAccessRights.getFirst();
+    String resultCard = null;
 
-      // to define access rights we support process variables and
-      TemplateModel model = new TemplateModel();
-      model.addProcessVariables(event.getProcessVariablesMap());
-      model.add(Model.RESPONSIBLE, event.getResponsibleOrganisationId());
-      // transform to string and parse the template back, we consider we can use process variables and responsible org in the model
+    if (processTypeConfig != null) {
+      List<AccessRight> viewAccessRights = processTypeConfig.accessRights().getOrDefault(Right.VIEW,
+              Collections.emptyList());
+
+      if (viewAccessRights.isEmpty()) {
+        resolvedAccessRight = new AccessRight(processTypeConfig.secundaTask(), AccessRight.PROCESS_CENTRE, null, null, null);
+      } else {
+        AccessRight viewAccessRight = viewAccessRights.getFirst();
+
+        try {
+          String convert = templateConverter.convert("accessRightsTemplate_" + event.getProcessInstanceId(),
+                  objectMapper.writeValueAsString(viewAccessRight), model);
+
+          // parse it back to pojo
+          resolvedAccessRight = objectMapper.readValue(convert, AccessRight.class);
+
+        } catch (JsonProcessingException e){
+          LOG.error("Error while parsing access rights", e);
+        }
+      }
+
+      // create translations for the type name
+      translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+              event.getProcessInstanceId(), TranslationAttribute.PROCESS_TYPE_NAME,
+              processTypeConfig.name());
+
       try {
-        String convert = templateConverter.convert(event.getProcessInstanceId(),
-            objectMapper.writeValueAsString(viewAccessRight), model);
+        String resolvedProcessTitleAsString = templateConverter.convert(
+                "titleTemplate_" + event.getProcessInstanceId(),
+                objectMapper.writeValueAsString(processTypeConfig.titleTemplate()), model);
 
-        // parse it back to pojo
-        resolvedAccessRight = objectMapper.readValue(convert, AccessRight.class);
-
+        BabelText resolvedProcessTitle = objectMapper.readValue(resolvedProcessTitleAsString, BabelText.class);
+        translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+                event.getProcessInstanceId(), TranslationAttribute.PROCESS_TITLE,
+                resolvedProcessTitle);
       } catch (JsonProcessingException e){
-        LOG.error("Error while creating access rights", e);
+        LOG.error("Error while parsing title template", e);
+
+        // if title template fails, store type name as process title
+        translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+                event.getProcessInstanceId(), TranslationAttribute.PROCESS_TITLE,
+                processTypeConfig.name());
       }
     }
 
-    InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(event, resolvedAccessRight);
+    if (resultCardLayoutConfig != null) {
+
+      resultCard = templateConverter.convert(
+              "resultCardLayout_" + event.getProcessInstanceId(),
+              resultCardLayoutConfig, model);
+    }
+
+    InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(
+            event, resolvedAccessRight, resultCard);
     processMapper.insertOrUpdateProcess(insertProcessQueryParam);
+
+    storeProcessConfig(event.getProcessInstanceId(), processTypeConfig, resultCardLayoutConfig);
 
     if (LOG.isDebugEnabled()){
       LOG.debug("Process {} persisted", event.getProcessInstanceId());
@@ -175,6 +198,22 @@ public class IngestionService {
         ProtoUtils.timestampToInstant(event.getCreatedOn())
     ));
   }
+
+  private void storeProcessConfig(String processInstanceId, ProcessTypeConfig processTypeConfig,
+                                  String processResultCardConfig){
+    String processTypeConfigAsString = Optional.ofNullable(processTypeConfig)
+                    .map(p -> {
+                        try {
+                            return objectMapper.writeValueAsString(processTypeConfig);
+                        } catch (JsonProcessingException e) {
+                            return null;
+                        }
+                    }).orElse(null);
+    processMapper.insertOrUpdateProcessConfig(
+            new InsertOrUpdateProcessConfigQueryParam(processInstanceId, processTypeConfigAsString, processResultCardConfig)
+    );
+  }
+
 
   @Transactional
   public void handle(ProcessVariablesUpdated event){
@@ -273,7 +312,7 @@ public class IngestionService {
     // delete a process, all linked objects will be removed in cascade
     processMapper.deleteProcess(new DeleteProcessQueryParam(event.getProcessInstanceId()));
 
-    InsertProcessQueryParam updateProcessQueryParam = eventConverter.toInsertProcessQueryParam(event, null);
+    InsertProcessQueryParam updateProcessQueryParam = eventConverter.toInsertProcessQueryParam(event, null, null);
     processMapper.insertOrUpdateProcess(updateProcessQueryParam);
 
     if (LOG.isDebugEnabled()){

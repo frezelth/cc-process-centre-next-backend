@@ -2,9 +2,11 @@ package eu.europa.ec.cc.processcentre.template;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
+import eu.europa.ec.cc.provider.proto.ProcessCreated;
 import eu.europa.ec.cc.variables.proto.VariableValue;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
+
+import javax.cache.Cache;
 
 /**
  * 
@@ -66,6 +70,38 @@ public class TemplateModel {
 
   public TemplateModel() {
 
+  }
+
+  public TemplateModel(ProcessCreated process) {
+    add(Model.ID, process.getProcessInstanceId());
+    add(Model.PROCESS_ID, process.getProcessInstanceId());
+    add(Model.PROCESS_TYPE_ID, process.getProcessTypeId());
+    add(Model.PROVIDER_ID, process.getProviderId());
+    add(Model.RESPONSIBLE, process.getResponsibleOrganisationId());
+
+    add(Model.STATUS, ProcessStatus.ONGOING);
+    add(Model.BUSINESS_STATUS, process.getBusinessStatus());
+    add(Model.START_DATE, ProtoUtils.timestampToInstant(process.getCreatedOn()));
+    add(Model.END_DATE, null);
+    add(Model.PAUSE_DATE, null);
+    add(Model.RESTART_DATE, null);
+    add(Model.CANCEL_DATE, null);
+
+    String items = null;
+    if (!CollectionUtils.isEmpty(process.getAssociatedPortfolioItemIdsList())) {
+      items = String.join(",", process.getAssociatedPortfolioItemIdsList());
+    }
+    add(Model.PORTFOLIO_ITEMS, items);
+
+    Map<String, Serializable> processVariables = process.getProcessVariablesMap()
+            .entrySet()
+            .stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> toValue(e.getValue())
+            ));
+
+    add(ModelGroup.PROCESS_VARIABLES.tag, processVariables);
   }
 
   public TemplateModel(FindProcessByIdQueryResponse process) {
@@ -132,7 +168,7 @@ public class TemplateModel {
     );
   }
 
-  public static Object toValue(VariableValue variableValue) {
+  public static Serializable toValue(VariableValue variableValue) {
     if (variableValue != null && !variableValue.getDeleted()) {
       switch (variableValue.getKindCase()) {
         case BOOLEANVALUE -> {

@@ -55,8 +55,12 @@ public class ProcessConfigService {
     this.objectMapper = objectMapper;
   }
 
+  public void refreshConfiguration(){
+
+  }
+
+
   @TransactionalEventListener
-  @Transactional
   @SneakyThrows
   public void handle(ProcessVariablesUpdated event){
     FindProcessConfigByIdQueryResponse processConfigById = processMapper.findProcessConfigById(

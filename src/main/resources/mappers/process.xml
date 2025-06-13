@@ -91,6 +91,11 @@
     WHERE PROCESS_INSTANCE_ID = #{value}
   </select>
 
+  <insert id="insertOrUpdateProcessConfig">
+    INSERT INTO T_PROCESS_CONFIG (PROCESS_INSTANCE_ID, TYPE, RESULT_CARD)
+    VALUES (#{processInstanceId}, #{processTypeConfig}, #{processResultCardConfig})
+  </insert>
+
   <insert id="insertOrUpdateProcess">
     INSERT INTO T_PROCESS (
       PROCESS_INSTANCE_ID,
@@ -106,7 +111,8 @@
       SECURITY_SECUNDA_TASK,
       SECURITY_SCOPE_TYPE_ID,
       SECURITY_SCOPE_ID,
-      SECURITY_ORGANISATION_ID
+      SECURITY_ORGANISATION_ID,
+      RESULT_CARD
     )  VALUES (
     #{processInstanceId},
     #{processTypeId},
@@ -121,7 +127,8 @@
     #{securitySecundaTask},
     #{securityScopeTypeId},
     #{securityScopeId},
-    #{securityOrganisationId}
+    #{securityOrganisationId},
+    #{resultCard}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
@@ -133,21 +140,16 @@
     PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID,
     SECURITY_APPLICATION_ID = EXCLUDED.SECURITY_APPLICATION_ID,
     SECURITY_SECUNDA_TASK = EXCLUDED.SECURITY_SECUNDA_TASK,
-    SECURITY_SECUNDA_SCOPE_TYPE_ID = EXCLUDED.SECURITY_SECUNDA_SCOPE_TYPE_ID,
-    SECURITY_SECUNDA_SCOPE_ID = EXCLUDED.SECURITY_SECUNDA_SCOPE_ID,
-    SECURITY_ORGANISATION_ID = EXCLUDED.SECURITY_ORGANISATION_ID
+    SECURITY_SCOPE_TYPE_ID = EXCLUDED.SECURITY_SCOPE_TYPE_ID,
+    SECURITY_SCOPE_ID = EXCLUDED.SECURITY_SCOPE_ID,
+    SECURITY_ORGANISATION_ID = EXCLUDED.SECURITY_ORGANISATION_ID,
+    RESULT_CARD = EXCLUDED.RESULT_CARD
   </insert>
-
-  <update id="updateProcess">
-    UPDATE T_PROCESS SET
-
-  </update>
 
   <update id="updateProcessSecurity">
     UPDATE T_PROCESS SET SECURITY_APPLICATION_ID = #{applicationId}, SECURITY_SECUNDA_TASK = #{secundaTask},
     SECURITY_SCOPE_TYPE_ID = #{scopeTypeId},
-    SECURITY_SCOPE_ID = #{scopeId},
-    SECURITY_SCOPE_ID_VALUE = #{scopeIdVal} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+    SECURITY_SCOPE_ID = #{scopeId} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
   <update id="deleteProcess">

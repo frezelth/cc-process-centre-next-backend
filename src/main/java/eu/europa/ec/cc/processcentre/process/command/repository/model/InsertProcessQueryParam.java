@@ -15,7 +15,8 @@ public record InsertProcessQueryParam(
     String securitySecundaTask,
     String securityScopeTypeId,
     String securityScopeId,
-    String securityOrganisationId
+    String securityOrganisationId,
+    String resultCard
 ) {
 
 }

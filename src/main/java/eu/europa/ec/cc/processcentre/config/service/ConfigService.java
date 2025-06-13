@@ -38,34 +38,45 @@ public class ConfigService {
     return fetchConfig(String.class, ProcessTypeConfig.CONFIGURATION_TYPE_NAME, context);
   }
 
-  @SuppressWarnings("unchecked")
-  private @NotNull <T> T fetchConfig(Class<T> configClass, String configType, Map<String, String> context) {
+  public JsonNode fetchConfig(String configType, Map<String, String> context){
     Context.requireValidContext(context);
 
-    ConfigurationSet processTypeConfigAsJson = domainConfigService.get(context,
-        configType,
-        SearchStrategy.BEST_MATCH,
-        MergeStrategy.NO_MERGE_HIGHEST_SCORE_WINS);
+    ConfigurationSet config = domainConfigService.get(context,
+            configType,
+            SearchStrategy.BEST_MATCH,
+            MergeStrategy.NO_MERGE_HIGHEST_SCORE_WINS);
 
-    if (processTypeConfigAsJson == null || processTypeConfigAsJson.getContent() == null) {
+    if (config == null) {
+      return null;
+    }
+
+    return config.getContent();
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T fetchConfig(Class<T> configClass, String configType, Map<String, String> context) {
+
+    JsonNode config = fetchConfig(configType, context);
+
+    if (config == null) {
       LOG.warn("Config not found for type {} and context {}", configType, context);
-      throw new ApplicationException("Config is empty");
+      return null;
     }
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Config for context {} fetched, config is {}",
-          context, processTypeConfigAsJson.getContent());
+          context, config);
     }
 
     try {
       if (configClass.isAssignableFrom(String.class)){
-        return (T) objectMapper.writeValueAsString(processTypeConfigAsJson.getContent());
+        return (T) objectMapper.writeValueAsString(config);
       } else {
-        return objectMapper.treeToValue(processTypeConfigAsJson.getContent(), configClass);
+        return objectMapper.treeToValue(config, configClass);
       }
     } catch (JsonProcessingException e) {
       LOG.warn("Invalid config for type {} and context {}", configType, context);
-      throw new ApplicationException(e);
+      return null;
     }
   }
 }
