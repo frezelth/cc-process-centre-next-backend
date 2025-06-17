@@ -35,19 +35,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface EventConverter {
 
-  @Mapping(source = "resolvedAccessRight.applicationId", target = "securityApplicationId")
-  @Mapping(source = "resolvedAccessRight.permissionId", target = "securitySecundaTask")
-  @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
-  @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
-  @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event, AccessRight resolvedAccessRight, String resultCard);
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessCreated event);
 
-  @Mapping(source = "resolvedAccessRight.applicationId", target = "securityApplicationId")
-  @Mapping(source = "resolvedAccessRight.permissionId", target = "securitySecundaTask")
-  @Mapping(source = "resolvedAccessRight.scopeTypeId", target = "securityScopeTypeId")
-  @Mapping(source = "resolvedAccessRight.scopeId", target = "securityScopeId")
-  @Mapping(source = "resolvedAccessRight.organisationId", target = "securityOrganisationId")
-  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event, AccessRight resolvedAccessRight, String resultCard);
+  InsertProcessQueryParam toInsertProcessQueryParam(ProcessRestored event);
 
   DeleteProcessQueryParam toDeleteProcessQueryParam(ProcessDeleted event);
 

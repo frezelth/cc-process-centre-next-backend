@@ -106,13 +106,7 @@
       BUSINESS_STATUS,
       RESPONSIBLE_ORGANISATION_ID,
       RESPONSIBLE_USER_ID,
-      PARENT_PROCESS_INSTANCE_ID,
-      SECURITY_APPLICATION_ID,
-      SECURITY_SECUNDA_TASK,
-      SECURITY_SCOPE_TYPE_ID,
-      SECURITY_SCOPE_ID,
-      SECURITY_ORGANISATION_ID,
-      RESULT_CARD
+      PARENT_PROCESS_INSTANCE_ID
     )  VALUES (
     #{processInstanceId},
     #{processTypeId},
@@ -122,13 +116,7 @@
     #{businessStatus},
     #{responsibleOrganisationId},
     #{responsibleUserId},
-    #{parentProcessInstanceId},
-    #{securityApplicationId},
-    #{securitySecundaTask},
-    #{securityScopeTypeId},
-    #{securityScopeId},
-    #{securityOrganisationId},
-    #{resultCard}
+    #{parentProcessInstanceId}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
@@ -137,19 +125,39 @@
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
     RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
     RESPONSIBLE_USER_ID = EXCLUDED.RESPONSIBLE_USER_ID,
-    PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID,
-    SECURITY_APPLICATION_ID = EXCLUDED.SECURITY_APPLICATION_ID,
-    SECURITY_SECUNDA_TASK = EXCLUDED.SECURITY_SECUNDA_TASK,
-    SECURITY_SCOPE_TYPE_ID = EXCLUDED.SECURITY_SCOPE_TYPE_ID,
-    SECURITY_SCOPE_ID = EXCLUDED.SECURITY_SCOPE_ID,
-    SECURITY_ORGANISATION_ID = EXCLUDED.SECURITY_ORGANISATION_ID,
-    RESULT_CARD = EXCLUDED.RESULT_CARD
+    PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID
   </insert>
 
-  <update id="updateProcessSecurity">
+  <update id="updateResolvedSecurityConfig">
     UPDATE T_PROCESS SET SECURITY_APPLICATION_ID = #{applicationId}, SECURITY_SECUNDA_TASK = #{secundaTask},
     SECURITY_SCOPE_TYPE_ID = #{scopeTypeId},
-    SECURITY_SCOPE_ID = #{scopeId} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+    SECURITY_SCOPE_ID = #{scopeId}, SECURITY_ORGANISATION_ID = #{organisationId}
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <update id="updateResolvedConfig">
+    UPDATE T_PROCESS
+    <set>
+      <if test="applicationId != null and applicationId != ''">
+        SECURITY_APPLICATION_ID = #{applicationId},
+      </if>
+      <if test="secundaTask != null and secundaTask != ''">
+        SECURITY_SECUNDA_TASK = #{secundaTask},
+      </if>
+      <if test="scopeTypeId != null and scopeTypeId != ''">
+        SECURITY_SCOPE_TYPE_ID = #{scopeTypeId},
+      </if>
+      <if test="scopeId != null and scopeId != ''">
+        SECURITY_SCOPE_ID = #{scopeId},
+      </if>
+      <if test="organisationId != null and organisationId != ''">
+        SECURITY_ORGANISATION_ID = #{organisationId},
+      </if>
+      <if test="resultCardConfig != null and resultCardConfig != ''">
+        RESULT_CARD = #{resultCardConfig},
+      </if>
+    </set>
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
   <update id="deleteProcess">

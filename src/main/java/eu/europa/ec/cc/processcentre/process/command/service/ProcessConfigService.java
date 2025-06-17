@@ -1,28 +1,33 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
+import eu.europa.ec.cc.processcentre.config.service.ConfigService;
 import eu.europa.ec.cc.processcentre.event.ProcessModelChanged;
-import eu.europa.ec.cc.processcentre.event.ProcessVariablesUpdated;
+import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
+import eu.europa.ec.cc.processcentre.event.ProcessVariablesChanged;
 import eu.europa.ec.cc.processcentre.exception.NotFoundException;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessConfigByIdQueryResponse;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessConfigQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedConfigQueryParam;
 import eu.europa.ec.cc.processcentre.template.TemplateConverter;
 import eu.europa.ec.cc.processcentre.template.TemplateExtractor;
+import eu.europa.ec.cc.processcentre.template.TemplateModel;
 import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
 import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
+import eu.europa.ec.cc.processcentre.translation.TranslationService;
 import eu.europa.ec.cc.processcentre.translation.repository.DeleteTranslationsParam;
 import eu.europa.ec.cc.processcentre.translation.repository.InsertOrUpdateTranslationsParam;
 import eu.europa.ec.cc.processcentre.translation.repository.TranslationMapper;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import java.io.Serializable;
-import java.io.StringReader;
+import eu.europa.ec.cc.processcentre.util.Context;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,139 +35,189 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import org.springframework.context.event.EventListener;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor.MappingsProvider;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.util.CollectionUtils;
 
 @Service
+@Slf4j
 public class ProcessConfigService {
 
   private final TranslationMapper translationMapper;
   private final ProcessMapper processMapper;
   private final TemplateConverter templateConverter;
   private final ObjectMapper objectMapper;
+  private final ConfigService configService;
+  private final TranslationService translationService;
 
   public ProcessConfigService(
       TranslationMapper translationMapper,
       ProcessMapper processMapper,
       TemplateConverter templateConverter,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper, ConfigService configService,
+      TranslationService translationService) {
     this.translationMapper = translationMapper;
     this.processMapper = processMapper;
     this.templateConverter = templateConverter;
     this.objectMapper = objectMapper;
+    this.configService = configService;
+    this.translationService = translationService;
   }
-
-  public void refreshConfiguration(){
-
-  }
-
 
   @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   @SneakyThrows
-  public void handle(ProcessVariablesUpdated event){
-    FindProcessConfigByIdQueryResponse processConfigById = processMapper.findProcessConfigById(
-        event.processInstanceId()).orElseThrow();
+  public void handle(ProcessRegistered event){
 
-    ProcessTypeConfig config = objectMapper.readValue(processConfigById.type(), ProcessTypeConfig.class);
+    Map<String, String> context = Context.context(event.providerId(), event.domainKey(), event.processTypeKey());
+    // load the process type config
+    ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context);
 
-    // check for places of the config where variables might be used
-    Boolean accessRightsMatch = config.accessRights().get(Right.VIEW).stream().findFirst().map(
-        accessRight -> accessRightMatch(accessRight, event.names())
-    ).orElse(Boolean.FALSE);
+    // load the process result card config, not mandatory
+    String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context);
+
+    // create translations for the type name / process title, initially based on type name
+    // it will be overridden later by the
+    translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+        event.processInstanceId(), TranslationAttribute.PROCESS_TYPE_NAME,
+        processTypeConfig.name());
+
+    // create translations for the type name
+    translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+        event.processInstanceId(), TranslationAttribute.PROCESS_TITLE,
+        processTypeConfig.name());
+
+    processMapper.insertOrUpdateProcessConfig(
+        new InsertOrUpdateProcessConfigQueryParam(
+            event.processInstanceId(), objectMapper.writeValueAsString(processTypeConfig), resultCardLayoutConfig)
+    );
   }
 
-  private boolean accessRightMatch(AccessRight viewRights, Set<String> variables) {
-    return TemplateExtractor.matchAny(viewRights.organisationId(), variables) ||
-        TemplateExtractor.matchAny(viewRights.scopeId(), variables);
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @SneakyThrows
+  public void handle(ProcessVariablesChanged event){
+    Set<String> namesInTemplate = event.names().stream().map(name -> TemplateModel.PROCESS_VARIABLE_PREFIX + name)
+        .collect(Collectors.toSet());
+    handleModelChange(event.processInstanceId(), namesInTemplate);
   }
 
-  @Transactional
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   @SneakyThrows
-  public void updateStoredConfiguration(String processInstanceId) {
-    FindProcessConfigByIdQueryResponse processConfigById = processMapper.findProcessConfigById(
-        processInstanceId).orElseThrow();
-
-    FindProcessByIdQueryResponse process = processMapper.findById(processInstanceId)
-        .orElseThrow(NotFoundException::new);
-    updateTitle(process);
+  public void handle(ProcessModelChanged event){
+    handleModelChange(event.processInstanceId(),
+        event.changes().stream().map(change -> change.tag).collect(Collectors.toSet()));
   }
 
-  @SneakyThrows
-  private void updateResultCard(FindProcessByIdQueryResponse findProcessByIdQueryResponse){
+  private void handleModelChange(String processInstanceId, Set<String> modelAttributesChanged) {
+    processMapper.findProcessConfigById(
+        processInstanceId).ifPresent(
+        processConfigById -> {
 
+          try {
+            ProcessTypeConfig processTypeConfig = objectMapper.readValue(processConfigById.type(),
+                ProcessTypeConfig.class);
+
+            // try to see if the first VIEW access rights contains any changed variable
+            boolean scopeIdMatches = Optional.ofNullable(processTypeConfig.accessRights())
+                .orElse(Map.of())
+                .getOrDefault(Right.VIEW, Collections.emptyList()).stream()
+                .anyMatch(a -> TemplateExtractor.matchAny(a.scopeId(), modelAttributesChanged));
+
+            boolean organisationIdMatches = Optional.ofNullable(processTypeConfig.accessRights())
+                .orElse(Map.of())
+                .getOrDefault(Right.VIEW, Collections.emptyList()).stream()
+                .anyMatch(
+                    a -> TemplateExtractor.matchAny(a.organisationId(), modelAttributesChanged));
+
+            boolean titleTemplateMatches = Optional.ofNullable(processTypeConfig.titleTemplate())
+                .map(t -> {
+                  try {
+                    return objectMapper.writeValueAsString(t);
+                  } catch (JsonProcessingException e) {
+                    return null;
+                  }
+                })
+                .stream().anyMatch(titleAsString -> TemplateExtractor.matchAny(titleAsString,
+                    modelAttributesChanged));
+
+            boolean cardMatches = Optional.ofNullable(processConfigById.resultCard())
+                .map(r -> TemplateExtractor.matchAny(r, modelAttributesChanged))
+                .orElse(Boolean.FALSE);
+
+            if (!scopeIdMatches && !organisationIdMatches && !titleTemplateMatches
+                && !cardMatches) {
+              // the variable did not change any stored configuration
+              return;
+            }
+
+            persistResolvedConfiguration(processInstanceId, processTypeConfig);
+          } catch (JsonProcessingException e) {
+            LOG.error("Error while persisting process configuration changes", e);
+          }
+        }
+    );
   }
 
-  @SneakyThrows
-  private void updateTitle(FindProcessByIdQueryResponse findProcessByIdQueryResponse) {
-    Map<TranslationAttribute, List<FindProcessByIdQueryResponseTranslation>> allTranslations =
-        findProcessByIdQueryResponse.getTranslations().stream()
-            .collect(Collectors.groupingBy(
-                FindProcessByIdQueryResponseTranslation::getAttribute
-            ));
+  private void persistResolvedConfiguration(String processInstanceId,
+      ProcessTypeConfig processTypeConfig) throws JsonProcessingException {
+    FindProcessByIdQueryResponse process = processMapper.findById(processInstanceId).orElseThrow();
+    TemplateModel model = new TemplateModel(process);
 
-    Map<String, String> existingProcessTitle = new HashMap<>();
+    String resolvedApplicationId = null;
+    String resolvedScopeId = null;
+    String resolvedOrganisationId = null;
+    String resolvedScopeTypeId = null;
+    String resolvedSecundaTaskId = null;
+    if (processTypeConfig.accessRights() != null &&
+        !CollectionUtils.isEmpty(processTypeConfig.accessRights().get(Right.VIEW))){
+      resolvedScopeId = templateConverter.convert("scopeId_"+ processInstanceId,
+          processTypeConfig.accessRights().get(Right.VIEW).getFirst().scopeId(), model);
 
-    if (allTranslations
-        .get(TranslationAttribute.PROCESS_TITLE) != null) {
-      existingProcessTitle = allTranslations
-          .get(TranslationAttribute.PROCESS_TITLE).stream()
-          .collect(Collectors.toMap(
-              FindProcessByIdQueryResponseTranslation::getLanguageCode,
-              FindProcessByIdQueryResponseTranslation::getText
-          ));
+      resolvedOrganisationId = templateConverter.convert("organisationId_"+ processInstanceId,
+          processTypeConfig.accessRights().get(Right.VIEW).getFirst().organisationId(), model);
+
+      resolvedApplicationId = processTypeConfig.accessRights().get(Right.VIEW).getFirst().applicationId() != null ?
+          processTypeConfig.accessRights().get(Right.VIEW).getFirst().applicationId() : AccessRight.PROCESS_CENTRE;
+
+      resolvedSecundaTaskId = processTypeConfig.accessRights().get(Right.VIEW).getFirst().permissionId();
+
+      resolvedScopeTypeId = processTypeConfig.accessRights().get(Right.VIEW).getFirst().scopeTypeId();
+    } else {
+      resolvedScopeId = AccessRight.PROCESS_CENTRE;
+      resolvedSecundaTaskId = processTypeConfig.secundaTask();
     }
 
-//    List<FindProcessByIdQueryResponseTranslation> titleTemplates = allTranslations.get(
-//        TranslationAttribute.PROCESS_TITLE_TEMPLATE);
-    List<FindProcessByIdQueryResponseTranslation> typeNames = allTranslations.get(
-        TranslationAttribute.PROCESS_TYPE_NAME);
+    String resolvedTitleAsString = templateConverter.convert("titleTemplate_"+ processInstanceId,
+        objectMapper.writeValueAsString(processTypeConfig.titleTemplate()), model);
+    BabelText resolvedTitle = objectMapper.readValue(resolvedTitleAsString, BabelText.class);
 
-//    if (titleTemplates != null && !titleTemplates.isEmpty()) {
-//      // case for titleTemplate
-//      // process variables in title template
-//      Map<String, String> newTitle = new HashMap<>();
-//      for (FindProcessByIdQueryResponseTranslation titleTemplate : titleTemplates) {
-//        Map<String, Map<String, Serializable>> model = Map.of("processVariables",
-//            findProcessByIdQueryResponse.getVariables().stream()
-//                .collect(Collectors.toMap(FindProcessVariableQueryResponse::getName,
-//                    FindProcessVariableQueryResponse::getVariableValue)));
-//        String computedTitle = FreeMarkerTemplateUtils.processTemplateIntoString(
-//                new Template(null, new StringReader(titleTemplate.getText()),
-//                        new Configuration(Configuration.VERSION_2_3_34)),
-//            model
-//        );
-//        newTitle.put(titleTemplate.getLanguageCode(), computedTitle);
-//      }
-//
-//      if (!existingProcessTitle.equals(newTitle)) {
-//        updateTitle(findProcessByIdQueryResponse.getProcessInstanceId(), titleTemplates, newTitle);
-//      }
-//    } else if (typeNames != null && !typeNames.isEmpty()) {
-//      // case for process type name
-//      Map<String, String> currentTypeNames = typeNames.stream()
-//          .collect(Collectors.toMap(FindProcessByIdQueryResponseTranslation::getLanguageCode,
-//              FindProcessByIdQueryResponseTranslation::getText));
-//      if (!currentTypeNames.equals(existingProcessTitle)) {
-//        updateTitle(findProcessByIdQueryResponse.getProcessInstanceId(), typeNames, currentTypeNames);
-//      }
-//    }
+    String resolvedCard = templateConverter.convert("cardLayout_"+ processInstanceId, processTypeConfig.resultCardLayout(), model);
+
+    // if needed update the title
+    if (resolvedTitle != null){
+      translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
+          processInstanceId,
+          TranslationAttribute.PROCESS_TITLE, resolvedTitle);
+    }
+
+    // update the rest of the config (security and result card)
+    processMapper.updateResolvedConfig(
+        new UpdateResolvedConfigQueryParam(
+            processInstanceId,
+            resolvedApplicationId,
+            resolvedSecundaTaskId,
+            resolvedScopeTypeId,
+            resolvedScopeId,
+            resolvedOrganisationId,
+            resolvedCard
+        )
+    );
   }
-
-  private void updateTitle(String processInstanceId,
-      List<FindProcessByIdQueryResponseTranslation> titleTemplates, Map<String, String> newTitle) {
-    // need to update the title
-    translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(TranslationObjectType.PROCESS,
-        processInstanceId, TranslationAttribute.PROCESS_TITLE));
-    Set<InsertOrUpdateTranslationsParam> params = titleTemplates.stream()
-        .map(t -> new InsertOrUpdateTranslationsParam(
-            TranslationObjectType.PROCESS, processInstanceId,
-            TranslationAttribute.PROCESS_TITLE,
-            t.getLanguageCode(), newTitle.get(t.getLanguageCode()), t.getIsDefault()
-        )).collect(Collectors.toSet());
-    translationMapper.insertOrUpdateTranslations(params);
-  }
-
 }

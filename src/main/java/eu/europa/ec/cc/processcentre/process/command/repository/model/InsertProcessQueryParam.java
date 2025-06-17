@@ -10,13 +10,7 @@ public record InsertProcessQueryParam(
     String processTypeKey,
     String responsibleUserId,
     String businessStatus,
-    String parentProcessInstanceId,
-    String securityApplicationId,
-    String securitySecundaTask,
-    String securityScopeTypeId,
-    String securityScopeId,
-    String securityOrganisationId,
-    String resultCard
+    String parentProcessInstanceId
 ) {
 
 }

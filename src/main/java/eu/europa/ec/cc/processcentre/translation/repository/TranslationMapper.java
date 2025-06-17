@@ -9,7 +9,7 @@ public interface TranslationMapper {
 
   void insertOrUpdateTranslations(Collection<InsertOrUpdateTranslationsParam> translations);
 
-  void deleteTranslationsForAttribute(DeleteTranslationsParam param);
+  void deleteTranslations(DeleteTranslationsParam param);
 
   Map<String, String> findTranslationsForAttribute(FindTranslationsForAttributeQueryParam param);
 

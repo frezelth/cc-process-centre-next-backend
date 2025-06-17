@@ -29,6 +29,7 @@ public class TemplateModel {
 
   private Map<String, Object> templateModel = new HashMap<>();
   public static final String TEMPLATE_MARKER = "${";
+  public static final String PROCESS_VARIABLE_PREFIX = "processVariables.";
 
   public enum Model {
     ID("id"),
@@ -48,8 +49,7 @@ public class TemplateModel {
     CANCEL_DATE("cancelDate"),
     PORTFOLIO_ITEM_BUSINESS_IDS("portfolioItemBusinessIds"),
     PORTFOLIO_ITEMS("portfolioItems"),
-    RESPONSIBLE_ORGANISATION("responsibleOrganisation")
-    ;
+    RESPONSIBLE_ORGANISATION("responsibleOrganisation"), RESPONSIBLE_USER("responsibleUser");
 
     public final String tag;
 

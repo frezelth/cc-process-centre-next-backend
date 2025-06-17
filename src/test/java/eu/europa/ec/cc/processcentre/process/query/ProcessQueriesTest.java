@@ -3,9 +3,6 @@ package eu.europa.ec.cc.processcentre.process.query;
 import eu.europa.ec.cc.processcentre.ProcessCentreNextApplicationTests;
 import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse;
-import eu.europa.ec.cc.processcentre.process.command.service.IngestionService;
-import eu.europa.ec.cc.processcentre.process.command.service.ProcessService;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,107 +10,27 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Test;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
 public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     @Autowired
     private ProcessQueries processQueries;
-    @Autowired
-    private IngestionService ingestionService;
-    @Autowired
-    private ProcessService processService;
 
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private SqlSessionFactory sqlSessionFactory;
-
     @Test
-//    @Sql(
-//            statements = {
-//                    "insert into t_process (PROCESS_INSTANCE_ID) values ('P1')",
-//                    "insert into t_user_task (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID) values ('P1T1', 'P1')",
-//                    "insert into t_user_task (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID) values ('P1T2', 'P1')",
-//                    "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                    "values ('PROCESS', 'P1', 'title', 'en', 'test', true)",
-//                    "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                            "values ('PROCESS', 'P1', 'title', 'fr', 'test fr', false)",
-//                    "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                            "values ('TASK', 'P1T1', 'title', 'en', 'test task title', true)",
-//                "insert into t_process (PROCESS_INSTANCE_ID, PARENT_ID) values ('P1Child', 'P1')",
-//                "insert into t_user_task (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID) values ('T1P1Child', 'P1Child')",
-//                "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                    "values ('PROCESS', 'P1Child', 'title', 'en', 'subprocess en', true)",
-//                "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                    "values ('PROCESS', 'P1Child', 'title', 'fr', 'subprocess fr', false)",
-//                "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                    "values ('TASK', 'T1P1Child', 'title', 'en', 'task subprocess', true)",
-//                    "insert into t_process (PROCESS_INSTANCE_ID) values ('2')",
-//                    "insert into t_user_task (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID) values ('T2', '2')",
-//                    "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                            "values ('PROCESS', '2', 'title', 'en', 'process 2', true)",
-//                    "insert into t_static_translation (object_type, object_id, attribute_name, language_code, translated_text, is_default) " +
-//                            "values ('TASK', 'T2', 'title', 'en', 'task 2', true)"
-//
-//            })
     @SneakyThrows
     void testQuickSearch(){
-
-        // insert thousands of rows
-
-        /*try (SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
-            ProcessMapper mapper = session.getMapper(ProcessMapper.class);
-            ProcessVariableMapper variableMapper = session.getMapper(ProcessVariableMapper.class);
-            TranslationMapper translationMapper = session.getMapper(TranslationMapper.class);
-            TaskMapper taskMapper = session.getMapper(TaskMapper.class);
-
-            for (int i = 0; i < 10000; i++) {
-                mapper.insertOrUpdateProcess(
-                        new CreateProcessQueryParam(String.valueOf(i), Instant.now(), "Flex", "processType1", null, null, null, "PM_AGRI", "processType1", null, "frezeth", null, null)
-                );
-
-                variableMapper.insertOrUpdateProcessVariables(
-                        Collections.singleton(new InsertOrUpdateProcessVariableQueryParam(String.valueOf(i), "YEAR", null, String.valueOf(i), null, null, null, null, null, null, null))
-                );
-
-                translationMapper.insertOrUpdateTranslations(
-                        Collections.singleton(new InsertOrUpdateTranslationsParam(TranslationObjectType.PROCESS, String.valueOf(i), TranslationAttribute.PROCESS_TITLE_TEMPLATE, "en", "Process title "+i, true))
-                );
-
-                for (int j = 0; j < 100; j++) {
-                    taskMapper.insertOrUpdateTask(
-                            new CreateTaskQueryParam(String.valueOf(i), i + "_" + j, "typeKey", Instant.now())
-                    );
-
-                    translationMapper.insertOrUpdateTranslations(
-                            Collections.singleton(new InsertOrUpdateTranslationsParam(TranslationObjectType.TASK, i + "_" + j, TranslationAttribute.TASK_TITLE, "en", "Task title "+(i+"_"+j), true))
-                    );
-
-                    if (j > 10){
-                        taskMapper.completeTask(new CompleteTaskQueryParam(String.valueOf(i), Instant.now()));
-                    }
-                }
-
-                if (i % 100 == 0) {
-                    session.flushStatements();
-                }
-            }
-            session.flushStatements();
-            session.commit();
-        }*/
 
         try (Connection conn = dataSource.getConnection()) {
             CopyManager copyManager = new CopyManager((BaseConnection) conn.unwrap(BaseConnection.class));

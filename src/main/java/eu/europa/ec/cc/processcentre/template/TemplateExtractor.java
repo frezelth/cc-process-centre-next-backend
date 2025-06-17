@@ -1,6 +1,7 @@
 package eu.europa.ec.cc.processcentre.template;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -26,9 +27,14 @@ public class TemplateExtractor {
   public static boolean matchAny(String templateSource, Collection<String> targetVariables) {
     Set<String> templateVars = extractVariables(templateSource);
 
-    for (String target : targetVariables) {
-      for (String found : templateVars) {
-        if (found.equals(target) || found.startsWith(target + ".")) {
+    Set<String> targetSet = new HashSet<>(targetVariables);
+
+    for (String fullPath : templateVars) {
+      // Split path like "variables.var1" into parts: ["variables", "var1"]
+      String[] parts = fullPath.split("\\.");
+
+      for (String part : parts) {
+        if (targetSet.contains(part)) {
           return true;
         }
       }

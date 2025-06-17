@@ -7,6 +7,8 @@ import eu.europa.ec.cc.processcentre.translation.repository.TranslationMapper;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +41,17 @@ public class TranslationService {
 
   }
 
+  @Transactional
+  public void deleteTranslations(
+      @NonNull TranslationObjectType type, @NonNull String objectId, @Nullable TranslationAttribute attribute
+  ){
+    translationMapper.deleteTranslations(new DeleteTranslationsParam(type, objectId, attribute));
+  }
+
   private void insertOrUpdateInternalTranslations(TranslationObjectType objectType, String objectId,
       TranslationAttribute attribute, BabelText text) {
     // delete current translations for the object
-    translationMapper.deleteTranslationsForAttribute(new DeleteTranslationsParam(objectType, objectId,
+    translationMapper.deleteTranslations(new DeleteTranslationsParam(objectType, objectId,
         attribute));
 
     if (text.getTranslations() == null || text.getTranslations().isEmpty()) {

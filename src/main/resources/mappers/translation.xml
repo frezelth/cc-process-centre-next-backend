@@ -45,9 +45,14 @@
     IS_DEFAULT = EXCLUDED.IS_DEFAULT
   </insert>
 
-  <delete id="deleteTranslationsForAttribute">
-    DELETE FROM T_STATIC_TRANSLATION WHERE OBJECT_TYPE = #{objectType} AND
-    OBJECT_ID = #{objectId} AND ATTRIBUTE_NAME = #{attribute} AND object_type = #{objectType}
+  <delete id="deleteTranslations">
+    DELETE FROM T_STATIC_TRANSLATION
+    <where>
+      OBJECT_ID = #{objectId} AND object_type = #{objectType}
+      <if test="attribute != null">
+        AND ATTRIBUTE_NAME = #{attribute}
+      </if>
+    </where>
   </delete>
 
   <select id="findTranslationsForAttribute">

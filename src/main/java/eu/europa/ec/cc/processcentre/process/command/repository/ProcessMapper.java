@@ -17,7 +17,8 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProc
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusinessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessSecurityQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedConfigQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedSecurityConfigQueryParam;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,8 +29,6 @@ public interface ProcessMapper {
   Optional<FindProcessByIdQueryResponse> findById(String id);
 
   void insertOrUpdateProcess(InsertProcessQueryParam process);
-
-  void updateProcessSecurity(UpdateProcessSecurityQueryParam param);
 
   void deleteProcess(DeleteProcessQueryParam deleteProcessQueryParam);
 
@@ -58,4 +57,8 @@ public interface ProcessMapper {
   void insertOrUpdateProcessConfig(InsertOrUpdateProcessConfigQueryParam param);
 
   Optional<FindProcessConfigByIdQueryResponse> findProcessConfigById(String param);
+
+  void updateResolvedSecurityConfig(UpdateResolvedSecurityConfigQueryParam param);
+
+  void updateResolvedConfig(UpdateResolvedConfigQueryParam param);
 }

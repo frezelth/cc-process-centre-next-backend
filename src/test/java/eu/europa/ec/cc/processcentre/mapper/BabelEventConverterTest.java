@@ -28,7 +28,7 @@ public class BabelEventConverterTest {
             .setCreatedOn(ProtoUtils.instantToTimestamp(now))
         .build();
 
-    InsertProcessQueryParam queryParam = converter.toInsertProcessQueryParam(command, null, null);
+    InsertProcessQueryParam queryParam = converter.toInsertProcessQueryParam(command);
 
     Assertions.assertEquals(command.getProcessInstanceId(), queryParam.processInstanceId());
     Assertions.assertEquals(command.getDomainKey(), queryParam.domainKey());

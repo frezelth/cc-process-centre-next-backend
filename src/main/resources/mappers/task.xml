@@ -6,29 +6,38 @@
 <mapper namespace="eu.europa.ec.cc.processcentre.task.repository.TaskMapper">
 
     <insert id="insertOrUpdateTask">
-        insert into T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY,
-          STATUS_TIMESTAMP)
-        VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey}, #{createdOn}) ON CONFLICT
-        DO NOTHING
+        insert into T_USER_TASK (
+        TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, TASK_TYPE_ID, PROVIDER_ID, DOMAIN_KEY,
+          STATUS, CREATED_ON,
+          ASSIGNED_ON, ASSIGNED_TO, ASSIGNED_TO_ON_BEHALF_OF)
+        VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey},
+        #{taskTypeId}, #{providerId}, #{domainKey}, #{status}::USER_TASK_STATUS, #{createdOn}, #{assignedOn}, #{assignedTo}, #{assignedToOnBehalfOf})
+        ON CONFLICT DO NOTHING
     </insert>
 
-    <update id="changeTaskStatus">
-        UPDATE T_USER_TASK (STATUS, STATUS, STATUS_ON)
-        VALUES ()
+    <update id="changeStatus">
+        UPDATE T_USER_TASK
+        <set>
+            STATUS = #{status}::USER_TASK_STATUS,
+            <if test="status == 'ASSIGNED'">
+                ASSIGNED_ON = #{timestamp}, ASSIGNED_TO = #{actionBy},
+                ASSIGNED_TO_ON_BEHALF_OF = #{actionByOnBehalfOf}
+            </if>
+            <if test="status == 'COMPLETED'">
+                COMPLETED_ON = #{timestamp}, COMPLETED_BY = #{actionBy},
+                COMPLETED_BY_ON_BEHALF_OF = #{actionByOnBehalfOf}
+            </if>
+            <if test="status == 'CANCELLED'">
+                CANCELLED_ON = #{timestamp}
+            </if>
+        </set>
+        <where>
+            TASK_INSTANCE_ID = #{taskInstanceId}
+        </where>
     </update>
 
-    <insert id="completeTask">
-        UPDATE T_USER_TASK SET COMPLETED_ON =
-        <choose>
-        <when test="completedOn != null">
-            #{completedOn}
-        </when>
-        <otherwise>
-            now()
-        </otherwise>
-        </choose>,
-        COMPLETED = TRUE
-        WHERE TASK_INSTANCE_ID = #{taskInstanceId}
-    </insert>
+    <delete id="deleteTask">
+        DELETE FROM T_USER_TASK WHERE TASK_INSTANCE_ID = #{taskInstanceId}
+    </delete>
 
 </mapper>
