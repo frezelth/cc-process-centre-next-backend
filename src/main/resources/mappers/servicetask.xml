@@ -5,4 +5,67 @@
 
 <mapper namespace="eu.europa.ec.cc.processcentre.servicetask.repository.ServiceTaskMapper">
 
+  <insert id="insertServiceTask">
+    insert into T_SERVICE_TASK (
+    TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, PROVIDER_ID, DOMAIN_KEY,
+    PROCESS_TYPE_KEY, STATUS)
+    VALUES (#{taskInstanceId}, #{processInstanceId}, #{taskTypeKey},
+    #{providerId}, #{domainKey},, #{processTypeKey}, 'CREATED'::SERVICE_TASK_STATUS
+    ON CONFLICT DO NOTHING
+  </insert>
+
+  <update id="changeStatus">
+    UPDATE T_SERVICE_TASK
+    <set>
+      STATUS = #{status}::SERVICE_TASK_STATUS, INFO_MSG = #{infoMsg}, ERROR_MSG = #{errorMsg}
+      <if test="status == 'COMPLETED'">
+        <choose>
+          <when test="timestamp != null">
+            COMPLETED_ON = #{timestamp}
+          </when>
+          <otherwise>
+            COMPLETED_ON = now()
+          </otherwise>
+        </choose>
+      </if>
+      <if test="status == 'CANCELLED'">
+        <choose>
+          <when test="timestamp != null">
+            CANCELLED_ON = #{timestamp}
+          </when>
+          <otherwise>
+            CANCELLED_ON = now()
+          </otherwise>
+        </choose>
+      </if>
+      <if test="status == 'LOCKED'">
+        <choose>
+          <when test="timestamp != null">
+            LOCKED_ON = #{timestamp}
+          </when>
+          <otherwise>
+            LOCKED_ON = now()
+          </otherwise>
+        </choose>
+      </if>
+      <if test="status == 'FAILED'">
+        <choose>
+          <when test="timestamp != null">
+            FAILED_ON = #{timestamp}
+          </when>
+          <otherwise>
+            FAILED_ON = now()
+          </otherwise>
+        </choose>
+      </if>
+    </set>
+    <where>
+      TASK_INSTANCE_ID = #{taskInstanceId}
+    </where>
+  </update>
+
+  <delete id="deleteServiceTask">
+    DELETE FROM T_SERVICE_TASK WHERE TASK_INSTANCE_ID = #{taskInstanceId}
+  </delete>
+
 </mapper>
