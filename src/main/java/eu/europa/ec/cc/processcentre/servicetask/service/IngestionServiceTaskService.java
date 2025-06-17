@@ -18,6 +18,7 @@ import eu.europa.ec.cc.provider.servicetask.event.proto.ServiceTaskLocked;
 import eu.europa.ec.cc.provider.servicetask.event.proto.ServiceTaskUnlocked;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskCreated event){
     // only handle service tasks that have a process instance id
     if (StringUtils.isEmpty(event.getProcessInstanceId())){
@@ -58,6 +60,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskCompleteSucceeded event){
 
     if (LOG.isDebugEnabled()){
@@ -72,6 +75,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskCompleteFailed event){
     if (event.getRetries() != 0){
       return;
@@ -89,6 +93,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskCancelled event){
 
     if (LOG.isDebugEnabled()){
@@ -103,6 +108,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskLocked event){
 
     if (LOG.isDebugEnabled()){
@@ -117,6 +123,7 @@ public class IngestionServiceTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ServiceTaskUnlocked event){
 
     if (LOG.isDebugEnabled()){

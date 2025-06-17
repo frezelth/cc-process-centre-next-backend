@@ -18,8 +18,6 @@ public record ProcessTypeConfig(
 
     String defaultBusinessDomainId,
 
-    String resultCardLayout,
-
     Map<Right, List<AccessRight>> accessRights,
 
     Boolean hideSubprocessesOfTheSameType

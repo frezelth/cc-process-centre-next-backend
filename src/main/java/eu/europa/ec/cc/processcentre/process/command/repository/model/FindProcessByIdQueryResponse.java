@@ -20,6 +20,10 @@ public class FindProcessByIdQueryResponse {
     private String processResponsibleOrganisation;
     private String processResponsibleOrganisationCode;
 
+    private String processResponsibleUserId;
+
+    private String businessDomainId;
+
     private ProcessStatus status;
 
     private String businessStatus;
@@ -32,7 +36,13 @@ public class FindProcessByIdQueryResponse {
     // ordered by default DESC, latest logs first
     private List<FindProcessByIdQueryActionLog> runningStatusLogs;
 
-    private List<String> portfolioItemIds;
+    private List<FindProcessByIdQueryResponsePortfolioItem> portfolioItemIds;
+
+    private String securityApplicationId;
+    private String securitySecundaTask;
+    private String securityScopeTypeId;
+    private String securityScopeId;
+    private String securityOrganisationId;
 
     public Map<TranslationAttribute, List<FindProcessByIdQueryResponseTranslation>> getTranslationsAsMap() {
         if (translations == null) {

@@ -17,6 +17,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProc
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusinessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedConfigQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedSecurityConfigQueryParam;
 import java.util.Optional;
@@ -61,4 +62,6 @@ public interface ProcessMapper {
   void updateResolvedSecurityConfig(UpdateResolvedSecurityConfigQueryParam param);
 
   void updateResolvedConfig(UpdateResolvedConfigQueryParam param);
+
+  void updateProcessStatus(UpdateProcessStatusQueryParam updateProcessStatusQueryParam);
 }

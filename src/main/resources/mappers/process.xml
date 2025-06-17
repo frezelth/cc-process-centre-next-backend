@@ -13,6 +13,7 @@
     <result property="valueLong" column="value_long"/>
     <result property="valueDouble" column="value_double"/>
     <result property="valueBoolean" column="value_boolean"/>
+    <result property="valueDate" column="value_date"/>
   </resultMap>
 
   <resultMap id="translation" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation">
@@ -31,6 +32,11 @@
     <result property="status" column="status_process_status"/>
   </resultMap>
 
+  <resultMap id="portfolioItem" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponsePortfolioItem">
+    <id property="processInstanceId" column="portfolio_process_instance_id"/>
+    <id property="portfolioItemId" column="portfolio_item_id"/>
+  </resultMap>
+
   <resultMap id="process" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
     <result property="providerId" column="provider_id"/>
@@ -39,11 +45,19 @@
     <result property="status" column="process_status"/>
     <result property="businessStatus" column="business_status"/>
     <result property="processTypeId" column="process_type_id"/>
+    <result property="processResponsibleOrganisation" column="process_responsible_organisation_id"/>
+    <result property="processResponsibleUserId" column="process_responsible_user_id"/>
+    <result property="businessDomainId" column="business_domain_id"/>
     <result property="resultCard" column="result_card"/>
+    <result property="securityApplicationId" column="security_application_id"/>
+    <result property="securitySecundaTask" column="security_secunda_task"/>
+    <result property="securityScopeTypeId" column="security_scope_type_id"/>
+    <result property="securityScopeId" column="security_scope_id"/>
+    <result property="securityOrganisationId" column="security_organisation_id"/>
     <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
     <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
     <collection property="runningStatusLogs" javaType="java.util.ArrayList" resultMap="processStatusLog"/>
-    <collection property="portfolioItemIds" javaType="java.util.ArrayList" ofType="string"/>
+    <collection property="portfolioItemIds" javaType="java.util.ArrayList" resultMap="portfolioItem"/>
   </resultMap>
 
   <select id="findById" resultMap="process">
@@ -55,7 +69,15 @@
       p.BUSINESS_STATUS as business_status,
       p.PROCESS_TYPE_ID as process_type_id,
       p.STATUS as process_status,
+      p.RESPONSIBLE_ORGANISATION_ID as process_responsible_organisation_id,
+      p.RESPONSIBLE_USER_ID as process_responsible_user_id,
+      p.BUSINESS_DOMAIN_ID as business_domain_id,
       p.RESULT_CARD as result_card,
+      p.SECURITY_APPLICATION_ID as security_application_id,
+      p.SECURITY_SECUNDA_TASK as security_secunda_task,
+      p.SECURITY_SCOPE_TYPE_ID as security_scope_type_id,
+      p.SECURITY_SCOPE_ID as security_scope_id,
+      p.SECURITY_ORGANISATION_ID as security_organisation_id,
       t.OBJECT_ID as object_id,
       t.OBJECT_TYPE as object_type,
       t.ATTRIBUTE_NAME as attribute_name,
@@ -69,10 +91,12 @@
       v.VALUE_LONG as value_long,
       v.VALUE_DOUBLE as value_double,
       v.VALUE_BOOLEAN as value_boolean,
+      v.VALUE_DATE as value_date,
       r.PROCESS_INSTANCE_ID as action_process_instance_id,
       r.ACTION as action_process_status,
       r.TIMESTAMP as action_timestamp,
       r.ACTION_ID as action_id,
+      pf.PROCESS_INSTANCE_ID as portfolio_process_instance_id,
       pf.PORTFOLIO_ITEM_ID as portfolio_item_id
     FROM T_PROCESS p
     LEFT JOIN V_RESOLVED_TRANSLATION t ON t.OBJECT_ID = p.PROCESS_INSTANCE_ID AND
@@ -106,7 +130,8 @@
       BUSINESS_STATUS,
       RESPONSIBLE_ORGANISATION_ID,
       RESPONSIBLE_USER_ID,
-      PARENT_PROCESS_INSTANCE_ID
+      PARENT_PROCESS_INSTANCE_ID,
+      BUSINESS_DOMAIN_ID
     )  VALUES (
     #{processInstanceId},
     #{processTypeId},
@@ -116,7 +141,8 @@
     #{businessStatus},
     #{responsibleOrganisationId},
     #{responsibleUserId},
-    #{parentProcessInstanceId}
+    #{parentProcessInstanceId},
+    #{businessDomainId}
     )
     ON CONFLICT (PROCESS_INSTANCE_ID) DO UPDATE SET
     DOMAIN_KEY = EXCLUDED.DOMAIN_KEY,
@@ -125,7 +151,8 @@
     BUSINESS_STATUS = EXCLUDED.BUSINESS_STATUS,
     RESPONSIBLE_ORGANISATION_ID = EXCLUDED.RESPONSIBLE_ORGANISATION_ID,
     RESPONSIBLE_USER_ID = EXCLUDED.RESPONSIBLE_USER_ID,
-    PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID
+    PARENT_PROCESS_INSTANCE_ID = EXCLUDED.PARENT_PROCESS_INSTANCE_ID,
+    BUSINESS_DOMAIN_ID = EXCLUDED.BUSINESS_DOMAIN_ID
   </insert>
 
   <update id="updateResolvedSecurityConfig">
@@ -177,6 +204,10 @@
 
   <update id="changeBusinessStatus">
     UPDATE T_PROCESS SET BUSINESS_STATUS = #{businessStatus} WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <update id="updateProcessStatus">
+    UPDATE T_PROCESS SET STATUS = #{status}::PROCESS_STATUS WHERE PROCESS_INSTANCE_ID = #{processInstanceId}
   </update>
 
   <insert id="insertOrUpdateProcessVariables" parameterType="collection">

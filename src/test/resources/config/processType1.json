@@ -15,10 +15,10 @@
     "VIEW": [
       {
         "permissionId": "PC_PM_REGIO_ViewProcess",
-        "scoped": false,
-        "scopeTypeId": null,
-        "variableName": null,
-        "responsibleOrganisationId": null
+        "scoped": true,
+        "scopeTypeId": "SCOPE_TYPE",
+        "scopeId": "${processVariables.SCOPE_ID}",
+        "organisationId": "${responsibleOrganisationId}"
       }
     ],
     "CREATE": [

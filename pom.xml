@@ -41,7 +41,7 @@
 		<cc-provider-proto.version>1.22.0</cc-provider-proto.version>
 		<cc-provider-task-proto.version>1.8.0</cc-provider-task-proto.version>
 		<cc-provider-servicetask-proto.version>1.4.0</cc-provider-servicetask-proto.version>
-		<cc-process-centre-proto.version>0.35.0</cc-process-centre-proto.version>
+		<cc-process-centre-proto.version>0.37.0-SNAPSHOT</cc-process-centre-proto.version>
 		<cc-portfolio-manager-proto.version>1.3.0</cc-portfolio-manager-proto.version>
 		<cc-task-proto.version>1.15.0</cc-task-proto.version>
 		<cc-tag-service-proto.version>1.9.0</cc-tag-service-proto.version>

@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponsePortfolioItem;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import eu.europa.ec.cc.processcentre.util.ProtoUtils;
 import eu.europa.ec.cc.provider.proto.ProcessCreated;
@@ -16,8 +17,6 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
-
-import javax.cache.Cache;
 
 /**
  * 
@@ -49,7 +48,7 @@ public class TemplateModel {
     CANCEL_DATE("cancelDate"),
     PORTFOLIO_ITEM_BUSINESS_IDS("portfolioItemBusinessIds"),
     PORTFOLIO_ITEMS("portfolioItems"),
-    RESPONSIBLE_ORGANISATION("responsibleOrganisation"), RESPONSIBLE_USER("responsibleUser");
+    RESPONSIBLE_ORGANISATION("responsibleOrganisationId"), RESPONSIBLE_USER("responsibleUser");
 
     public final String tag;
 
@@ -110,11 +109,8 @@ public class TemplateModel {
     add(Model.PROCESS_TYPE_ID, process.getProcessTypeId());
     add(Model.PROVIDER_ID, process.getProviderId());
 
-    if (isNotEmpty(process.getProcessResponsibleOrganisationCode())) {
-      add(Model.RESPONSIBLE, process.getProcessResponsibleOrganisationCode());
-    } else {
-      add(Model.RESPONSIBLE, process.getProcessResponsibleOrganisation());
-    }
+    add(Model.RESPONSIBLE, process.getProcessResponsibleOrganisation());
+    add(Model.RESPONSIBLE_ORGANISATION, process.getProcessResponsibleOrganisation());
 
     add(Model.STATUS, process.getStatus());
     add(Model.BUSINESS_STATUS, process.getBusinessStatus());
@@ -130,7 +126,9 @@ public class TemplateModel {
 
     String items = null;
     if (!CollectionUtils.isEmpty(process.getPortfolioItemIds())) {
-      items = String.join(",", process.getPortfolioItemIds());
+      items = process.getPortfolioItemIds().stream().map(
+          FindProcessByIdQueryResponsePortfolioItem::getPortfolioItemId).collect(
+          Collectors.joining(","));
     }
     add(Model.PORTFOLIO_ITEMS, items);
 

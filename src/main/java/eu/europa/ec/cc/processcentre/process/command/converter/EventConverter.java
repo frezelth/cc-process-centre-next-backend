@@ -69,6 +69,11 @@ public interface EventConverter {
       ProcessRunningStatusChanged event
   );
 
+  @Mapping(expression = "java(eu.europa.ec.cc.processcentre.model.ProcessStatus.CANCELLED)", target = "status")
+  UpdateProcessStatusQueryParam toUpdateProcessRunningStatusQueryParam(
+      ProcessCancelled event
+  );
+
   default ProcessStatus mapToStatus(Status proto){
     return switch (proto){
       case ONGOING -> ProcessStatus.ONGOING;

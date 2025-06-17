@@ -39,6 +39,10 @@ public class ConfigLibraryMockConfig {
         Resource classPathResource = new ClassPathResource(
             "/config/" + processTypeKey + ".json");
 
+        if (!classPathResource.exists()) {
+          return new ConfigurationSet();
+        }
+
         String configContent = classPathResource.getContentAsString(StandardCharsets.UTF_8);
 
         ConfigurationSet configurationSet = new ConfigurationSet();

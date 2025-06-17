@@ -1,11 +1,13 @@
 package eu.europa.ec.cc.processcentre.config;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public record AccessRight(
     String permissionId,
     String applicationId,
     String scopeTypeId,
-    String scopeId,
-    String organisationId
+    @JsonAlias("variableName") String scopeId,
+    @JsonAlias("responsibleOrganisationId") String organisationId
 ) {
 
   public enum Right {
@@ -13,7 +15,7 @@ public record AccessRight(
     SKIP_SERVICE_TASK, RETRY_SERVICE_TASK,
     CREATE_SUB_PROCESS
   }
-  
+
   public static final String PROCESS_CENTRE = "PROCESS_CENTRE";
 
 }

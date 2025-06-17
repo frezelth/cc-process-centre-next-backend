@@ -35,7 +35,7 @@ public class ConfigService {
   }
 
   public String fetchResultCardLayoutConfig(Map<String, String> context) {
-    return fetchConfig(String.class, ProcessTypeConfig.CONFIGURATION_TYPE_NAME, context);
+    return fetchConfig(String.class, ProcessTypeConfig.CONFIGURATION_RESULT_CARD_NAME, context);
   }
 
   public JsonNode fetchConfig(String configType, Map<String, String> context){

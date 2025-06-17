@@ -2,6 +2,7 @@ package eu.europa.ec.cc.processcentre.process.command.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.cc.configadmin.event.proto.RefreshConfiguration;
 import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
@@ -37,6 +38,8 @@ import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor.MappingsProvider;
+import org.springframework.context.event.EventListener;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -69,14 +72,18 @@ public class ProcessConfigService {
     this.translationService = translationService;
   }
 
-  @TransactionalEventListener
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @EventListener
   @SneakyThrows
   public void handle(ProcessRegistered event){
 
     Map<String, String> context = Context.context(event.providerId(), event.domainKey(), event.processTypeKey());
     // load the process type config
     ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context);
+
+    if (processTypeConfig == null) {
+      LOG.warn("No process type configuration found for context {}", context);
+      return;
+    }
 
     // load the process result card config, not mandatory
     String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context);
@@ -96,10 +103,11 @@ public class ProcessConfigService {
         new InsertOrUpdateProcessConfigQueryParam(
             event.processInstanceId(), objectMapper.writeValueAsString(processTypeConfig), resultCardLayoutConfig)
     );
+
+    persistResolvedConfiguration(event.processInstanceId(), processTypeConfig, resultCardLayoutConfig);
   }
 
-  @TransactionalEventListener
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @EventListener
   @SneakyThrows
   public void handle(ProcessVariablesChanged event){
     Set<String> namesInTemplate = event.names().stream().map(name -> TemplateModel.PROCESS_VARIABLE_PREFIX + name)
@@ -107,15 +115,14 @@ public class ProcessConfigService {
     handleModelChange(event.processInstanceId(), namesInTemplate);
   }
 
-  @TransactionalEventListener
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @EventListener
   @SneakyThrows
   public void handle(ProcessModelChanged event){
     handleModelChange(event.processInstanceId(),
         event.changes().stream().map(change -> change.tag).collect(Collectors.toSet()));
   }
 
-  private void handleModelChange(String processInstanceId, Set<String> modelAttributesChanged) {
+  private void handleModelChange(String processInstanceId, @Nullable Set<String> modelAttributesChanged) {
     processMapper.findProcessConfigById(
         processInstanceId).ifPresent(
         processConfigById -> {
@@ -157,7 +164,8 @@ public class ProcessConfigService {
               return;
             }
 
-            persistResolvedConfiguration(processInstanceId, processTypeConfig);
+            persistResolvedConfiguration(processInstanceId, processTypeConfig,
+                processConfigById.resultCard());
           } catch (JsonProcessingException e) {
             LOG.error("Error while persisting process configuration changes", e);
           }
@@ -166,7 +174,7 @@ public class ProcessConfigService {
   }
 
   private void persistResolvedConfiguration(String processInstanceId,
-      ProcessTypeConfig processTypeConfig) throws JsonProcessingException {
+      ProcessTypeConfig processTypeConfig, String resultCardConfig) throws JsonProcessingException {
     FindProcessByIdQueryResponse process = processMapper.findById(processInstanceId).orElseThrow();
     TemplateModel model = new TemplateModel(process);
 
@@ -198,7 +206,7 @@ public class ProcessConfigService {
         objectMapper.writeValueAsString(processTypeConfig.titleTemplate()), model);
     BabelText resolvedTitle = objectMapper.readValue(resolvedTitleAsString, BabelText.class);
 
-    String resolvedCard = templateConverter.convert("cardLayout_"+ processInstanceId, processTypeConfig.resultCardLayout(), model);
+    String resolvedCard = templateConverter.convert("cardLayout_"+ processInstanceId, resultCardConfig, model);
 
     // if needed update the title
     if (resolvedTitle != null){

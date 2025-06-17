@@ -20,6 +20,7 @@ import eu.europa.ec.cc.provider.task.event.proto.TaskUnclaimed;
 import eu.europa.ec.cc.provider.task.event.proto.TaskUpdated;
 import eu.europa.ec.cc.taskcenter.event.proto.TaskRegistered;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskCreated event){
     if (event.getProcessInstanceId().isEmpty()){
       // tasks without process, not handled inside process centre
@@ -62,6 +64,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskRegistered event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskRegistered for task {}", event.getTaskInstanceId());
@@ -76,6 +79,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskDeleted event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskDeleted for task {}", event.getTaskInstanceId());
@@ -91,6 +95,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskCompleted event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskCompleted for task {}", event.getTaskInstanceId());
@@ -108,6 +113,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskCancelled event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskCancelled for task {}", event.getTaskInstanceId());
@@ -125,6 +131,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskAssigned event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskAssigned for task {}", event.getTaskInstanceId());
@@ -142,6 +149,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskClaimed event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskClaimed for task {}", event.getTaskInstanceId());
@@ -159,6 +167,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskUnclaimed event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskUnclaimed for task {}", event.getTaskInstanceId());
@@ -176,6 +185,7 @@ public class IngestionTaskService {
   }
 
   @Transactional
+  @EventListener
   public void handle(TaskUpdated event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling TaskUpdated for task {}", event.getTaskInstanceId());

@@ -1,7 +1,5 @@
 package eu.europa.ec.cc.processcentre.process.command.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.cc.processcentre.config.service.ConfigService;
 import eu.europa.ec.cc.processcentre.event.ProcessModelChanged;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.event.ProcessVariablesChanged;
@@ -20,8 +18,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertProc
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateBusinessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleOrganisationQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessResponsibleUserQueryParam;
-import eu.europa.ec.cc.processcentre.task.repository.TaskMapper;
-import eu.europa.ec.cc.processcentre.template.TemplateConverter;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateProcessStatusQueryParam;
 import eu.europa.ec.cc.processcentre.template.TemplateModel.Model;
 import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
@@ -50,6 +47,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,37 +60,25 @@ public class IngestionService {
   private final ProcessMapper processMapper;
   private final EventConverter eventConverter;
   private final ApplicationEventPublisher eventPublisher;
-  private final TaskMapper taskMapper;
   private final TranslationService translationService;
-  private final ConfigService configService;
-  private final TemplateConverter templateConverter;
-  private final ObjectMapper objectMapper;
 
   public IngestionService(ProcessMapper processMapper,
       EventConverter eventConverter,
-      ApplicationEventPublisher eventPublisher, TaskMapper taskMapper,
-      TranslationService translationService,
-      ConfigService configService,
-      TemplateConverter templateConverter,
-      ObjectMapper objectMapper) {
+      ApplicationEventPublisher eventPublisher,
+      TranslationService translationService) {
     this.processMapper = processMapper;
     this.eventConverter = eventConverter;
     this.eventPublisher = eventPublisher;
-    this.taskMapper = taskMapper;
     this.translationService = translationService;
-    this.configService = configService;
-    this.templateConverter = templateConverter;
-    this.objectMapper = objectMapper;
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessCreated event) {
 
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessCreated for process {}", event.getProcessInstanceId());
     }
-
-    Map<String, String> context = Context.context(event.getProviderId(), event.getDomainKey(), event.getProcessTypeKey());
 
     InsertProcessQueryParam insertProcessQueryParam = eventConverter.toInsertProcessQueryParam(
             event);
@@ -142,6 +128,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessVariablesUpdated event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessVariablesUpdated for process {}", event.getProcessId());
@@ -155,6 +142,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessVariableUpdated event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessVariableUpdated for process {}", event.getProcessId());
@@ -168,10 +156,14 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessCancelled event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessCancelled for process {}", event.getProcessInstanceId());
     }
+
+    UpdateProcessStatusQueryParam updateProcessStatusQueryParam = eventConverter.toUpdateProcessRunningStatusQueryParam(event);
+    processMapper.updateProcessStatus(updateProcessStatusQueryParam);
 
     InsertProcessActionLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toInsertProcessRunningStatusQueryParam(event);
     processMapper.insertProcessActionLog(changeProcessRunningStatusQueryParam);
@@ -181,6 +173,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessAssociatedPortfolioItemAdded event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessAssociatedPortfolioItemAdded for process {}", event.getProcessInstanceId());
@@ -198,6 +191,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessAssociatedPortfolioItemRemoved event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessAssociatedPortfolioItemRemoved for process {}", event.getProcessInstanceId());
@@ -215,6 +209,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessResponsibleUserChanged event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessResponsibleUserChanged for process {}", event.getProcessInstanceId());
@@ -228,6 +223,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessResponsibleOrganisationChanged event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessResponsibleOrganisationChanged for process {}", event.getProcessInstanceId());
@@ -248,6 +244,7 @@ public class IngestionService {
    * @param event
    */
   @Transactional
+  @EventListener
   public void handle(ProcessRestored event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessRestored for process {}", event.getProcessInstanceId());
@@ -345,10 +342,14 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessRunningStatusChanged event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessRunningStatusChanged for process {}", event.getProcessInstanceId());
     }
+
+    UpdateProcessStatusQueryParam updateProcessStatusQueryParam = eventConverter.toUpdateProcessRunningStatusQueryParam(event);
+    processMapper.updateProcessStatus(updateProcessStatusQueryParam);
 
     InsertProcessActionLogQueryParam changeProcessRunningStatusQueryParam = eventConverter.toInsertProcessRunningStatusQueryParam(event);
     processMapper.insertProcessActionLog(changeProcessRunningStatusQueryParam);
@@ -358,6 +359,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessBusinessStatusChanged event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessBusinessStatusChanged for process {}", event.getProcessInstanceId());
@@ -371,6 +373,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessDeleted event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessDeleted for process {}", event.getProcessInstanceId());
@@ -383,6 +386,7 @@ public class IngestionService {
   }
 
   @Transactional
+  @EventListener
   public void handle(ProcessStateChanged event){
     if (LOG.isDebugEnabled()){
       LOG.debug("Handling ProcessStateChanged for process {}", event.getProcessInstanceId());
