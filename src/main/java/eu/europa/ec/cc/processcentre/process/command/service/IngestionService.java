@@ -4,6 +4,7 @@ import eu.europa.ec.cc.processcentre.event.ProcessModelChanged;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.event.ProcessVariablesChanged;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
+import eu.europa.ec.cc.processcentre.model.VariableType;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessPortfolioItems;
@@ -438,45 +439,45 @@ public class IngestionService {
     return switch (value.getKindCase()){
       case STRINGVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, null, value.getStringValue(), null, null,
+          name, VariableType.STRING, null, value.getStringValue(), null, null,
           null, null, null, null, null
       );
       case BOOLEANVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, null, null, null, null,
+          name, VariableType.BOOLEAN, null, null, null, null,
           null, value.getBooleanValue(), null, null, null
       );
       case INTEGERVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, value.getIntegerValue(), null, null, null,
+          name, VariableType.INTEGER, value.getIntegerValue(), null, null, null,
           null, null, null, null, null
       );
       case LONGVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, null, null, value.getLongValue(), null,
+          name, VariableType.LONG, null, null, value.getLongValue(), null,
           null, null, null, null, null
       );
       case DOUBLEVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, null, null, null, value.getDoubleValue(),
+          name, VariableType.DOUBLE, null, null, null, value.getDoubleValue(),
           null, null, null, null, null
       );
       case TIMEVALUE -> new InsertOrUpdateProcessVariableQueryParam(
           processInstanceId,
-          name, null, null, null, null,
+          name, null, null, null, null, null,
           ProtoUtils.timestampToInstant(value.getTimeValue()), null, null, null, null
       );
       case BYTESVALUE -> {
         if (value.getMimeType().equals(MIME_TYPE_JSON)) {
           yield  new InsertOrUpdateProcessVariableQueryParam(
               processInstanceId,
-              name, null, null, null, value.getDoubleValue(),
+              name, VariableType.JSON, null, null, null, value.getDoubleValue(),
               null, null, new String(value.getBytesValue().toByteArray(), StandardCharsets.UTF_8), null, null
           );
         }
         yield new InsertOrUpdateProcessVariableQueryParam(
             processInstanceId,
-            name, null, null, null, null,
+            name, VariableType.JSON,null, null, null, null,
             null, null, null, value.getMimeType(), value.toByteArray()
         );
       }

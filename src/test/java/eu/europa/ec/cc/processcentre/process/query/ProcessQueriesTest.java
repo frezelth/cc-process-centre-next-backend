@@ -1,8 +1,12 @@
 package eu.europa.ec.cc.processcentre.process.query;
 
 import eu.europa.ec.cc.processcentre.ProcessCentreNextApplicationTests;
-import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessResponseDto;
+import eu.europa.ec.cc.processcentre.security.Scope;
+import eu.europa.ec.cc.processcentre.security.ScopeRule;
+import eu.europa.ec.cc.processcentre.security.SecundaScope;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,10 +19,13 @@ import java.util.List;
 import java.util.Locale;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
 
 public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
@@ -27,6 +34,142 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     @Autowired
     private DataSource dataSource;
+
+    @Test
+    @Sql(statements = {
+        "insert into t_process (process_instance_id, security_secunda_task) values ('1', 'CORRECT_TASK')",
+        "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
+    })
+    void testSecundaTaskWithNoScope(){
+      Mockito.when(securityRepository.findScopes("frezeth"))
+          .thenReturn(Collections.singletonList(
+              new SecundaScope("CORRECT_TASK", Collections.emptyList(), Collections.emptyList())
+          ));
+
+      SearchProcessResponseDto result = processQueries.searchProcesses(
+          new SearchProcessRequestDto(
+              null,
+              null,
+              null,
+              null,
+              Collections.emptyList(),
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              Collections.emptyList(),
+              Collections.emptyList(),
+              Collections.emptyList(),
+              null,
+              null,
+              null,
+              null,
+              Collections.emptyList(),
+              Collections.emptyList(),
+              null
+          ), 0, 10, Locale.ENGLISH, "frezeth"
+      );
+
+      Assertions.assertEquals(1, result.totalElements());
+      Assertions.assertEquals("1", result.processes().getFirst().processId());
+    }
+
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id, security_secunda_task, "
+          + "security_scope_type_id, security_scope_id) values ('1', 'CORRECT_TASK', 'MY_SCOPE_TYPE', 'MY_SCOPE_VALUE')",
+      "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
+  })
+  void testSecundaTaskWithExplicitScope(){
+    Mockito.when(securityRepository.findScopes("frezeth"))
+        .thenReturn(Collections.singletonList(
+            new SecundaScope("CORRECT_TASK", Collections.emptyList(),
+                Collections.singletonList(Scope.builder()
+                    .scopeTypeId("MY_SCOPE_TYPE").scopeId("MY_SCOPE_VALUE").build()))
+        ));
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals("1", result.processes().getFirst().processId());
+  }
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id, security_secunda_task, "
+          + "security_scope_type_id, security_scope_id) values ('1', 'CORRECT_TASK', 'EC-Hierarchy', 'AGRI/R/03')",
+      "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
+  })
+  void testSecundaTaskWithScopeRules(){
+    Mockito.when(securityRepository.findScopes("frezeth"))
+        .thenReturn(Collections.singletonList(
+            new SecundaScope("CORRECT_TASK",
+                Collections.singletonList(ScopeRule.builder()
+                        .scopeTypeId("EC-Hierarchy").attrName("DG").attrVal("31045263")
+                    .build()),
+                Collections.emptyList())
+        ));
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals("1", result.processes().getFirst().processId());
+  }
 
     @Test
     @SneakyThrows
@@ -52,14 +195,14 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
               System.out.println("push finished");
 
               long before = System.currentTimeMillis();
-              List<SearchProcessQueryResponse> searchProcessQueryResponses = processQueries.searchProcesses(
+              SearchProcessResponseDto searchProcessQueryResponses = processQueries.searchProcesses(
                   new SearchProcessRequestDto(
                       null,
                       null,
                       null,
                       "Proc:*",
                       Collections.emptyList(),
-                      Collections.emptyList(),
+                      null,
                       null,
                       null,
                       null,
@@ -94,7 +237,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                       null,
                       "titl:*",
                       Collections.emptyList(),
-                      Collections.emptyList(),
+                      null,
                       null,
                       null,
                       null,

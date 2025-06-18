@@ -4,20 +4,15 @@ import static eu.europa.ec.cc.processcentre.exception.ApplicationExceptionHandle
 import static eu.europa.ec.cc.processcentre.exception.Severity.WARNING;
 import static eu.europa.ec.cc.processcentre.util.Perf.trace;
 import static java.lang.String.join;
-import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSet;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toUnmodifiableSet;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import eu.europa.ec.cc.processcentre.exception.ApplicationException;
 import eu.europa.ec.cc.processcentre.security.Scope;
 import eu.europa.ec.cc.processcentre.security.ScopeRule;
 import eu.europa.ec.cc.processcentre.security.SecundaScope;
 import eu.europa.ec.cc.processcentre.security.SecurityRepository;
-import eu.europa.ec.cc.processcentre.userorganisation.service.UserOrganisationService;
 import eu.europa.ec.rtd.secunda.author.rest.client.AuthorizationManager;
 import eu.europa.ec.rtd.secunda.author.rest.client.criteria.TaskRightCriteria;
 import eu.europa.ec.rtd.secunda.author.rest.client.criteria.TaskRightCriteria.TaskRightCriteriaBuilder;
@@ -26,7 +21,6 @@ import eu.europa.ec.rtd.secunda.author.rest.domain.exceptions.EntryNotFoundExcep
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,12 +43,6 @@ import org.springframework.util.CollectionUtils;
 public class SecurityRepositoryImpl implements SecurityRepository {
 
   private final AuthorizationManager authorizationManager;
-
-  private final UserOrganisationService userOrganisationService;
-
-  public static final String SCOPE_TYPE_ID_ORGANISATION = "CRF-Hierarchy";
-
-  public static final String SCOPE_TYPE_ID_BUSINESS_DOMAIN = "BusinessDomain";
 
   /**
    * Performs a Secunda access operation if the primary {@link AuthorizationManager authorization manager} is available.
@@ -106,24 +94,6 @@ public class SecurityRepositoryImpl implements SecurityRepository {
     }).orElseGet(Collections::emptySet);
   }
 
-  @NonNull
-  @Override
-  public Set<String> findTasks(String username) {
-    if (isBlank(username)) {
-      return emptySet();
-    }
-
-    try {
-      return findTaskRights(TaskRightCriteria.builder().userId(username).applicationId(APPLICATION_ID_PROCESS_CENTRE))
-        .stream()
-        .map(TaskRight::getTaskId)
-        .collect(toUnmodifiableSet());
-    } catch (Exception ex) {
-      log(ex, true, "Cannot obtain the Secunda tasks for user {}", username);
-      return emptySet();
-    }
-  }
-
   private static void forEachRuleDataEntry(
     Supplier<Collection<eu.europa.ec.rtd.secunda.author.rest.domain.ScopeRule>> scopeRulesSupplier,
     BiConsumer<String, Set<Map<String, Set<String>>>> ruleDataEntryConsumer
@@ -168,8 +138,6 @@ public class SecurityRepositoryImpl implements SecurityRepository {
 
         final var secundaScope = new SecundaScope();
         secundaScope.setSecundaTaskId(taskRight.getTaskId());
-        secundaScope.setResponsibleOrganisation(new ArrayList<>());
-        secundaScope.setPortfolioItemBusinessIds(new ArrayList<>());
         secundaScope.setScopeRules(new ArrayList<>());
         secundaScope.setScopes(new ArrayList<>());
 
@@ -177,13 +145,6 @@ public class SecurityRepositoryImpl implements SecurityRepository {
         //    scope rule list | CRF-Hierarchy  => organisation responsibles
         //    scope rule list | *              => scope rules
         forEachRuleDataEntry(taskRight::getScopeRules, (scopeTypeId, scopeAttrs) -> {
-
-          if (SCOPE_TYPE_ID_ORGANISATION.equals(scopeTypeId)) {
-            scopeAttrs.stream().flatMap(scopeAttr -> scopeAttr.values().stream()).flatMap(Collection::stream).forEach(
-              scopeAttrVal -> secundaScope
-                .getResponsibleOrganisation()
-                .add(userOrganisationService.findOrganisationOrUndefinedIfException(scopeAttrVal)));
-          }
 
           scopeAttrs.forEach(scopeAttr -> scopeAttr
             .entrySet()
@@ -206,15 +167,6 @@ public class SecurityRepositoryImpl implements SecurityRepository {
         if (!CollectionUtils.isEmpty(scopes)) {
           scopes.forEach((scopeTypeId, scopeIds) -> {
             for (final var scopeId : scopeIds) {
-
-              if (SCOPE_TYPE_ID_ORGANISATION.equals(scopeTypeId)) {
-                secundaScope
-                  .getResponsibleOrganisation()
-                  .add(userOrganisationService.findOrganisationOrUndefinedIfException(scopeId));
-              } else if (SCOPE_TYPE_ID_BUSINESS_DOMAIN.equals(scopeTypeId)) {
-                secundaScope.getPortfolioItemBusinessIds().add(scopeId);
-              }
-
               secundaScope.getScopes().add(
                   Scope.builder().scopeTypeId(scopeTypeId).scopeId(scopeId).build());
             }
@@ -231,49 +183,7 @@ public class SecurityRepositoryImpl implements SecurityRepository {
     return unmodifiableList(secundaScopes);
   }
 
-  @NonNull
-  @Override
-  public Set<String> findBusinessDomainIds(
-    String username, String applicationId, String taskId, String domainScopeType
-  ) {
-    final var businessDomainIds = new HashSet<String>();
-
-    try {
-      // If we explicitly set the scope type (ID) on the criteria, we also need to specify a scope ID; otherwise,
-      // the query fails with the new author REST client. Setting the scope ID, however, defeats our very purpose
-      // of retrieving all available scope IDs, so we use an additional query for that.
-      final var taskRights = findTaskRights(
-        TaskRightCriteria.builder().userId(username).includeScopes("all").applicationId(applicationId).taskId(taskId),
-        "+scopeTypeId:\"" + domainScopeType + "\""
-      );
-
-      for (final var taskRight : taskRights) {
-        final var taskScopes = taskRight.getScopes();
-        if (taskScopes != null) {
-          for (final var scopeIds : taskScopes.values()) {
-            businessDomainIds.addAll(scopeIds);
-          }
-        }
-      }
-
-    } catch (Exception ex) {
-      log(
-        ex,
-        true,
-        "Cannot obtain the business domain IDs for user {}, application ID {}, task ID {}, " + "scope type {}",
-        username,
-        applicationId,
-        taskId,
-        domainScopeType
-      );
-    }
-
-    return unmodifiableSet(businessDomainIds);
-  }
-
-  @NonNull
-  @Override
-  public Collection<TaskRight> getAssignedTaskRights(String username) {
+  private Collection<TaskRight> getAssignedTaskRights(String username) {
     return findTaskRights(TaskRightCriteria
                             .builder()
                             .userId(username)

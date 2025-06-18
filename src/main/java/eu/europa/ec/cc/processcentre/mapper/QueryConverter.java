@@ -1,8 +1,9 @@
 package eu.europa.ec.cc.processcentre.mapper;
 
-import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam;
+import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam.SecurityFilter;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -15,7 +16,8 @@ public interface QueryConverter {
   @Mapping(target = "statuses",
       expression = "java(mapBooleansToStatuses(dto.completed(), dto.ongoing(), dto.paused(), dto.cancelled()))")
   SearchProcessQueryParam toQueryParam(
-      SearchProcessRequestDto dto, Locale locale, String username, int limit, int offset);
+      SearchProcessRequestDto dto, Locale locale,
+      String username, int limit, int offset, Set<SecurityFilter> securityFilters);
 
   // Default method in the interface
   default Set<ProcessStatus> mapBooleansToStatuses(Boolean completed, Boolean ongoing, Boolean paused, Boolean cancelled) {

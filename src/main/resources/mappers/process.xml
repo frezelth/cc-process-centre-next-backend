@@ -214,6 +214,7 @@
     INSERT INTO T_PROCESS_VARIABLE (
     PROCESS_INSTANCE_ID,
     NAME,
+    VALUE_TYPE,
     MIME_TYPE,
     VALUE_STRING,
     VALUE_INTEGER,
@@ -227,6 +228,7 @@
     <foreach collection="variables" item="variable" separator=",">
       (#{variable.processInstanceId},
       #{variable.name},
+      #{variable.valueType},
       #{variable.mimeType},
       #{variable.valueString},
       #{variable.valueInteger},
@@ -316,5 +318,15 @@
       (#{processInstanceId}, #{portfolioItemId})
     </foreach>
   </delete>
+
+  <insert id="setAsFavourite">
+    INSERT INTO T_PROCESS_FAVOURITE (PROCESS_INSTANCE_ID, USER_ID)
+      VALUES (#{processInstanceId}, #{userId}) ON CONFLICT DO NOTHING
+  </insert>
+
+  <insert id="removeFromFavourites">
+    DELETE FROM T_PROCESS_FAVOURITE
+    WHERE PROCESS_INSTANCE_ID = #{processInstanceId} AND USER_ID = #{userId}
+  </insert>
 
 </mapper>

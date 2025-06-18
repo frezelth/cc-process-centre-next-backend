@@ -8,16 +8,42 @@
   <resultMap id="ProcessResult" type="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
     <id property="processInstanceId" column="process_instance_id"/>
     <result property="title" column="process_title"/>
-    <result property="tasks" column="tasks"/>
+    <result property="activeTasks" column="tasks"/>
     <result property="totalCount" column="total_count"/>
+    <result property="status" column="status"/>
+    <result property="cardLayout" column="result_card"/>
   </resultMap>
 
   <sql id="processesCte">
-    WITH RECURSIVE matching_roots AS (
-    SELECT p.process_instance_id,
+    WITH RECURSIVE
+    <if test="(sortProperty != null and sortProperty.startsWith('specificAttributes.'))
+      or (specificAttributes != null and specificAttributes.size() > 0)">
+      <!-- we need to store or filter on a given variable, we need to add an additional cte -->
+    filter_variables AS (
+      select process_instance_id from t_process_variable
+      <where>
+
+      </where>
+    ),
+    </if>
+    matching_roots AS (
+    SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
     COUNT(*) OVER() AS total_count
     FROM t_process p
     <include refid="whereClause"/>
+    <choose>
+      <when test="sortProperty != null and sortProperty.startsWith('specificAttributes.')">
+        ORDER BY (
+        SELECT pv.value::int
+        FROM T_PROCESS_VARIABLES pv
+        WHERE pv.process_id = p.id AND pv.name = #{sortProperty}
+        LIMIT 1
+        )
+      </when>
+      <otherwise>
+        ORDER BY p.created_on desc
+      </otherwise>
+    </choose>
     LIMIT #{limit} OFFSET #{offset}),
     descendants AS (SELECT p.process_instance_id, p.parent_process_instance_id
     FROM t_process p
@@ -71,6 +97,34 @@
 
   <sql id="whereClause">
     <where>
+      <if test="securityFilters != null and securityFilters.size() > 0">
+        <foreach item="filter" collection="securityFilters" separator="OR" open="(" close=")">
+          (
+            p.SECURITY_SECUNDA_TASK = #{filter.secundaTask}
+            <foreach collection="filter.secundaScopes" item="scope" separator="AND">
+              <if test="scope.scopeIds != null and !scope.scopeIds.isEmpty()">
+                AND p.SECURITY_SCOPE_TYPE_ID = #{scope.scopeTypeId}
+                <choose>
+                  <when test="scope.scopeTypeId == 'EC-Hierarchy'">
+                    <!-- For EC-Hierarchy we need to do a start with query -->
+                    AND
+                    <foreach collection="scope.scopeIds" item="scopeId" separator="AND">
+                      p.SECURITY_SCOPE_ID ILIKE CONCAT (#{scopeId}, '%')
+                    </foreach>
+                  </when>
+                  <otherwise>
+                    <!-- For other scope types we do an exact match -->
+                    AND p.SECURITY_SCOPE_ID IN
+                    <foreach collection="scope.scopeIds" item="scopeId" open="(" separator="," close=")">
+                      #{scopeId}
+                    </foreach>
+                  </otherwise>
+                </choose>
+              </if>
+            </foreach>
+          )
+        </foreach>
+      </if>
       <if test="searchText != null and searchText != ''">
         AND p.SEARCH_VECTOR @@ to_tsquery('simple', #{searchText})
       </if>
@@ -88,7 +142,9 @@
     SELECT r.process_instance_id as process_instance_id,
     r.total_count as total_count,
     pt.translated_text    AS process_title,
-    COALESCE(at.tasks, '[]'::json) AS tasks
+    COALESCE(at.tasks, '[]'::json) AS tasks,
+    r.status as status,
+    r.result_card as result_card
     FROM matching_roots r
     LEFT JOIN (SELECT object_id, translated_text
     FROM t_static_translation
@@ -98,7 +154,6 @@
     AND object_id IN (SELECT process_instance_id FROM matching_roots)) pt
     ON pt.object_id = r.process_instance_id
     LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id
-      ORDER BY r.process_instance_id
   </select>
 
   <!--  <select id="countStations" resultType="eu.europa.ec.cc.processcentre.repository.model.MetroLineStationStats">-->

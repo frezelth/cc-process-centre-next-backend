@@ -4,6 +4,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProc
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessStateQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProcessVariableQueryParam;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FavouriteQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessConfigByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryParam;
@@ -64,4 +65,8 @@ public interface ProcessMapper {
   void updateResolvedConfig(UpdateResolvedConfigQueryParam param);
 
   void updateProcessStatus(UpdateProcessStatusQueryParam updateProcessStatusQueryParam);
+
+  void setAsFavourite(FavouriteQueryParam param);
+
+  void deleteFromFavourites(FavouriteQueryParam param);
 }

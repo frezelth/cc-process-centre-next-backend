@@ -1,4 +1,4 @@
-package eu.europa.ec.cc.processcentre.dto;
+package eu.europa.ec.cc.processcentre.process.query.web.dto;
 
 import java.util.List;
 
@@ -8,7 +8,9 @@ public record SearchProcessRequestDto(
     String processTypeKey,
     String searchText,
     List<String> responsibleOrganisationCodes,
-    List<String> taxonomyPaths,
+
+    String taxonomyPath,
+
     String graphElementKey,
     Long situationOnDate,
     Boolean ongoing,

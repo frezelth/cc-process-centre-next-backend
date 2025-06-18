@@ -1,7 +1,8 @@
 package eu.europa.ec.cc.processcentre.mapper;
 
-import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam;
+import java.util.Collections;
 import java.util.Locale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class QueryConverterTest {
     SearchProcessRequestDto searchProcessRequestDto = factory.manufacturePojo(SearchProcessRequestDto.class);
 
     SearchProcessQueryParam queryParam = converter.toQueryParam(searchProcessRequestDto,
-        Locale.FRENCH, "username", 20, 0);
+        Locale.FRENCH, "username", 20, 0, Collections.emptySet());
 
     Assertions.assertEquals("username", queryParam.username());
   }

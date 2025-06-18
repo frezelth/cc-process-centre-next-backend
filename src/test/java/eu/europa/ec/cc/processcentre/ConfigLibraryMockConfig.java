@@ -1,6 +1,5 @@
 package eu.europa.ec.cc.processcentre;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.cc.configuration.domain.ConfigurationSet;
 import eu.europa.ec.cc.configuration.service.DomainConfigService;

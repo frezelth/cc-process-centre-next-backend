@@ -1,6 +1,6 @@
 package eu.europa.ec.cc.processcentre.process.query.repository.model;
 
-import eu.europa.ec.cc.processcentre.dto.SearchProcessRequestDto.SpecificFilterValueDto;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificFilterValueDto;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +11,10 @@ public record SearchProcessQueryParam(
     String processTypeKey,
     String searchText,
     List<String> responsibleOrganisationCodes,
-    List<String> taxonomyPaths,
+
+    String taxonomyPath,
+
     String graphElementKey,
-    Long situationOnDate,
-    Boolean ongoing,
-    Boolean completed,
-    Boolean paused,
-    Boolean cancelled,
 
     Set<ProcessStatus> statuses,
 
@@ -37,14 +34,24 @@ public record SearchProcessQueryParam(
     List<String> tags,
     List<String> businessStatuses,
 
-    String workspaceId,
-
     String locale,
     String username,
 
     Integer offset,
-    Integer limit
+    Integer limit,
+
+    Set<SecurityFilter> securityFilters
 
 ) {
+
+  public record SecurityFilter (
+      String secundaTask,
+      Set<SecurityFilterScope> secundaScopes
+  ){}
+
+  public record SecurityFilterScope(
+      String scopeTypeId,
+      Set<String> scopeIds
+  ){}
 
 }
