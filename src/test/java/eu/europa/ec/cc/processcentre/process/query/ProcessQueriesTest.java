@@ -2,7 +2,8 @@ package eu.europa.ec.cc.processcentre.process.query;
 
 import eu.europa.ec.cc.processcentre.ProcessCentreNextApplicationTests;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
-import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificAttributeValueType;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificFilterValueDto;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessResponseDto;
 import eu.europa.ec.cc.processcentre.security.Scope;
 import eu.europa.ec.cc.processcentre.security.ScopeRule;
@@ -171,6 +172,90 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
     Assertions.assertEquals("1", result.processes().getFirst().processId());
   }
 
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id) values ('1')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_string) values ('1', 'STRING_VAR', 'STRING', 'STRING_VAR_VALUE')"
+  })
+  void testWithStringProcessVariable(){
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            List.of(new SpecificFilterValueDto("STRING_VAR", SpecificAttributeValueType.STRING, "STRING_VAR_VALUE",
+                null, null, null, null, null)),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals("1", result.processes().getFirst().processId());
+  }
+
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id) values ('1')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('1', 'DATE_VAR', 'DATE', '2025-01-01 10:00:00')",
+      "insert into t_process (process_instance_id) values ('2')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('2', 'DATE_VAR', 'DATE', '2025-01-01 11:00:00')",
+      "insert into t_process (process_instance_id) values ('3')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('3', 'DATE_VAR', 'DATE', '2025-01-01 09:00:00')"
+  })
+  void testWithDateProcessVariableOrderByDate(){
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            "specificAttributes.DATE_VAR",
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(3, result.totalElements());
+    Assertions.assertEquals("3", result.processes().getFirst().processId());
+  }
+
+
     @Test
     @SneakyThrows
     void testQuickSearch(){
@@ -246,7 +331,18 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                       null,
                       null,
                       Collections.emptyList(),
-                      Collections.emptyList(),
+                      Collections.singletonList(
+                          new SpecificFilterValueDto(
+                              "VAR_STRING_0",
+                              SpecificAttributeValueType.STRING,
+                              "VALUE_STRING_0",
+                              null,
+                              null,
+                              null,
+                              null,
+                              null
+                          )
+                      ),
                       Collections.emptyList(),
                       null,
                       null,
@@ -274,63 +370,117 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
     }
 
     private static void insertProcesses(CopyManager copyManager) throws SQLException, IOException {
-        StringBuilder sb = new StringBuilder();
-        StringBuilder taskBuilder = new StringBuilder();
-        StringBuilder taskTitleBuilder = new StringBuilder();
-        for (int i=0;i<500;i++) {
-            sb.append(i)
-                    .append(',')
-                    .append("Flex")
-                    .append(',')
-                    .append("PM_AGRI")
-                    .append(',')
-                    .append("processType1")
-                    .append('\n');
+      StringBuilder sb = new StringBuilder();
+      StringBuilder taskBuilder = new StringBuilder();
+      StringBuilder taskTitleBuilder = new StringBuilder();
 
-            for (int j=0;j<30;j++) {
+      StringBuilder processVariablesBuilder = new StringBuilder();
 
-                if (j > 10){
-                    taskBuilder.append(i).append("_").append(j)
-                            .append(',')
-                            .append(i)
-                            .append(',')
-                            .append("typeKey")
-                            .append(',')
-                            .append("COMPLETED")
-                            .append('\n');
-                } else {
-                    taskBuilder.append(i).append("_").append(j)
-                            .append(',')
-                            .append(i)
-                            .append(',')
-                            .append("typeKey")
-                            .append(',')
-                            .append("CREATED")
-                            .append('\n');
-                }
+      for (int i=0;i<500;i++) {
+          sb.append(i)
+                  .append(',')
+                  .append("Flex")
+                  .append(',')
+                  .append("PM_AGRI")
+                  .append(',')
+                  .append("processType1")
+                  .append('\n');
 
-                taskTitleBuilder.append(i).append("_").append(j)
-                        .append(',')
-                        .append("TASK")
-                        .append(',')
-                        .append("TASK_TITLE")
-                        .append(',').append("en")
-                        .append(',').append("task title title ").append(i).append("_").append(j)
-                        .append('\n');
+          for (int j = 0; j<15;j++){
+            if (j < 5){
+              processVariablesBuilder.append(i)
+                  .append(',')
+                  .append("VAR_STRING_").append(j)
+                  .append(',')
+                  .append("STRING")
+                  .append(',')
+                  .append("VALUE_STRING_").append(j)
+                  .append(',')
+//                  .append("NULL")
+                  .append(',')
+//                  .append("NULL")
+                  .append('\n');
             }
-        }
+            if (j >= 5 && j < 10){
+              // date var
+              processVariablesBuilder.append(i)
+                  .append(',')
+                  .append("VAR_DATE_").append(j)
+                  .append(',')
+                  .append("DATE")
+                  .append(',')
+//                  .append("NULL")
+                  .append(',')
+                  .append("202"+j+"-10-10 11:30:30")
+                  .append(',')
+//                  .append("NULL")
+                  .append('\n');
+            }
+            if (j >= 10){
+              // number var
+              processVariablesBuilder.append(i)
+                  .append(',')
+                  .append("VAR_NUMBER_").append(j)
+                  .append(',')
+                  .append("INTEGER")
+                  .append(',')
+//                  .append("NULL")
+                  .append(',')
+//                  .append("NULL")
+                  .append(',')
+                  .append(j)
+                  .append('\n');
+            }
+          }
 
-        byte[] data = sb.toString().getBytes(StandardCharsets.UTF_8);
-        InputStream is = new ByteArrayInputStream(data);
-        copyManager.copyIn("COPY T_PROCESS (PROCESS_INSTANCE_ID, PROVIDER_ID, DOMAIN_KEY, PROCESS_TYPE_KEY) FROM STDIN WITH (FORMAT csv)", is);
+          for (int j=0;j<30;j++) {
 
-        byte[] dataTask = taskBuilder.toString().getBytes(StandardCharsets.UTF_8);
-        InputStream isTask = new ByteArrayInputStream(dataTask);
-        copyManager.copyIn("COPY T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, STATUS) FROM STDIN WITH (FORMAT csv)", isTask);
+              if (j > 10){
+                  taskBuilder.append(i).append("_").append(j)
+                          .append(',')
+                          .append(i)
+                          .append(',')
+                          .append("typeKey")
+                          .append(',')
+                          .append("COMPLETED")
+                          .append('\n');
+              } else {
+                  taskBuilder.append(i).append("_").append(j)
+                          .append(',')
+                          .append(i)
+                          .append(',')
+                          .append("typeKey")
+                          .append(',')
+                          .append("CREATED")
+                          .append('\n');
+              }
 
-        byte[] dataTranslation = taskTitleBuilder.toString().getBytes(StandardCharsets.UTF_8);
-        InputStream isTranslation = new ByteArrayInputStream(dataTranslation);
-        copyManager.copyIn("COPY T_STATIC_TRANSLATION (OBJECT_ID, OBJECT_TYPE, ATTRIBUTE_NAME, LANGUAGE_CODE, TRANSLATED_TEXT) FROM STDIN WITH (FORMAT csv)", isTranslation);
+              taskTitleBuilder.append(i).append("_").append(j)
+                      .append(',')
+                      .append("TASK")
+                      .append(',')
+                      .append("TASK_TITLE")
+                      .append(',').append("en")
+                      .append(',').append("task title title ").append(i).append("_").append(j)
+                      .append('\n');
+          }
+      }
+
+      byte[] data = sb.toString().getBytes(StandardCharsets.UTF_8);
+      InputStream is = new ByteArrayInputStream(data);
+      copyManager.copyIn("COPY T_PROCESS (PROCESS_INSTANCE_ID, PROVIDER_ID, DOMAIN_KEY, PROCESS_TYPE_KEY) FROM STDIN WITH (FORMAT csv)", is);
+
+      byte[] dataTask = taskBuilder.toString().getBytes(StandardCharsets.UTF_8);
+      InputStream isTask = new ByteArrayInputStream(dataTask);
+      copyManager.copyIn("COPY T_USER_TASK (TASK_INSTANCE_ID, PROCESS_INSTANCE_ID, TASK_TYPE_KEY, STATUS) FROM STDIN WITH (FORMAT csv)", isTask);
+
+      byte[] dataTranslation = taskTitleBuilder.toString().getBytes(StandardCharsets.UTF_8);
+      InputStream isTranslation = new ByteArrayInputStream(dataTranslation);
+      copyManager.copyIn("COPY T_STATIC_TRANSLATION (OBJECT_ID, OBJECT_TYPE, ATTRIBUTE_NAME, LANGUAGE_CODE, TRANSLATED_TEXT) FROM STDIN WITH (FORMAT csv)", isTranslation);
+
+      byte[] variables = processVariablesBuilder.toString().getBytes(StandardCharsets.UTF_8);
+      InputStream isVariables = new ByteArrayInputStream(variables);
+      copyManager.copyIn("COPY T_PROCESS_VARIABLE (PROCESS_INSTANCE_ID, NAME, VALUE_TYPE, VALUE_STRING, VALUE_DATE, VALUE_INTEGER) FROM STDIN WITH (FORMAT csv)", isVariables);
     }
 
     private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {

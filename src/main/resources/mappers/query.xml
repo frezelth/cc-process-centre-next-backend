@@ -15,30 +15,55 @@
   </resultMap>
 
   <sql id="processesCte">
-    WITH RECURSIVE
-    <if test="(sortProperty != null and sortProperty.startsWith('specificAttributes.'))
-      or (specificAttributes != null and specificAttributes.size() > 0)">
-      <!-- we need to store or filter on a given variable, we need to add an additional cte -->
-    filter_variables AS (
-      select process_instance_id from t_process_variable
-      <where>
-
-      </where>
-    ),
-    </if>
-    matching_roots AS (
+    WITH RECURSIVE matching_roots AS (
     SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
     COUNT(*) OVER() AS total_count
     FROM t_process p
+    <if test="specificAttributes != null and specificAttributes.size() > 0">
+      <foreach collection="specificAttributes" item="specificAttribute" index="idx">
+        JOIN T_PROCESS_VARIABLE v${idx} ON v${idx}.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID AND
+          v${idx}.NAME = #{specificAttribute.name} AND
+          <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@STRING">
+            v${idx}.VALUE_STRING = #{specificAttribute.stringValue}
+          </if>
+      </foreach>
+    </if>
     <include refid="whereClause"/>
     <choose>
       <when test="sortProperty != null and sortProperty.startsWith('specificAttributes.')">
-        ORDER BY (
-        SELECT pv.value::int
-        FROM T_PROCESS_VARIABLES pv
-        WHERE pv.process_id = p.id AND pv.name = #{sortProperty}
+        <bind name="variableName" value="sortProperty.split('\\.')[1]" />
+        ORDER BY
+        (
+        SELECT pv.VALUE_INTEGER
+        FROM t_process_variable pv
+        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
-        )
+        ) ASC,
+        (
+        SELECT pv.VALUE_LONG
+        FROM t_process_variable pv
+        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        LIMIT 1
+        ) ASC,
+        (
+        SELECT pv.VALUE_DOUBLE
+        FROM t_process_variable pv
+        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        LIMIT 1
+        ) ASC,
+        (
+        SELECT pv.VALUE_DATE
+        FROM t_process_variable pv
+        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        LIMIT 1
+        ) ASC,
+        (
+        SELECT pv.VALUE_STRING
+        FROM t_process_variable pv
+        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        LIMIT 1
+        ) ASC
       </when>
       <otherwise>
         ORDER BY p.created_on desc
@@ -97,6 +122,7 @@
 
   <sql id="whereClause">
     <where>
+<!--      p.SECURITY_SECUNDA_TASK is not null-->
       <if test="securityFilters != null and securityFilters.size() > 0">
         <foreach item="filter" collection="securityFilters" separator="OR" open="(" close=")">
           (

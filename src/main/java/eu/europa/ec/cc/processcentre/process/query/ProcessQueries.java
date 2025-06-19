@@ -146,16 +146,16 @@ public class ProcessQueries {
 
     // if user has no security filter we should just return an empty result list
     // otherwise we'll not generate the where clause and the user will see all processes
-    if (securityFilters.isEmpty()) {
-      return new SearchProcessResponseDto(0,
-          Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-    }
+//    if (securityFilters.isEmpty()) {
+//      return new SearchProcessResponseDto(0,
+//          Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+//    }
 
     SearchProcessQueryParam queryParam = queryConverter.toQueryParam(searchProcessDto, locale,
         username, limit, offset, securityFilters);
     List<SearchProcessQueryResponse> search = queryMapper.search(queryParam);
 
-    if (securityFilters.isEmpty()) {
+    if (search.isEmpty()) {
       return new SearchProcessResponseDto(0,
           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }
