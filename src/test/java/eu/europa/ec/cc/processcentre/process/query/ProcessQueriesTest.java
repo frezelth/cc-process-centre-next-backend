@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,6 +29,7 @@ import org.postgresql.core.BaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+@Slf4j
 public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     @Autowired
@@ -266,15 +268,22 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
             insertProcesses(copyManager);
             insertProcessesLabels(copyManager);
 
+            log.info("insert finished");
+
             // Run ANALYZE
             try (Statement stmt = conn.createStatement()) {
+              stmt.execute("SELECT FUNC_TEST_UPDATE_SEARCH_VECTOR()");
+              log.info("trigger finished");
                 stmt.execute("ANALYZE T_PROCESS");
                 stmt.execute("ANALYZE T_STATIC_TRANSLATION");
+              stmt.execute("ANALYZE T_PROCESS_VARIABLE");
                 stmt.execute("REINDEX TABLE T_PROCESS");
                 stmt.execute("REINDEX TABLE T_STATIC_TRANSLATION");
+              stmt.execute("REINDEX TABLE T_PROCESS_VARIABLE");
                 // Optional: also run REINDEX if needed
                 // stmt.execute("REINDEX TABLE your_table");
 
+              log.info("reindex finished");
 
 
               System.out.println("push finished");
@@ -285,7 +294,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                       null,
                       null,
                       null,
-                      "Proc:*",
+                      "proc:*",
                       Collections.emptyList(),
                       null,
                       null,
@@ -311,7 +320,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                   Locale.ENGLISH,
                   "frezeth"
               );
-              System.out.println("results:"+searchProcessQueryResponses);
+//              System.out.println("results:"+searchProcessQueryResponses);
               System.out.println(System.currentTimeMillis() - before);
 
               before = System.currentTimeMillis();
@@ -358,7 +367,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
                   "frezeth"
               );
               System.out.println(System.currentTimeMillis() - before);
-              System.out.println("number of results:"+searchProcessQueryResponses);
+//              System.out.println("number of results:"+searchProcessQueryResponses);
 
               stmt.execute("DELETE FROM T_USER_TASK");
               stmt.execute("DELETE FROM T_PROCESS");
@@ -376,7 +385,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
       StringBuilder processVariablesBuilder = new StringBuilder();
 
-      for (int i=0;i<500;i++) {
+      for (int i=0;i<10000;i++) {
           sb.append(i)
                   .append(',')
                   .append("Flex")
@@ -485,7 +494,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {
         StringBuilder sb = new StringBuilder();
-        for (int i=0;i<100;i++) {
+        for (int i=0;i<10000;i++) {
             sb.append(i)
                     .append(',')
                     .append("PROCESS")

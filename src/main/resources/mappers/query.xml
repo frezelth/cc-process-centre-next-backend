@@ -15,7 +15,25 @@
   </resultMap>
 
   <sql id="processesCte">
-    WITH RECURSIVE matching_roots AS (
+    WITH RECURSIVE
+    filtering AS (
+    SELECT p.*, COUNT(*) OVER () AS total_count
+    FROM t_process p
+    <if test="specificAttributes != null and specificAttributes.size() > 0">
+    JOIN t_process_variable v
+    ON v.process_instance_id = p.process_instance_id
+      <foreach collection="specificAttributes" item="specificAttribute">
+        AND v.name = #{specificAttribute.name}
+        <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@STRING">
+          AND v$.VALUE_STRING = #{specificAttribute.stringValue}
+        </if>
+      </foreach>
+    </if>
+    <include refid="whereClause"/>
+    WHERE p.search_vector @@ to_tsquery('simple', 'titl:*')
+    ),
+    matching_roots AS (
     SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
     COUNT(*) OVER() AS total_count
     FROM t_process p

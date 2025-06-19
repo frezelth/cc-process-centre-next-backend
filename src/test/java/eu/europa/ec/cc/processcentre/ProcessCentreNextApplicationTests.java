@@ -35,7 +35,7 @@ public abstract class ProcessCentreNextApplicationTests {
 
 	public static class SingletonPostgresContainer extends PostgreSQLContainer<SingletonPostgresContainer> {
 
-		private static final String IMAGE_VERSION = "postgres:15";
+		private static final String IMAGE_VERSION = "postgres:17";
 		private static SingletonPostgresContainer container;
 
 		private SingletonPostgresContainer() {
