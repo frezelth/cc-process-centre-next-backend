@@ -20,6 +20,11 @@
     SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
     COUNT(*) OVER() AS total_count
     FROM t_process p
+    <if test="taxonomyPath != null and taxonomyPath != ''">
+      JOIN t_taxonomy tx
+        ON tx.process_type_id = p.process_type_id
+        AND tx.taxonomy_path = #{taxonomyPath}
+    </if>
     <if test="specificAttributes != null and specificAttributes.size() > 0">
       JOIN t_process_variable v
       ON v.process_instance_id = p.process_instance_id

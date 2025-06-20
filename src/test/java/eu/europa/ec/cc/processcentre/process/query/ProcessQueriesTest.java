@@ -308,6 +308,46 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
   }
 
 
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id, process_type_id) values ('1', 'providerId:domainKey:processTypeKey')",
+      "insert into t_process (process_instance_id, process_type_id) values ('2', 'providerId2:domainKey:processTypeKey')",
+      "insert into t_taxonomy (process_type_id, taxonomy_path) values ('providerId:domainKey:processTypeKey', 'toto/flex')",
+  })
+  void testWithTaxonomyPath(){
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            "toto/flex",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals("1", result.processes().getFirst().processId());
+  }
+
     @Test
     @SneakyThrows
     void testQuickSearch(){
