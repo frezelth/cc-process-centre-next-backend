@@ -16,35 +16,55 @@
 
   <sql id="processesCte">
     WITH RECURSIVE
-    filtering AS (
-    SELECT p.*, COUNT(*) OVER () AS total_count
-    FROM t_process p
-    <if test="specificAttributes != null and specificAttributes.size() > 0">
-    JOIN t_process_variable v
-    ON v.process_instance_id = p.process_instance_id
-      <foreach collection="specificAttributes" item="specificAttribute">
-        AND v.name = #{specificAttribute.name}
-        <if test="specificAttribute.type ==
-            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@STRING">
-          AND v$.VALUE_STRING = #{specificAttribute.stringValue}
-        </if>
-      </foreach>
-    </if>
-    <include refid="whereClause"/>
-    WHERE p.search_vector @@ to_tsquery('simple', 'titl:*')
-    ),
     matching_roots AS (
     SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
     COUNT(*) OVER() AS total_count
     FROM t_process p
     <if test="specificAttributes != null and specificAttributes.size() > 0">
-      <foreach collection="specificAttributes" item="specificAttribute" index="idx">
-        JOIN T_PROCESS_VARIABLE v${idx} ON v${idx}.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID AND
-          v${idx}.NAME = #{specificAttribute.name} AND
-          <if test="specificAttribute.type ==
+      JOIN t_process_variable v
+      ON v.process_instance_id = p.process_instance_id
+      <foreach collection="specificAttributes" item="specificAttribute">
+        AND v.name = #{specificAttribute.name}
+        <if test="specificAttribute.type ==
             @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@STRING">
-            v${idx}.VALUE_STRING = #{specificAttribute.stringValue}
+          AND v.VALUE_STRING = #{specificAttribute.stringValue}
+        </if>
+        <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@INTEGER">
+          <if test="specificAttribute.numericValueLte != null">
+            <![CDATA[ AND v.VALUE_INTEGER <= #{specificAttribute.numericValueLte} ]]>
           </if>
+          <if test="specificAttribute.numericValueGte != null">
+            <![CDATA[ AND v.VALUE_INTEGER >= #{specificAttribute.numericValueGte} ]]>
+          </if>
+        </if>
+        <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@LONG">
+          <if test="specificAttribute.numericValueLte != null">
+            <![CDATA[ AND v.VALUE_LONG <= #{specificAttribute.numericValueLte} ]]>
+          </if>
+          <if test="specificAttribute.numericValueGte != null">
+            <![CDATA[ AND v.VALUE_LONG >= #{specificAttribute.numericValueGte} ]]>
+          </if>
+        </if>
+        <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@DOUBLE">
+          <if test="specificAttribute.numericValueLte != null">
+            <![CDATA[ AND v.VALUE_DOUBLE <= #{specificAttribute.numericValueLte} ]]>
+          </if>
+          <if test="specificAttribute.numericValueGte != null">
+            <![CDATA[ AND v.VALUE_DOUBLE >= #{specificAttribute.numericValueGte} ]]>
+          </if>
+        </if>
+        <if test="specificAttribute.type ==
+            @eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto$SpecificAttributeValueType@DATE">
+          <if test="specificAttribute.dateValueLte != null">
+            <![CDATA[ AND v.VALUE_DATE <= #{specificAttribute.dateValueLte} ]]>
+          </if>
+          <if test="specificAttribute.dateValueGte != null">
+            <![CDATA[ AND v.VALUE_DATE >= #{specificAttribute.dateValueGte} ]]>
+          </if>
+        </if>
       </foreach>
     </if>
     <include refid="whereClause"/>
@@ -119,22 +139,6 @@
     )) AS tasks
     FROM task_titles t
     GROUP BY t.process_instance_id
-    ),
-    processes AS (
-    SELECT
-    r.process_instance_id,
-    r.total_count,
-    pt.translated_text AS process_title,
-    COALESCE(at.tasks, '[]'::json) AS tasks
-    FROM matching_roots r
-    LEFT JOIN (
-    SELECT object_id, translated_text
-    FROM t_static_translation
-    WHERE language_code = #{locale}
-    AND object_type = 'PROCESS'
-    AND attribute_name = 'PROCESS_TITLE'
-    ) pt ON pt.object_id = r.process_instance_id
-    LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id
     )
   </sql>
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.taxonomy.repository.TaxonomyMapper">
+
+  <insert id="saveTaxonomyProcessTypes">
+    insert into T_TAXONOMY (
+    TAXONOMY_PATH, PROCESS_TYPE_ID)
+    VALUES
+    <foreach collection="processTypeIds" item="processTypeId" separator=",">
+    (
+    #{taxonomyPath}, #{processTypeId}
+    )
+    </foreach>
+
+    ON CONFLICT DO NOTHING
+  </insert>
+
+  <delete id="deleteTaxonomyProcessTypes">
+    DELETE FROM T_TAXONOMY
+    <where>
+      TAXONOMY_PATH = #{taxonomyPath}
+    </where>
+  </delete>
+
+</mapper>

@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -223,6 +225,54 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
       "insert into t_process (process_instance_id) values ('3')",
       "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('3', 'DATE_VAR', 'DATE', '2025-01-01 09:00:00')"
   })
+  void testWithDateProcessVariableDateFilter(){
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        new SearchProcessRequestDto(
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.singletonList(
+                new SpecificFilterValueDto("DATE_VAR", SpecificAttributeValueType.DATE,
+                    null, null, null, null,
+                    LocalDateTime.of(2025,1,1,12,0).atZone(ZoneId.of("Europe/Brussels")).toInstant(),
+                    LocalDateTime.of(2025,1,1,10,0).atZone(ZoneId.of("Europe/Brussels")).toInstant()
+                )
+            ),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null
+        ), 0, 10, Locale.ENGLISH, "frezeth"
+    );
+
+    Assertions.assertEquals(2, result.totalElements());
+  }
+
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id) values ('1')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('1', 'DATE_VAR', 'DATE', '2025-01-01 10:00:00')",
+      "insert into t_process (process_instance_id) values ('2')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('2', 'DATE_VAR', 'DATE', '2025-01-01 11:00:00')",
+      "insert into t_process (process_instance_id) values ('3')",
+      "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('3', 'DATE_VAR', 'DATE', '2025-01-01 09:00:00')"
+  })
   void testWithDateProcessVariableOrderByDate(){
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
@@ -385,7 +435,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
       StringBuilder processVariablesBuilder = new StringBuilder();
 
-      for (int i=0;i<10000;i++) {
+      for (int i=0;i<500000;i++) {
           sb.append(i)
                   .append(',')
                   .append("Flex")
@@ -494,7 +544,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {
         StringBuilder sb = new StringBuilder();
-        for (int i=0;i<10000;i++) {
+        for (int i=0;i<500000;i++) {
             sb.append(i)
                     .append(',')
                     .append("PROCESS")

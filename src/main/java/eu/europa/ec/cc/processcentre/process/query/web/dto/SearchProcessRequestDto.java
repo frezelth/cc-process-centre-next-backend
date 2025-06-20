@@ -1,5 +1,6 @@
 package eu.europa.ec.cc.processcentre.process.query.web.dto;
 
+import java.time.Instant;
 import java.util.List;
 
 public record SearchProcessRequestDto(
@@ -46,8 +47,8 @@ public record SearchProcessRequestDto(
       Double numericValueLte,
       Double numericValueGte,
 
-      Long dateValueLte,
-      Long dateValueGte
+      Instant dateValueLte,
+      Instant dateValueGte
   ){
   }
 
