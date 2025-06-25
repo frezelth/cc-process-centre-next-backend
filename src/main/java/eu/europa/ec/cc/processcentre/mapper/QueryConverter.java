@@ -14,7 +14,7 @@ import org.mapstruct.Mapping;
 public interface QueryConverter {
 
   @Mapping(target = "statuses",
-      expression = "java(mapBooleansToStatuses(dto.completed(), dto.ongoing(), dto.paused(), dto.cancelled()))")
+      expression = "java(mapBooleansToStatuses(dto.getCompleted(), dto.getOngoing(), dto.getPaused(), dto.getCancelled()))")
   SearchProcessQueryParam toQueryParam(
       SearchProcessRequestDto dto, Locale locale,
       String username, int limit, int offset, Set<SecurityFilter> securityFilters);

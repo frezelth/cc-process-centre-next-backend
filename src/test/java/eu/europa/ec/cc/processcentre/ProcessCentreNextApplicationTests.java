@@ -1,5 +1,7 @@
 package eu.europa.ec.cc.processcentre;
 
+import eu.europa.ec.cc.processcentre.process.query.CommonColumnsQueriesImpl;
+import eu.europa.ec.cc.processcentre.process.query.SortableFieldsQueriesImpl;
 import eu.europa.ec.cc.processcentre.security.SecurityRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;

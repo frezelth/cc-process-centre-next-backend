@@ -2,7 +2,6 @@ package eu.europa.ec.cc.processcentre.process.command.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.cc.configadmin.event.proto.RefreshConfiguration;
 import eu.europa.ec.cc.processcentre.babel.BabelText;
 import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.config.AccessRight.Right;
@@ -11,11 +10,8 @@ import eu.europa.ec.cc.processcentre.config.service.ConfigService;
 import eu.europa.ec.cc.processcentre.event.ProcessModelChanged;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.event.ProcessVariablesChanged;
-import eu.europa.ec.cc.processcentre.exception.NotFoundException;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation;
-import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessConfigByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessConfigQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedConfigQueryParam;
 import eu.europa.ec.cc.processcentre.template.TemplateConverter;
@@ -24,27 +20,18 @@ import eu.europa.ec.cc.processcentre.template.TemplateModel;
 import eu.europa.ec.cc.processcentre.translation.TranslationAttribute;
 import eu.europa.ec.cc.processcentre.translation.TranslationObjectType;
 import eu.europa.ec.cc.processcentre.translation.TranslationService;
-import eu.europa.ec.cc.processcentre.translation.repository.DeleteTranslationsParam;
-import eu.europa.ec.cc.processcentre.translation.repository.InsertOrUpdateTranslationsParam;
 import eu.europa.ec.cc.processcentre.translation.repository.TranslationMapper;
 import eu.europa.ec.cc.processcentre.util.Context;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor.MappingsProvider;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.CollectionUtils;
 
 @Service
@@ -78,7 +65,7 @@ public class ProcessConfigService {
 
     Map<String, String> context = Context.context(event.providerId(), event.domainKey(), event.processTypeKey());
     // load the process type config
-    ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context);
+    ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context).orElse(null);
 
     if (processTypeConfig == null) {
       LOG.warn("No process type configuration found for context {}", context);
@@ -86,7 +73,7 @@ public class ProcessConfigService {
     }
 
     // load the process result card config, not mandatory
-    String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context);
+    String resultCardLayoutConfig = configService.fetchResultCardLayoutConfig(context).orElse(null);
 
     // create translations for the type name / process title, initially based on type name
     // it will be overridden later by the

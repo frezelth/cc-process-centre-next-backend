@@ -1,12 +1,13 @@
 package eu.europa.ec.cc.processcentre.process.query.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import eu.europa.ec.cc.processcentre.config.SortableField;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import java.util.List;
 
 public record SearchProcessResponseDto(
     long totalElements,
-    List<SearchProcessResponseDtoProcess> processes,
+    @JsonRawValue  List<String> processes,
     List<SortableField> sortableFields,
     List<String> commonColumns
 ) {
@@ -18,10 +19,6 @@ public record SearchProcessResponseDto(
       @JsonRawValue String cardLayout,
       boolean favourite,
       @JsonRawValue String activeTasks
-  ){}
-
-  public record SortableField(
-
   ){}
 
   public record SearchProcessResponseDtoActiveTask(

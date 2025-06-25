@@ -8,15 +8,18 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.cc.processcentre.config.SortableField;
 import eu.europa.ec.cc.processcentre.mapper.QueryConverter;
 import eu.europa.ec.cc.processcentre.process.query.repository.QueryMapper;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam.SecurityFilter;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryParam.SecurityFilterScope;
 import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse;
+import eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse.SearchProcessQueryResponseType;
+import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessResponseDto;
-import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessResponseDto.SearchProcessResponseDtoProcess;
 import eu.europa.ec.cc.processcentre.security.ECHierarchyService;
 import eu.europa.ec.cc.processcentre.security.Scope;
 import eu.europa.ec.cc.processcentre.security.ScopeRule;
@@ -26,17 +29,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 @Component
+@Slf4j
 public class ProcessQueries {
 
   private static final String SCOPE_TYPE_ID_EC_HIER = "EC-Hierarchy";
@@ -46,15 +54,23 @@ public class ProcessQueries {
   private final QueryConverter queryConverter;
   private final SecurityRepository securityRepository;
   private final ECHierarchyService ecHierarchyService;
+  private final SortableFieldsQueries sortableFieldsQueries;
+  private final ObjectMapper objectMapper;
+  private final CommonColumnsQueries commonColumnsQueries;
 
   public ProcessQueries(QueryMapper queryMapper,
       QueryConverter queryConverter,
       SecurityRepository securityRepository,
-      ECHierarchyService ecHierarchyService) {
+      ECHierarchyService ecHierarchyService, ObjectMapper objectMapper,
+      CommonColumnsQueries commonColumnsQueries,
+      SortableFieldsQueries sortableFieldsQueries) {
     this.queryMapper = queryMapper;
     this.queryConverter = queryConverter;
     this.securityRepository = securityRepository;
     this.ecHierarchyService = ecHierarchyService;
+    this.objectMapper = objectMapper;
+    this.commonColumnsQueries = commonColumnsQueries;
+    this.sortableFieldsQueries = sortableFieldsQueries;
   }
 
   public Map<String, Set<String>> getScopeRulesSecurityFilters(Collection<ScopeRule> scopeRules) {
@@ -104,12 +120,18 @@ public class ProcessQueries {
     return ecHierarchyService.findTopLevelOrganisationCodes(ecHierarchyScopeRuleValues);
   }
 
+  @SneakyThrows
   public SearchProcessResponseDto searchProcesses(
       SearchProcessRequestDto searchProcessDto,
       int offset, int limit, Locale locale, String username){
 
-    List<SecundaScope> scopes = securityRepository.findScopes(username);
+    StopWatch sw = new StopWatch();
 
+    sw.start("Fetch secunda tasks");
+    List<SecundaScope> scopes = securityRepository.findScopes(username);
+    sw.stop();
+
+    sw.start("Gather security filters");
     Set<SecurityFilter> securityFilters = new HashSet<>();
     for (final var secundaScope : scopes) {
       if (isBlank(secundaScope.getSecundaTaskId())) {
@@ -144,6 +166,7 @@ public class ProcessQueries {
       securityFilters.add(filter);
     }
 
+    sw.stop();
     // if user has no security filter we should just return an empty result list
     // otherwise we'll not generate the where clause and the user will see all processes
 //    if (securityFilters.isEmpty()) {
@@ -151,28 +174,66 @@ public class ProcessQueries {
 //          Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
 //    }
 
+    sw.start("Creating search param");
     SearchProcessQueryParam queryParam = queryConverter.toQueryParam(searchProcessDto, locale,
         username, limit, offset, securityFilters);
-    List<SearchProcessQueryResponse> search = queryMapper.search(queryParam);
+    sw.stop();
 
+    sw.start("Searching for processes");
+    List<SearchProcessQueryResponse> search = queryMapper.search(queryParam);
+    sw.stop();
+
+    sw.start("Formatting results");
     if (search.isEmpty()) {
       return new SearchProcessResponseDto(0,
           Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }
 
+    String totalCountJson = search.stream()
+        .filter(s -> s.getType() == SearchProcessQueryResponseType.count)
+        .map(SearchProcessQueryResponse::getPayload)
+        .findFirst().orElseThrow();
+
+    long totalCount = objectMapper.readTree(totalCountJson).get("total_count").longValue();
+    List<String> processes = search.stream()
+        .filter(s -> s.getType() == SearchProcessQueryResponseType.data)
+        .map(SearchProcessQueryResponse::getPayload)
+        .toList();
+
+    String contextKeysAsString = search.stream()
+        .filter(s -> s.getType() == SearchProcessQueryResponseType.agg)
+        .map(SearchProcessQueryResponse::getPayload)
+        .findFirst().orElseThrow();
+
+    Set<Map<String,String>> contexts = objectMapper.readValue(contextKeysAsString,
+        new TypeReference<>() {
+        });
+
+    Set<Map<String, String>> orderedContext = contexts
+        .stream()
+        .map(c -> {
+          LinkedHashMap<String, String> map = new LinkedHashMap<>();
+          map.put("providerId", c.get("providerId"));
+          map.put("domainKey", c.get("domainKey"));
+          map.put("processTypeKey", c.get("processTypeKey"));
+          return map;
+        }).collect(toSet());
+
+    sw.stop();
+    LOG.debug(sw.prettyPrint());
+
+    List<SortableField> sortableFields = sortableFieldsQueries.findSortableFields(
+        orderedContext,
+        locale // used, for example, to sort the fields
+    );
+
+    List<String> commonColumns = commonColumnsQueries.findCommonColumns(contexts);
+
     return new SearchProcessResponseDto(
-        search.getFirst().getTotalCount(),
-        search.stream().map(e ->
-            new SearchProcessResponseDtoProcess(
-                e.getProcessInstanceId(),
-                e.getTitle(),
-                e.getStatus(),
-                e.getCardLayout(),
-                false,
-                e.getActiveTasks()
-            )).toList(),
-        Collections.emptyList(),
-        Collections.emptyList()
+        totalCount,
+        processes,
+        sortableFields,
+        commonColumns
     );
 
   }

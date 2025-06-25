@@ -16,14 +16,19 @@
 
   <sql id="processesCte">
     WITH RECURSIVE
-    matching_roots AS (
-    SELECT p.process_instance_id, p.status, p.result_card, p.created_on,
-    COUNT(*) OVER() AS total_count
+    filtered_data AS (
+    SELECT p.process_instance_id,
+    p.domain_key,
+    p.provider_id,
+    p.process_type_key,
+    p.status,
+    p.result_card,
+    p.created_on
     FROM t_process p
     <if test="taxonomyPath != null and taxonomyPath != ''">
       JOIN t_taxonomy tx
-        ON tx.process_type_id = p.process_type_id
-        AND tx.taxonomy_path = #{taxonomyPath}
+      ON tx.process_type_id = p.process_type_id
+      AND tx.taxonomy_path = #{taxonomyPath}
     </if>
     <if test="specificAttributes != null and specificAttributes.size() > 0">
       JOIN t_process_variable v
@@ -73,6 +78,15 @@
       </foreach>
     </if>
     <include refid="whereClause"/>
+    ),
+    context_keys as (
+    SELECT provider_id, domain_key, process_type_key
+    FROM filtered_data f
+    GROUP BY provider_id, domain_key,process_type_key
+    ),
+    matching_roots AS (
+    SELECT f.process_instance_id, f.status, f.result_card, f.created_on
+    FROM filtered_data f
     <choose>
       <when test="sortProperty != null and sortProperty.startsWith('specificAttributes.')">
         <bind name="variableName" value="sortProperty.split('\\.')[1]" />
@@ -80,36 +94,36 @@
         (
         SELECT pv.VALUE_INTEGER
         FROM t_process_variable pv
-        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        WHERE pv.process_instance_id = f.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
         ) ASC,
         (
         SELECT pv.VALUE_LONG
         FROM t_process_variable pv
-        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        WHERE pv.process_instance_id = f.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
         ) ASC,
         (
         SELECT pv.VALUE_DOUBLE
         FROM t_process_variable pv
-        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        WHERE pv.process_instance_id = f.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
         ) ASC,
         (
         SELECT pv.VALUE_DATE
         FROM t_process_variable pv
-        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        WHERE pv.process_instance_id = f.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
         ) ASC,
         (
         SELECT pv.VALUE_STRING
         FROM t_process_variable pv
-        WHERE pv.process_instance_id = p.process_instance_id AND pv.name = #{variableName}
+        WHERE pv.process_instance_id = f.process_instance_id AND pv.name = #{variableName}
         LIMIT 1
         ) ASC
       </when>
       <otherwise>
-        ORDER BY p.created_on desc
+        ORDER BY f.created_on desc
       </otherwise>
     </choose>
     LIMIT #{limit} OFFSET #{offset}),
@@ -190,14 +204,34 @@
     </where>
   </sql>
 
-  <select id="search" resultMap="ProcessResult" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
+  <select id="search" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
     <include refid="processesCte"/>
-    SELECT r.process_instance_id as process_instance_id,
-    r.total_count as total_count,
-    pt.translated_text    AS process_title,
-    COALESCE(at.tasks, '[]'::json) AS tasks,
-    r.status as status,
-    r.result_card as result_card
+<!--    SELECT r.process_instance_id as process_instance_id,-->
+<!--    r.total_count as total_count,-->
+<!--    pt.translated_text    AS process_title,-->
+<!--    COALESCE(at.tasks, '[]'::json) AS tasks,-->
+<!--    r.status as status,-->
+<!--    r.result_card as result_card-->
+<!--    FROM matching_roots r-->
+<!--    LEFT JOIN (SELECT object_id, translated_text-->
+<!--    FROM t_static_translation-->
+<!--    WHERE language_code = #{locale}-->
+<!--    AND object_type = 'PROCESS'-->
+<!--    AND attribute_name = 'PROCESS_TITLE'-->
+<!--    AND object_id IN (SELECT process_instance_id FROM matching_roots)) pt-->
+<!--    ON pt.object_id = r.process_instance_id-->
+<!--    LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id-->
+
+    SELECT
+    'data' as type,
+    to_jsonb(
+    json_build_object(
+    'processInstanceId', r.process_instance_id,
+    'status', r.status,
+    'resultCard', r.result_card,
+    'title', pt.translated_text,
+    'activeTasks', at.tasks
+    )) AS payload
     FROM matching_roots r
     LEFT JOIN (SELECT object_id, translated_text
     FROM t_static_translation
@@ -207,6 +241,14 @@
     AND object_id IN (SELECT process_instance_id FROM matching_roots)) pt
     ON pt.object_id = r.process_instance_id
     LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id
+    UNION ALL
+    select 'agg' as type, to_jsonb(
+      json_build_object('providerId', ck.provider_id, 'domainKey', ck.domain_key, 'processTypeKey', ck.process_type_key)
+    ) as payload
+    from context_keys ck
+    UNION ALL
+    select 'count' as type,
+    to_jsonb(JSON_BUILD_OBJECT('total_count', COUNT(*))) AS payload from filtered_data f
   </select>
 
   <!--  <select id="countStations" resultType="eu.europa.ec.cc.processcentre.repository.model.MetroLineStationStats">-->

@@ -1,20 +1,26 @@
 package eu.europa.ec.cc.processcentre.config.service;
 
+import static eu.europa.ec.cc.configuration.service.MergeStrategy.NO_MERGE_HIGHEST_SCORE_WINS;
+import static eu.europa.ec.cc.configuration.service.SearchStrategy.BEST_MATCH;
+import static eu.europa.ec.cc.processcentre.config.ConfigException.translate;
+import static eu.europa.ec.cc.processcentre.config.ConfigType.PROCESS_RESULT;
+import static eu.europa.ec.cc.processcentre.config.ConfigType.PROCESS_SORTABLE_FIELDS;
+import static eu.europa.ec.cc.processcentre.config.ConfigType.PROCESS_TYPE;
+import static java.util.Optional.ofNullable;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.cc.configuration.domain.ConfigurationSet;
 import eu.europa.ec.cc.configuration.service.DomainConfigService;
-import eu.europa.ec.cc.configuration.service.MergeStrategy;
-import eu.europa.ec.cc.configuration.service.SearchStrategy;
+import eu.europa.ec.cc.processcentre.config.ConfigType;
+import eu.europa.ec.cc.processcentre.config.InvalidConfigException;
 import eu.europa.ec.cc.processcentre.config.ProcessTypeConfig;
-import eu.europa.ec.cc.processcentre.exception.ApplicationException;
+import eu.europa.ec.cc.processcentre.config.SortableFieldConfig;
 import eu.europa.ec.cc.processcentre.util.Context;
 import java.util.Map;
 import java.util.Optional;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,53 +36,57 @@ public class ConfigService {
     this.objectMapper = objectMapper;
   }
 
-  public ProcessTypeConfig fetchProcessTypeConfig(Map<String, String> context) {
-    return fetchConfig(ProcessTypeConfig.class, ProcessTypeConfig.CONFIGURATION_TYPE_NAME, context);
+  public Optional<ProcessTypeConfig> fetchProcessTypeConfig(Map<String, String> context) {
+    return fetchConfig(ProcessTypeConfig.class, PROCESS_TYPE, context);
   }
 
-  public String fetchResultCardLayoutConfig(Map<String, String> context) {
-    return fetchConfig(String.class, ProcessTypeConfig.CONFIGURATION_RESULT_CARD_NAME, context);
+  public Optional<String> fetchResultCardLayoutConfig(Map<String, String> context) {
+    return fetchConfig(String.class, PROCESS_RESULT, context);
   }
 
-  public JsonNode fetchConfig(String configType, Map<String, String> context){
+  public Optional<JsonNode> fetchConfig(ConfigType configType, Map<String, String> context){
     Context.requireValidContext(context);
 
-    ConfigurationSet config = domainConfigService.get(context,
-            configType,
-            SearchStrategy.BEST_MATCH,
-            MergeStrategy.NO_MERGE_HIGHEST_SCORE_WINS);
+    try {
 
-    if (config == null) {
-      return null;
+      return ofNullable(domainConfigService.get(
+          context,
+          configType.toString(),
+          BEST_MATCH,
+          NO_MERGE_HIGHEST_SCORE_WINS
+      )).map(ConfigurationSet::getContent);
+
+    } catch (Exception exception) {
+      throw translate(exception);
     }
-
-    return config.getContent();
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T fetchConfig(Class<T> configClass, String configType, Map<String, String> context) {
+  private <T> Optional<T> fetchConfig(Class<T> configClass, ConfigType configType, Map<String, String> context) {
+    return fetchConfig(configType, context).map(
+        c -> {
 
-    JsonNode config = fetchConfig(configType, context);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Config for context {} fetched, config is {}",
+                context, c);
+          }
 
-    if (config == null) {
-      LOG.warn("Config not found for type {} and context {}", configType, context);
-      return null;
-    }
+          try {
+            if (configClass.isAssignableFrom(String.class)){
+              return (T) objectMapper.writeValueAsString(c);
+            } else {
+              return objectMapper.treeToValue(c, configClass);
+            }
+          } catch (JsonProcessingException e) {
+            LOG.warn("Invalid config for type {} and context {}", configType, context);
+            throw new InvalidConfigException(e);
+          }
+        }
+    );
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Config for context {} fetched, config is {}",
-          context, config);
-    }
+  }
 
-    try {
-      if (configClass.isAssignableFrom(String.class)){
-        return (T) objectMapper.writeValueAsString(config);
-      } else {
-        return objectMapper.treeToValue(config, configClass);
-      }
-    } catch (JsonProcessingException e) {
-      LOG.warn("Invalid config for type {} and context {}", configType, context);
-      return null;
-    }
+  public Optional<SortableFieldConfig> fetchProcessSortableFields(Map<String, String> context) {
+    return fetchConfig(SortableFieldConfig.class, PROCESS_SORTABLE_FIELDS, context);
   }
 }

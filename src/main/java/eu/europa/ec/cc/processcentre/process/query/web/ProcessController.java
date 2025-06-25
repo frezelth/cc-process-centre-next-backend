@@ -11,6 +11,8 @@ import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessResponse
 import eu.europa.ec.cc.processcentre.proto.RemoveProcessFavourite;
 import eu.europa.ec.cc.processcentre.util.ApiHelper;
 import java.util.Locale;
+import org.springframework.context.i18n.LocaleContext;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,25 +43,12 @@ public class ProcessController {
       @RequestBody(required = false) SearchProcessRequestDto filter
   ) {
 
-    return null;
-//    final var userDetails = userBusinessDomainIdsService.findUserBusinessDomains();
-//    final var criteria = searchCriteriaWithTaxonomyPaths(filter, userDetails);
-//
-//    final var processesAndContexts = processQueries.searchProcesses(filter,
-//        offset,
-//        limit,
-//        Locale.ENGLISH,
-//        ApiHelper.getUsername().orElseThrow());
-//
-//    final var processes = processesAndContexts.getProcessesDto();
-//    processes.setUserDetails(userDetails);
-//    processes.setSortableFields(sortableFieldsService.findSortableFields(
-//        processesAndContexts.getContexts(),
-//        criteria.getLocale() // used, for example, to sort the fields
-//    ));
-//    processes.setCommonColumns(commonColumnsService.findCommonColumns(processesAndContexts.getContexts()));
-//    convert(processes.getProcesses());
-//    return processes;
+    final var processesAndContexts = processQueries.searchProcesses(
+        filter, offset, limit, LocaleContextHolder.getLocale(), ApiHelper.getUsername().orElseThrow(
+            () -> new InvalidInputException("No user found in request")
+        ));
+
+    return processesAndContexts;
   }
 
   @PutMapping("/{processId}/favourite")

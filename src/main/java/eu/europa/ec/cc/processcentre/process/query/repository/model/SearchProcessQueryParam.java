@@ -2,10 +2,12 @@ package eu.europa.ec.cc.processcentre.process.query.repository.model;
 
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificFilterValueDto;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 public record SearchProcessQueryParam(
+
     String providerId,
     String domainKey,
     String processTypeKey,
@@ -43,6 +45,12 @@ public record SearchProcessQueryParam(
     Set<SecurityFilter> securityFilters
 
 ) {
+
+  public SearchProcessQueryParam(){
+    this(null, null, null, null, Collections.emptyList(), null, null, Collections.emptySet(),
+        null, Collections.emptySet(), Collections.emptyList(), Collections.emptyList(), null, null, null,
+        null, Collections.emptyList(), Collections.emptyList(), null, null, 0, 1, Collections.emptySet());
+  }
 
   public record SecurityFilter (
       String secundaTask,

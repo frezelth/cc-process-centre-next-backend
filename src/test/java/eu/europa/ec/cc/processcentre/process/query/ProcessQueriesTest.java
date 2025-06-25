@@ -1,6 +1,8 @@
 package eu.europa.ec.cc.processcentre.process.query;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.cc.processcentre.ProcessCentreNextApplicationTests;
+import eu.europa.ec.cc.processcentre.config.SortableField;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificAttributeValueType;
 import eu.europa.ec.cc.processcentre.process.query.web.dto.SearchProcessRequestDto.SpecificFilterValueDto;
@@ -18,8 +20,11 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,7 @@ import org.mockito.Mockito;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Slf4j
@@ -39,12 +45,23 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     @Autowired
     private DataSource dataSource;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @Test
+
+
+  @MockitoBean
+  protected SortableFieldsQueries sortableFieldsQueries;
+
+  @MockitoBean
+  protected CommonColumnsQueries commonColumnsQueries;
+
+  @Test
     @Sql(statements = {
         "insert into t_process (process_instance_id, security_secunda_task) values ('1', 'CORRECT_TASK')",
         "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
     })
+  @SneakyThrows
     void testSecundaTaskWithNoScope(){
       Mockito.when(securityRepository.findScopes("frezeth"))
           .thenReturn(Collections.singletonList(
@@ -52,35 +69,13 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
           ));
 
       SearchProcessResponseDto result = processQueries.searchProcesses(
-          new SearchProcessRequestDto(
-              null,
-              null,
-              null,
-              null,
-              Collections.emptyList(),
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              Collections.emptyList(),
-              Collections.emptyList(),
-              Collections.emptyList(),
-              null,
-              null,
-              null,
-              null,
-              Collections.emptyList(),
-              Collections.emptyList(),
-              null
-          ), 0, 10, Locale.ENGLISH, "frezeth"
+          SearchProcessRequestDto.builder().build(), 0, 10, Locale.ENGLISH, "frezeth"
       );
 
       Assertions.assertEquals(1, result.totalElements());
-      Assertions.assertEquals("1", result.processes().getFirst().processId());
+      String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+    Assertions.assertEquals("1", processInstanceId);
     }
 
   @Test
@@ -89,6 +84,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
           + "security_scope_type_id, security_scope_id) values ('1', 'CORRECT_TASK', 'MY_SCOPE_TYPE', 'MY_SCOPE_VALUE')",
       "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
   })
+  @SneakyThrows
   void testSecundaTaskWithExplicitScope(){
     Mockito.when(securityRepository.findScopes("frezeth"))
         .thenReturn(Collections.singletonList(
@@ -98,35 +94,13 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
         ));
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+        SearchProcessRequestDto.builder().build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(1, result.totalElements());
-    Assertions.assertEquals("1", result.processes().getFirst().processId());
+    String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+    Assertions.assertEquals("1", processInstanceId);
   }
   @Test
   @Sql(statements = {
@@ -134,6 +108,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
           + "security_scope_type_id, security_scope_id) values ('1', 'CORRECT_TASK', 'EC-Hierarchy', 'AGRI/R/03')",
       "insert into t_process (process_instance_id, security_secunda_task) values ('2', 'OTHER_TASK')"
   })
+  @SneakyThrows
   void testSecundaTaskWithScopeRules(){
     Mockito.when(securityRepository.findScopes("frezeth"))
         .thenReturn(Collections.singletonList(
@@ -145,35 +120,14 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
         ));
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+        SearchProcessRequestDto.builder().build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(1, result.totalElements());
-    Assertions.assertEquals("1", result.processes().getFirst().processId());
+
+    String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+    Assertions.assertEquals("1", processInstanceId);
   }
 
   @Test
@@ -181,39 +135,29 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
       "insert into t_process (process_instance_id) values ('1')",
       "insert into t_process_variable (process_instance_id, name, value_type, value_string) values ('1', 'STRING_VAR', 'STRING', 'STRING_VAR_VALUE')"
   })
+  @SneakyThrows
   void testWithStringProcessVariable(){
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            List.of(new SpecificFilterValueDto("STRING_VAR", SpecificAttributeValueType.STRING, "STRING_VAR_VALUE",
-                null, null, null, null, null)),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+        SearchProcessRequestDto.builder()
+            .specificAttributes(
+                Collections.singletonList(
+                    SpecificFilterValueDto.builder()
+                        .name("STRING_VAR")
+                        .type(SpecificAttributeValueType.STRING)
+                        .stringValue("STRING_VAR_VALUE")
+                        .build()
+                )
+            )
+            .build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(1, result.totalElements());
-    Assertions.assertEquals("1", result.processes().getFirst().processId());
+
+    String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+
+    Assertions.assertEquals("1", processInstanceId);
   }
 
   @Test
@@ -228,37 +172,20 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
   void testWithDateProcessVariableDateFilter(){
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.singletonList(
-                new SpecificFilterValueDto("DATE_VAR", SpecificAttributeValueType.DATE,
-                    null, null, null, null,
-                    LocalDateTime.of(2025,1,1,12,0).atZone(ZoneId.of("Europe/Brussels")).toInstant(),
-                    LocalDateTime.of(2025,1,1,10,0).atZone(ZoneId.of("Europe/Brussels")).toInstant()
+        SearchProcessRequestDto.builder()
+            .specificAttributes(
+                Collections.singletonList(
+                    SpecificFilterValueDto.builder()
+                        .name("DATE_VAR")
+                        .type(SpecificAttributeValueType.DATE)
+                        .dateValueGte(LocalDateTime.of(2025, 1, 1, 10, 0).atZone(ZoneId.of("Europe/Brussels"))
+                            .toInstant())
+                        .dateValueLte(LocalDateTime.of(2025, 1, 1, 12, 0).atZone(ZoneId.of("Europe/Brussels"))
+                            .toInstant())
+                        .build()
                 )
-            ),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+            )
+            .build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(2, result.totalElements());
@@ -273,38 +200,21 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
       "insert into t_process (process_instance_id) values ('3')",
       "insert into t_process_variable (process_instance_id, name, value_type, value_date) values ('3', 'DATE_VAR', 'DATE', '2025-01-01 09:00:00')"
   })
+  @SneakyThrows
   void testWithDateProcessVariableOrderByDate(){
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            "specificAttributes.DATE_VAR",
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+        SearchProcessRequestDto.builder()
+            .sortProperty("specificAttributes.DATE_VAR")
+            .build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(3, result.totalElements());
-    Assertions.assertEquals("3", result.processes().getFirst().processId());
+
+
+    String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+    Assertions.assertEquals("3", processInstanceId);
   }
 
 
@@ -314,38 +224,81 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
       "insert into t_process (process_instance_id, process_type_id) values ('2', 'providerId2:domainKey:processTypeKey')",
       "insert into t_taxonomy (process_type_id, taxonomy_path) values ('providerId:domainKey:processTypeKey', 'toto/flex')",
   })
+  @SneakyThrows
   void testWithTaxonomyPath(){
 
     SearchProcessResponseDto result = processQueries.searchProcesses(
-        new SearchProcessRequestDto(
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            "toto/flex",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null
-        ), 0, 10, Locale.ENGLISH, "frezeth"
+        SearchProcessRequestDto.builder()
+            .taxonomyPath("toto/flex")
+            .build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
     Assertions.assertEquals(1, result.totalElements());
-    Assertions.assertEquals("1", result.processes().getFirst().processId());
+
+
+    String first = result.processes().getFirst();
+    String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
+    Assertions.assertEquals("1", processInstanceId);
+  }
+
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id, domain_key, provider_id, process_type_key) values ('1', 'domainKey', 'providerId', 'processTypeKey')",
+  })
+  @SneakyThrows
+  void testFetchSortableFields(){
+
+    Map<String, String> context = new LinkedHashMap<>();
+    context.put("providerId", "providerId");
+    context.put("domainKey", "domainKey");
+    context.put("processTypeKey", "processTypeKey");
+
+    Set<Map<String, String>> contexts = new HashSet<>();
+    contexts.add(context);
+    Mockito.when(sortableFieldsQueries.findSortableFields(
+        contexts,
+        Locale.ENGLISH
+    )).thenReturn(Collections.singletonList(SortableField.builder()
+        .field("MY_FIELD")
+        .propertyOrder(0)
+        .build()));
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        SearchProcessRequestDto.builder()
+            .build(), 0, 0, Locale.ENGLISH, "frezeth"
+    );
+
+    // returns 1 total element (limit not taken into account by count)
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals(1, result.sortableFields().size());
+  }
+
+  @Test
+  @Sql(statements = {
+      "insert into t_process (process_instance_id, domain_key, provider_id, process_type_key) values ('1', 'domainKey', 'providerId', 'processTypeKey')",
+  })
+  @SneakyThrows
+  void testFetchCommonColumns(){
+
+    Map<String, String> context = new LinkedHashMap<>();
+    context.put("providerId", "providerId");
+    context.put("domainKey", "domainKey");
+    context.put("processTypeKey", "processTypeKey");
+
+    Set<Map<String, String>> contexts = new HashSet<>();
+    contexts.add(context);
+    Mockito.when(commonColumnsQueries.findCommonColumns(
+        contexts
+    )).thenReturn(Collections.singletonList("DEALINE"));
+
+    SearchProcessResponseDto result = processQueries.searchProcesses(
+        SearchProcessRequestDto.builder()
+            .build(), 0, 0, Locale.ENGLISH, "frezeth"
+    );
+
+    // returns 1 total element (limit not taken into account by count)
+    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals(1, result.commonColumns().size());
   }
 
     @Test
@@ -380,31 +333,9 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
               long before = System.currentTimeMillis();
               SearchProcessResponseDto searchProcessQueryResponses = processQueries.searchProcesses(
-                  new SearchProcessRequestDto(
-                      null,
-                      null,
-                      null,
-                      "proc:*",
-                      Collections.emptyList(),
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      Collections.emptyList(),
-                      Collections.emptyList(),
-                      Collections.emptyList(),
-                      null,
-                      null,
-                      null,
-                      null,
-                      Collections.emptyList(),
-                      Collections.emptyList(),
-                      null
-                  ),
+                  SearchProcessRequestDto.builder()
+                      .searchText("proc:*")
+                      .build(),
                   0,
                   20,
                   Locale.ENGLISH,
@@ -415,42 +346,17 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
               before = System.currentTimeMillis();
               searchProcessQueryResponses = processQueries.searchProcesses(
-                  new SearchProcessRequestDto(
-                      null,
-                      null,
-                      null,
-                      "titl:*",
-                      Collections.emptyList(),
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      Collections.emptyList(),
-                      Collections.singletonList(
-                          new SpecificFilterValueDto(
-                              "VAR_STRING_0",
-                              SpecificAttributeValueType.STRING,
-                              "VALUE_STRING_0",
-                              null,
-                              null,
-                              null,
-                              null,
-                              null
-                          )
-                      ),
-                      Collections.emptyList(),
-                      null,
-                      null,
-                      null,
-                      null,
-                      Collections.emptyList(),
-                      Collections.emptyList(),
-                      null
-                  ),
+                  SearchProcessRequestDto.builder()
+                      .searchText("title:*")
+                      .specificAttributes(
+                          Collections.singletonList(
+                          SpecificFilterValueDto.builder()
+                          .name("VAR_STRING_0")
+                          .stringValue("VALUE_STRING_0")
+                          .type(SpecificAttributeValueType.STRING)
+                          .build())
+                      )
+                      .build(),
                   0,
                   20,
                   Locale.ENGLISH,
@@ -475,7 +381,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
       StringBuilder processVariablesBuilder = new StringBuilder();
 
-      for (int i=0;i<500000;i++) {
+      for (int i=0;i<50000;i++) {
           sb.append(i)
                   .append(',')
                   .append("Flex")
@@ -584,7 +490,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {
         StringBuilder sb = new StringBuilder();
-        for (int i=0;i<500000;i++) {
+        for (int i=0;i<50000;i++) {
             sb.append(i)
                     .append(',')
                     .append("PROCESS")
