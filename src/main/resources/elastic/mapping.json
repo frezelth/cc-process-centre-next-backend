@@ -1,0 +1,146 @@
+{
+  "dynamic": "strict",
+  "_source": {
+    "excludes": ["fullTextSearch"]
+  },
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "providerId": {
+      "type": "keyword"
+    },
+    "domainKey": {
+      "type": "keyword"
+    },
+    "processTypeKey": {
+      "type": "keyword"
+    },
+    "fullTextSearch": {
+      "type": "text",
+      "analyzer": "pc_text_analyzer",
+      "search_analyzer": "pc_srch_analyzer"
+    },
+    "title": {
+      "type": "object",
+      "disabled": true
+    },
+    "resultCardLayout": {
+      "type": "keyword",
+      "index": false
+    },
+    "indexedOn": {
+      "type": "date",
+      "index": false
+    },
+    "startedOn": {
+      "type": "date"
+    },
+    "pausedOn": {
+      "type": "date"
+    },
+    "restartedOn": {
+      "type": "date"
+    },
+    "endedOn": {
+      "type": "date"
+    },
+    "cancelledOn": {
+      "type": "date"
+    },
+    "securitySecundaTask": {
+      "type": "keyword"
+    },
+    "securitySecundaApplicationId": {
+      "type": "keyword"
+    },
+    "securitySecundaScopeTypeId": {
+      "type": "keyword"
+    },
+    "securitySecundaScopeId": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "businessStatus": {
+      "type": "keyword"
+    },
+    "portfolioItems": {
+      "type": "object",
+      "enabled": false
+    },
+    "tags": {
+      "type": "object",
+      "properties": {
+        "catalog": {
+          "type": "keyword"
+        },
+        "values": {
+          "type": "keyword"
+        }
+      }
+    },
+    "variables": {
+      "type": "nested",
+      "properties": {
+        "name": {
+          "type": "keyword"
+        },
+        "valueBoolean": {
+          "type": "boolean"
+        },
+        "valueDate": {
+          "type": "date"
+        },
+        "valueDouble": {
+          "type": "double"
+        },
+        "valueInteger": {
+          "type": "integer"
+        },
+        "valueLong": {
+          "type": "long"
+        },
+        "valueString": {
+          "type": "keyword",
+          "fields": {
+            "text": {
+              "type": "text",
+              "analyzer": "pc_keyw_analyzer",
+              "search_analyzer": "pc_srch_analyzer"
+            }
+          }
+        },
+        "valueType": {
+          "type": "keyword",
+          "index": false
+        }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "enabled": false
+    },
+    "activities": {
+      "taskTypeId": {
+        "type": "keyword"
+      },
+      "processTypeId": {
+        "type": "keyword"
+      },
+      "businessStatus": {
+        "type": "keyword"
+      }
+    },
+    "parentIds": {
+      "type": "keyword"
+    },
+    "hiddenSubprocess": {
+      "type": "boolean"
+    },
+    "favouriteFor": {
+      "type": "keyword"
+    }
+  }
+}
