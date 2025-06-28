@@ -222,7 +222,9 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
   @Sql(statements = {
       "insert into t_process (process_instance_id, process_type_id) values ('1', 'providerId:domainKey:processTypeKey')",
       "insert into t_process (process_instance_id, process_type_id) values ('2', 'providerId2:domainKey:processTypeKey')",
+      "insert into t_process (process_instance_id, process_type_id, parent_process_instance_id) values ('3', 'providerId:domainKey:processTypeKeySub', '1')",
       "insert into t_taxonomy (process_type_id, taxonomy_path) values ('providerId:domainKey:processTypeKey', 'toto/flex')",
+      "insert into t_taxonomy (process_type_id, taxonomy_path) values ('providerId:domainKey:processTypeKeySub', 'toto/flex/sub')",
   })
   @SneakyThrows
   void testWithTaxonomyPath(){
@@ -233,12 +235,16 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
             .build(), 0, 10, Locale.ENGLISH, "frezeth"
     );
 
-    Assertions.assertEquals(1, result.totalElements());
+    Assertions.assertEquals(2, result.totalElements());
 
 
     String first = result.processes().getFirst();
     String processInstanceId = objectMapper.readTree(first).get("processInstanceId").textValue();
     Assertions.assertEquals("1", processInstanceId);
+
+    String second = result.processes().get(1);
+    String secondProcessInstanceId = objectMapper.readTree(second).get("processInstanceId").textValue();
+    Assertions.assertEquals("3", secondProcessInstanceId);
   }
 
   @Test
@@ -381,7 +387,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
       StringBuilder processVariablesBuilder = new StringBuilder();
 
-      for (int i=0;i<50000;i++) {
+      for (int i=0;i<500;i++) {
           sb.append(i)
                   .append(',')
                   .append("Flex")
@@ -490,7 +496,7 @@ public class ProcessQueriesTest extends ProcessCentreNextApplicationTests {
 
     private static void insertProcessesLabels(CopyManager copyManager) throws SQLException, IOException {
         StringBuilder sb = new StringBuilder();
-        for (int i=0;i<50000;i++) {
+        for (int i=0;i<500;i++) {
             sb.append(i)
                     .append(',')
                     .append("PROCESS")

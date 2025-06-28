@@ -28,7 +28,7 @@
     <if test="taxonomyPath != null and taxonomyPath != ''">
       JOIN t_taxonomy tx
       ON tx.process_type_id = p.process_type_id
-      AND tx.taxonomy_path = #{taxonomyPath}
+      AND tx.taxonomy_path like concat (#{taxonomyPath}, '%')
     </if>
     <if test="specificAttributes != null and specificAttributes.size() > 0">
       JOIN t_process_variable v
@@ -176,7 +176,7 @@
                     <!-- For EC-Hierarchy we need to do a start with query -->
                     AND
                     <foreach collection="scope.scopeIds" item="scopeId" separator="AND">
-                      p.SECURITY_SCOPE_ID ILIKE CONCAT (#{scopeId}, '%')
+                      p.SECURITY_SCOPE_ID LIKE CONCAT (#{scopeId}, '%')
                     </foreach>
                   </when>
                   <otherwise>
@@ -201,27 +201,15 @@
           #{runningStatus}
         </foreach>
       </if>
+      <if test="taxonomyPath == null or taxonomyPath == ''">
+        <!-- no taxonomy tree selected, retrieve only root processes -->
+        AND p.PARENT_PROCESS_INSTANCE_ID is null
+      </if>
     </where>
   </sql>
 
   <select id="search" resultType="eu.europa.ec.cc.processcentre.process.query.repository.model.SearchProcessQueryResponse">
     <include refid="processesCte"/>
-<!--    SELECT r.process_instance_id as process_instance_id,-->
-<!--    r.total_count as total_count,-->
-<!--    pt.translated_text    AS process_title,-->
-<!--    COALESCE(at.tasks, '[]'::json) AS tasks,-->
-<!--    r.status as status,-->
-<!--    r.result_card as result_card-->
-<!--    FROM matching_roots r-->
-<!--    LEFT JOIN (SELECT object_id, translated_text-->
-<!--    FROM t_static_translation-->
-<!--    WHERE language_code = #{locale}-->
-<!--    AND object_type = 'PROCESS'-->
-<!--    AND attribute_name = 'PROCESS_TITLE'-->
-<!--    AND object_id IN (SELECT process_instance_id FROM matching_roots)) pt-->
-<!--    ON pt.object_id = r.process_instance_id-->
-<!--    LEFT JOIN aggregated_tasks at ON at.process_instance_id = r.process_instance_id-->
-
     SELECT
     'data' as type,
     to_jsonb(
@@ -234,7 +222,7 @@
     )) AS payload
     FROM matching_roots r
     LEFT JOIN (SELECT object_id, translated_text
-    FROM t_static_translation
+    FROM v_resolved_translation
     WHERE language_code = #{locale}
     AND object_type = 'PROCESS'
     AND attribute_name = 'PROCESS_TITLE'
