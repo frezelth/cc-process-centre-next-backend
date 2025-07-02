@@ -1,0 +1,33 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Decision Adoption"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_ViewSubProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_PM_REGIO_ViewSubProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114891",
+  "specificAttributesDefinitions": [],
+  "hideSubprocessOfTheSameType": null
+}

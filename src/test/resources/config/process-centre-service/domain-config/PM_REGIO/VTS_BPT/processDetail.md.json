@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processDetail",
+  "context" : {
+    "domainKey" : "PM_REGIO_INTERNAL",
+    "providerId" : "camundapm",
+	"processTypeKey" : "VTS_BPT"
+  }
+}

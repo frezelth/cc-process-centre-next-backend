@@ -1,0 +1,165 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": false,
+				"header": {
+					"title": "${processTypeName!}",
+					"subtitle": {
+            "value": "${processVariables.CALL_ABBREVIATION!}",
+            "label": {
+              "urn": null,
+                "translations": {
+                "en": "Call"
+              },
+  				    "defaultLanguage": "en"
+            }
+          }
+				},
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"value": "${processVariables.CALL_EVALUATION_SESSION_NAME!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Evaluation session"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+                {
+                  "value": "${processVariables.CALL_SUBMISSION_DEADLINE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Submission deadline"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.CALL_PROGRAMME_ABBREVIATION!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Programme"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+                  "value": "${processVariables.CALL_EVALUATION_STAGE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Evaluation stage"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.CALL_CLOSURE_IDENTIFIER!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Closure identifier"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible unit"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.RESPONSIBLE_UNIT!}",
+                  "size": 6
+                }
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commence le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Termine le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "documentList",
+						"label": "Documents",
+						"blocks": [
+							{
+								"type": "documentList"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication"
+							}
+						]
+					},
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

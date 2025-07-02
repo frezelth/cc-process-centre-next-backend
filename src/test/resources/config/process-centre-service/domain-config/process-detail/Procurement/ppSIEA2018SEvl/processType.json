@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppSIEA2018ScEvl",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Evaluation"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_OPSYS_PP_SIEA2018_SC_EVL_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_OPSYS_PP_SIEA2018_SC_EVL_ViewProcess",
+        "scopeTypeId": "PROCEDURE",
+        "scopeId": "${processVariables.PROCEDURE_ID}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

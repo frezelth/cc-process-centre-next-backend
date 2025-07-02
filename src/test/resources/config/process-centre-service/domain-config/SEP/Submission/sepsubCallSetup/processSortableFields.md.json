@@ -1,0 +1,7 @@
+{
+  "configurationType" : "processSortableFields",
+  "context" : {
+    "providerId": "SEPCompass",
+    "domainKey" : "SEP Submission"
+  }
+}

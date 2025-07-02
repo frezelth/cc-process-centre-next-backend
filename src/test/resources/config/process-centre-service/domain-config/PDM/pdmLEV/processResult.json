@@ -1,0 +1,307 @@
+{
+	"header": {
+		"title": "Legal entity validation <#if processVariables.FIRST_VALIDATION?has_content && processVariables.FIRST_VALIDATION == false > (Update Request) <#else></#if>- ${processVariables.PIC} - ${processVariables.LEGAL_NAME_FULL}"
+	},
+	"sections": {
+		"header": {
+			"properties": [
+				{
+					"type": "TEXT",
+					"order": 1,
+					"label": {
+						"urn": null,
+						"translations": {
+							"en": "Importance"
+						},
+						"defaultLanguage": "en"
+					},
+					"value": "${processVariables.IMPORTANCE!}"
+				},
+				{
+					"type": "TEXT",
+					"order": 2,
+					"label": {
+						"urn": null,
+						"translations": {
+							"en": "Legal Entity Type"
+						},
+						"defaultLanguage": "en"
+					},
+					"value": "${processVariables.LEGAL_ENTITY_TYPE!}"
+				},
+				{
+					"type": "TEXT",
+					"order": 3,
+					"label": {
+						"urn": null,
+						"translations": {
+							"en": "Last Validator"
+						},
+						"defaultLanguage": "en"
+					},
+					"value": "${processVariables.LAST_VALIDATOR!}"
+				},
+				{
+					"type": "TEXT",
+					"order": 4,
+					"label": {
+						"urn": null,
+						"translations": {
+							"en": "Last Verifier"
+						},
+						"defaultLanguage": "en"
+					},
+					"value": "${processVariables.LAST_VERIFIER!}"
+				},
+				{
+					"type": "TIMESTAMP",
+					"order": 5,
+					"label": {
+						"urn": null,
+						"translations": {
+							"en": "Requested Date"
+						},
+						"defaultLanguage": "en"
+					},
+					"value": "${(processVariables.REQUEST_DATE)?date!}"
+				}
+			]
+		}
+	},
+	"details": {
+		"rows": [
+			{
+				"columns": [
+					{
+						"value": "${processVariables.PIC!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "PIC"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},{
+						"value": "${processVariables.IMPORTANCE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Importance"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.LEGAL_ENTITY_TYPE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Legal entity type"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},{
+						"value": "${processVariables.LEGAL_ENTITY_STATUS!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Legal entity status"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CONTEXT!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Context"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "<#if processVariables?? && processVariables.REPLICATED?? && processVariables.REPLICATED == true>REPLICATED<#else>${processVariables.STATUS!}</#if>",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Workflow Status"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.REGISTRATION_COUNTRY!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Country"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.RESPONSIBLE_UNIT!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Responsible Unit"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.BP_ID!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "BP ID"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.JAGATE_TRANSACTION_ID!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Jagate reference key"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.FEL!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "FEL"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.JAGATE_CHANGE_REQUEST_ID!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Summa change request Id"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CALL!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.REGISTRATION_NUMBER!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Registration Number"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.PO_NAME!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "PO Name"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.DG!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "DG"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},	
+			{
+				"columns": [
+					{
+						"value": ".",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "."
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "<#if processVariables?? && processVariables.STATUS?has_content> <#if processVariables.STATUS == 'DG_BUDG_PENDING'>${processVariables.JAGATE_PENDING_REASON!}<#else></#if></#if>",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Pending request reason"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			}
+		]
+	}
+}

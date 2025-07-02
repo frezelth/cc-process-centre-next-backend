@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processDetail",
+  "context" : {
+    "providerId": "PDMCompass",
+    "domainKey" : "Compass Processes PDM",
+    "processTypeKey" : "pdmLEV"
+  }
+}

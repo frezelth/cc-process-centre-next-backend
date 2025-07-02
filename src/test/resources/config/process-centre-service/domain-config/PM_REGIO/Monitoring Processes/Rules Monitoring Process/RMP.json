@@ -1,0 +1,20 @@
+{
+	"name": {
+		"urn": null,
+		"translations": {
+			"en": "Rules monitoring process"
+		},
+		"defaultLanguage": "en"
+	},
+	"accessRights": {
+		"VIEW": [
+			{
+				"permissionId": "PC_PM_REGIO_ViewProcess_RMP",
+				"scoped": false,
+				"scopeTypeId": null,
+				"variableName": null,
+				"responsibleOrganisationId": null
+			}
+		]
+	}
+}

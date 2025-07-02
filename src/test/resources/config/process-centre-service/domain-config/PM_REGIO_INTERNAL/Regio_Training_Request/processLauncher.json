@@ -1,0 +1,131 @@
+{
+  "providerProcessTypeKey": "Regio_Training_Request",
+  "variables": [
+    {
+      "name": "process",
+      "value": "Regio_Training_Request",
+      "type": "STRING"
+    },
+    {
+      "name": "consultantFullName",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "consultant",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "trainingName",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "trainingURL",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "numberOfHours",
+      "value": null,
+      "type": "NUMBER"
+    },
+    {
+      "name": "trainingDetails",
+      "value": null,
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "label": "Consultant full name"
+        },
+        "type": "_uxTextInput",
+        "key": "consultantFullName"
+      },
+      "fieldType": "formControl"
+    },
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "maxLengthValidationErrorMessage": "Too many characters",
+          "label": "Consultant logon",
+          "maxLengthCounter": true,
+          "maxLength": 20
+        },
+        "type": "_uxTextInput",
+        "key": "consultant"
+      },
+      "fieldType": "formControl"
+    },
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "label": "Training name"
+        },
+        "type": "_uxTextInput",
+        "key": "trainingName"
+      },
+      "fieldType": "formControl"
+    },
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "label": "Link to the training"
+        },
+        "type": "_uxTextInput",
+        "key": "trainingURL"
+      },
+      "fieldType": "formControl"
+    },
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "label": "Number of hours"
+        },
+        "type": "_uxTextInput",
+        "key": "numberOfHours"
+      },
+      "fieldType": "formControl"
+    },
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "label": "Additional details"
+        },
+        "type": "_uxTextInput",
+        "key": "trainingDetails"
+      },
+      "fieldType": "formControl"
+    }
+  ],
+  "formModel": {
+    "consultantFullName": "",
+    "consultant": "",
+    "trainingName": "",
+    "trainingURL": "",
+    "numberOfHours": "",
+    "trainingDetails": ""
+  }
+}

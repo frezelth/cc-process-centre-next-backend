@@ -1,0 +1,213 @@
+{
+  "responsibleUserDisplayed" : false,
+  "portfolioItemHidden": true,
+  "variables": [
+    {
+      "name": "releaseTitle",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "deployableIdVariable",
+      "value": "XLR_backend-artifact-id",
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_backend-artifact-id",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "environmentIdVariable",
+      "value": "XLR_target-env",
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_target-env",
+      "value": "DLT",
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_backend-artifact-version",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_target-pks-cluster",
+      "value": "",
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_target-pks-replicas",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_target-eks-cluster",
+      "value": "",
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_target-eks-replicas",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_business-domain",
+      "value": "",
+      "type": "STRING"
+    }
+  ],
+  "portfolioItemRequired" : false,
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "releaseTitle",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Release title"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_backend-artifact-id",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Backend artifact id"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_backend-artifact-version",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Version"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_target-env",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Target environment",
+          "selectOptions": [
+            {
+              "id": "DLT",
+              "value": "DLT"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_target-pks-cluster",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Target cluster (PKS)",
+          "selectOptions": [
+            {
+              "id": "",
+              "value": "None"
+            },
+            {
+              "id": "ccdlt",
+              "value": "ccdlt"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_target-pks-replicas",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Replicas (PKS)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_target-eks-cluster",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Target cluster (EKS)",
+          "selectOptions": [
+            {
+              "id": "",
+              "value": "None"
+            },
+            {
+              "id": "ccdlt",
+              "value": "ccdlt"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_target-eks-replicas",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Replicas (EKS)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_business-domain",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Backend business domain"
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "remoteId": "",
+    "prodDeploymentMode": "",
+    "doAutomatic": ""
+  },
+  "portfolioItemCriteria" : { }
+}

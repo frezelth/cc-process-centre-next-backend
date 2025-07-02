@@ -1,0 +1,6 @@
+{
+  "configurationType" : "processDetail",
+  "context" : {
+    "providerId" : "OPSYSCompass"
+  }
+}

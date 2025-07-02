@@ -1,0 +1,21 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Terminate accreditation"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Terminate accreditation"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": "PMM_AT.TERMINATE_ACCREDITATION_PROCESS",
+  "accessRights": null,
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

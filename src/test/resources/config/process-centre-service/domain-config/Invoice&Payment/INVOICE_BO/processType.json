@@ -1,0 +1,48 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Invoices and Payments Workflow"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "INVBO.V2.00.NON_ELECTRONIC_INVOICE.PC_VIEW",
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "INVBO.V2.00.NON_ELECTRONIC_INVOICE.PC_VIEW",
+        "scoped": true,
+        "scopeTypeId": "CRF-Hierarchy",
+        "variableName": "${processVariables.leadDG}",
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "INVBO.V1.00.NON_ELECTRONIC_INVOICE.START",
+        "scoped": true,
+        "scopeTypeId": "CRF-Hierarchy",
+        "variableName": "${processVariables.responsibleOrganization}",
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CANCEL": [
+      {
+        "permissionId": "INVBO.V1.00.NON_ELECTRONIC_INVOICE.START",
+        "scoped": true,
+        "scopeTypeId": "CRF-Hierarchy",
+        "variableName": "${processVariables.responsibleOrganization}",
+        "responsibleOrganisationId": null
+      }
+    ],
+    "DELETE": [
+      {
+        "permissionId": "INVBO.V1.00.NON_ELECTRONIC_INVOICE.START",
+        "scoped": true,
+        "scopeTypeId": "CRF-Hierarchy",
+        "variableName": "${processVariables.responsibleOrganization}",
+        "responsibleOrganisationId": null
+      }
+    ]
+  }
+}

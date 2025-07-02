@@ -1,0 +1,8 @@
+{
+  "context" : {
+    "providerId" : "camundaeac",
+    "domainKey" : "erasmusplus",
+    "processTypeKey" : "AccreditationTerminationEppAccreditations"
+  },
+  "configurationType" : "processDetail"
+}

@@ -1,0 +1,102 @@
+{
+  "subset": {
+    "includes": [
+      {
+        "processTypeKey": "ACOA2021_REGIO"
+      },
+      {
+        "processTypeKey": "CBA2021_REGIO"
+      },
+      {
+        "processTypeKey": "CLO2000"
+      },
+      {
+        "processTypeKey": "CPR2021_REGIO"
+      },
+      {
+        "processTypeKey": "ECAP1506CU2021_REGIO"
+      },
+      {
+        "processTypeKey": "ECAP2021_REGIO"
+      },
+      {
+        "processTypeKey": "ECAPCU2021_REGIO"
+      },
+      {
+        "processTypeKey": "FIR2014"
+      },
+      {
+        "processTypeKey": "IP2021_REGIO"
+      },
+      {
+        "processTypeKey": "MAC2021_REGIO"
+      },
+      {
+        "processTypeKey": "MTR2021_REGIO"
+      },
+      {
+        "processTypeKey": "PFNEXT2021"
+      },
+      {
+        "processTypeKey": "PRAM2021_REGIO"
+      },
+      {
+        "processTypeKey": "PRAME2021"
+      },
+      {
+        "processTypeKey": "RP2021_REGIO"
+      },
+      {
+        "processTypeKey": "TOD2021_REGIO"
+      },
+      {
+        "processTypeKey": "WIPS2021_REGIO"
+      },
+      {
+        "processTypeKey": "PRAD2021_REGIO"
+      },
+      {
+        "processTypeKey": "PRADE2021"
+      },
+      {
+        "processTypeKey": "FPF2021_REGIO"
+      },
+      {
+        "processTypeKey": "PAAD2021"
+      },
+      {
+        "processTypeKey": "MPF2021_REGIO"
+      },
+      {
+        "processTypeKey": "MDC2021_REGIO"
+      },
+      {
+        "processTypeKey": "DCL2014_REGIO"
+      },
+      {
+        "processTypeKey": "ENIAFPA2014"
+      }
+    ],
+    "excludes": []
+  },
+  "filters": {
+    "options": [
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": false,
+    "portfolio": {
+      "hidden": false,
+      "collapsed": false
+    }
+  },
+  "navigation": {
+    "hidden": false,
+    "collapsed": false,
+    "dynamicFilters": {
+      "hidden": false,
+      "collapsed": false
+    }
+  }
+}

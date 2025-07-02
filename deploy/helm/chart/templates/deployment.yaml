@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+      annotations:
+        timestamp: {{ now | quote }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+    imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+          - name: https
+            containerPort: 8443
+            protocol: TCP
+        env:
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE-ID
+            value: {{ .Release.Namespace }}:${spring.cloud.client.hostname}
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_INSTANCE-GROUP
+          value: {{ .Release.Namespace }}
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME
+            value: {{ .Chart.Name }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_HEALTH_CHECK_URL
+          value: http://{{ .Chart.Name }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}/health
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_METADATA_INGRESS
+            value: http://{{ .Chart.Name }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_METADATA_GROUP
+            value: {{ .Release.Namespace }}
+          - name: SPRING_CLOUD_CONSUL_DISCOVERY_METADATA_OPEN-API
+            value: http://{{ .Chart.Name }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}/v3/api-docs
+          - name: KUBE_NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: SPRING_PROFILES_ACTIVE
+            value: {{ .Release.Namespace }},cc-k8s,{{ .Release.Namespace }}-k8s,cc-cert,cert-{{ .Release.Namespace }}{{- if .Values.profiles }},{{ .Values.profiles }}{{- end }}
+          - name: JAVA_TOOL_OPTIONS
+          value: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dcom.sun.jndi.ldap.object.trustURLCodebase=false -Dlog4j2.formatMsgNoLookups=true
+          - name: HEALTH_CONFIG_ENABLED
+            value: "false"
+          {{- if .Values.systemconfig.uri }}
+          - name: SPRING_CLOUD_CONFIG_ENABLED
+            value: "true"
+          - name: SPRING_CLOUD_CONFIG_URI
+            value: {{ .Values.systemconfig.uri }}
+          {{- if .Values.systemconfig.vault }}
+          - name: SPRING_CLOUD_CONFIG_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.systemconfig.name}}-vault-token
+                key: SPRING_CLOUD_CONFIG_TOKEN
+          {{- end }}
+          {{- else }}
+          - name: SPRING_CLOUD_CONFIG_ENABLED
+            value: "false"
+          - name: SPRING_CONFIG_LOCATION
+            value: "file:/home/cc/config/,classpath:/"
+          - name: SPRING_CONFIG_NAME
+            value: {{ .Values.systemconfig.name }}
+
+          {{- end }}
+          {{- range $key, $val := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $val | quote }}
+          {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+          - name: java-tls
+            mountPath: /etc/ssl/certs/java
+          - name: tls-config
+            mountPath: /home/cc/tls
+        {{- if .Values.probes.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.probes.readinessProbe.httpGet.path }}
+            port: 8080
+          initialDelaySeconds: {{ .Values.probes.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probes.livenessProbe.httpGet.path }}
+            port: 8080
+          initialDelaySeconds: {{ .Values.probes.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.probes.livenessProbe.timeoutSeconds }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.probes.startupProbe.httpGet.path }}
+            port: 8080
+          failureThreshold: {{ .Values.probes.startupProbe.failureTreshold }}
+          periodSeconds: {{ .Values.probes.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.probes.startupProbe.timeoutSeconds }}
+        {{- end }}
+    volumes:
+      - name: java-tls
+        secret:
+          secretName: cacerts
+      - name: tls-config
+        secret:
+          secretName: kafka-client-secret
+    {{- with .Values.nodeSelector }}
+    nodeSelector:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+    affinity:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}

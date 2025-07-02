@@ -1,0 +1,71 @@
+{
+"header": {
+      "title": "Invoice & Payment",
+      "subtitle": {
+        "value": "${processVariables.ProcessReference!}",
+        "label": {
+          "urn": null,
+          "translations": {
+            "en": "Process Reference"
+          },
+          "defaultLanguage": "en"
+        }
+      }
+    },
+    "details": {
+      "rows": [
+        {
+          "columns": [
+            {
+              "value": "${responsible!} ${processVariables.RESPONSIBLE_UNIT!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Responsible service"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 9
+            },
+            {
+              "value": "${startDate!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Start date"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 3
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.ProcessReference!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Process Reference"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 9
+            },
+            {
+              "value": "${processVariables.INVOICE_NUMBER!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Invoice Number"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 3
+            }
+          ]
+        }
+      ]
+    }
+}

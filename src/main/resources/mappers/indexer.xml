@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.europa.ec.cc.processcentre.indexer.repository.ProcessIndexerMapper">
+
+  <resultMap id="processVariable" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse">
+    <id property="processInstanceId" column="variable_process_instance_id"/>
+    <id property="name" column="name"/>
+    <result property="valueString" column="value_string"/>
+    <result property="valueInteger" column="value_integer"/>
+    <result property="valueLong" column="value_long"/>
+    <result property="valueDouble" column="value_double"/>
+    <result property="valueBoolean" column="value_boolean"/>
+    <result property="valueDate" column="value_date"/>
+  </resultMap>
+
+  <resultMap id="translation" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponseTranslation">
+    <id property="objectId" column="object_id"/>
+    <id property="objectType" column="object_type"/>
+    <id property="attribute" column="attribute_name"/>
+    <id property="languageCode" column="language_code"/>
+    <result property="text" column="translated_text"/>
+    <result property="isDefault" column="is_default"/>
+  </resultMap>
+
+  <resultMap id="processStatusLog" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryActionLog">
+    <id property="id" column="status_id"/>
+    <result property="process_instance_id" column="status_process_instance_id"/>
+    <result property="timestamp" column="status_timestamp"/>
+    <result property="status" column="status_process_status"/>
+  </resultMap>
+
+  <resultMap id="portfolioItem" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponsePortfolioItem">
+    <id property="processInstanceId" column="portfolio_process_instance_id"/>
+    <id property="portfolioItemId" column="portfolio_item_id"/>
+  </resultMap>
+
+  <resultMap id="process" type="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse">
+    <id property="processInstanceId" column="process_instance_id"/>
+    <result property="providerId" column="provider_id"/>
+    <result property="domainKey" column="domain_key"/>
+    <result property="processTypeKey" column="process_type_key"/>
+    <result property="status" column="process_status"/>
+    <result property="businessStatus" column="business_status"/>
+    <result property="processTypeId" column="process_type_id"/>
+    <result property="processResponsibleOrganisation" column="process_responsible_organisation_id"/>
+    <result property="processResponsibleUserId" column="process_responsible_user_id"/>
+    <result property="businessDomainId" column="business_domain_id"/>
+    <result property="resultCard" column="result_card"/>
+    <result property="securityApplicationId" column="security_application_id"/>
+    <result property="securitySecundaTask" column="security_secunda_task"/>
+    <result property="securityScopeTypeId" column="security_scope_type_id"/>
+    <result property="securityScopeId" column="security_scope_id"/>
+    <result property="securityOrganisationId" column="security_organisation_id"/>
+    <collection property="variables" javaType="java.util.ArrayList" resultMap="processVariable"/>
+    <collection property="translations" javaType="java.util.ArrayList" resultMap="translation"/>
+    <collection property="runningStatusLogs" javaType="java.util.ArrayList" resultMap="processStatusLog"/>
+    <collection property="portfolioItemIds" javaType="java.util.ArrayList" resultMap="portfolioItem"/>
+  </resultMap>
+
+  <select id="findProcessesToIndex" resultMap="process">
+    SELECT
+    p.PROCESS_INSTANCE_ID as process_instance_id,
+    p.PROVIDER_ID as provider_id,
+    p.DOMAIN_KEY as domain_key,
+    p.PROCESS_TYPE_KEY as process_type_key,
+    p.BUSINESS_STATUS as business_status,
+    p.PROCESS_TYPE_ID as process_type_id,
+    p.STATUS as process_status,
+    p.RESPONSIBLE_ORGANISATION_ID as process_responsible_organisation_id,
+    p.RESPONSIBLE_USER_ID as process_responsible_user_id,
+    p.BUSINESS_DOMAIN_ID as business_domain_id,
+    p.RESULT_CARD as result_card,
+    p.SECURITY_APPLICATION_ID as security_application_id,
+    p.SECURITY_SECUNDA_TASK as security_secunda_task,
+    p.SECURITY_SCOPE_TYPE_ID as security_scope_type_id,
+    p.SECURITY_SCOPE_ID as security_scope_id,
+    p.SECURITY_ORGANISATION_ID as security_organisation_id,
+    t.OBJECT_ID as object_id,
+    t.OBJECT_TYPE as object_type,
+    t.ATTRIBUTE_NAME as attribute_name,
+    t.LANGUAGE_CODE as language_code,
+    t.TRANSLATED_TEXT as translated_text,
+    t.IS_DEFAULT as is_default,
+    v.PROCESS_INSTANCE_ID as variable_process_instance_id,
+    v.NAME as name,
+    v.VALUE_STRING as value_string,
+    v.VALUE_INTEGER as value_integer,
+    v.VALUE_LONG as value_long,
+    v.VALUE_DOUBLE as value_double,
+    v.VALUE_BOOLEAN as value_boolean,
+    v.VALUE_DATE as value_date,
+    r.PROCESS_INSTANCE_ID as action_process_instance_id,
+    r.ACTION as action_process_status,
+    r.TIMESTAMP as action_timestamp,
+    r.ACTION_ID as action_id,
+    pf.PROCESS_INSTANCE_ID as portfolio_process_instance_id,
+    pf.PORTFOLIO_ITEM_ID as portfolio_item_id
+    FROM T_PROCESS p
+    LEFT JOIN V_RESOLVED_TRANSLATION t ON t.OBJECT_ID = p.PROCESS_INSTANCE_ID AND
+    t.OBJECT_TYPE = 'PROCESS'
+    LEFT JOIN T_PROCESS_VARIABLE v ON v.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    LEFT JOIN T_PROCESS_ACTION_LOG r ON r.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    LEFT JOIN T_PROCESS_PORTFOLIO_ITEM pf ON pf.PROCESS_INSTANCE_ID = p.PROCESS_INSTANCE_ID
+    WHERE p.PROCESS_INSTANCE_ID = #{value}
+    ORDER BY r.TIMESTAMP desc
+  </select>
+
+</mapper>

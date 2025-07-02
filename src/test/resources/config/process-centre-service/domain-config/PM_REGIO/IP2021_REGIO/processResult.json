@@ -1,0 +1,55 @@
+{
+  "header": {
+    "title": "${processTypeName} - CCI Title: ${processVariables.CCI} - V ${processVariables.version}.${processVariables.workVersion} <#if (processVariables.accountingYear)?has_content> - ${processVariables.accountingYear}</#if> <#if (processVariables.fund)?has_content> - ${processVariables.fund}</#if>",
+    "subtitle": {
+      "value": "${processVariables.CCI} ",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": ""
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "CCI"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.CCI}",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        },
+        {
+          "type": "COUNTRY",
+          "label": {
+            "translations": {
+              "en": "Country"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "<#if processVariables.cciMs == 'TC'>EU<#else>${processVariables.cciMs}</#if>",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

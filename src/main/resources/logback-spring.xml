@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true">
+
+  <!-- ... original logback configuration ... -->
+
+  <springProperty name="logstash-enabled" source="logging.logback.logstash.enabled" />
+  <springProperty name="logstash-destination" source="logging.logback.logstash.destination" />
+  <if condition='isNull("logstash-enabled")'>
+    <then>
+      <if condition='isDefined("logstash-destination")'>
+        <then><property name="logstash-enabled" value="true" /></then>
+        <else><property name="logstash-enabled" value="false" /></else>
+      </if>
+    </then>
+  </if>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg %n</pattern>
+    </encoder>
+  </appender>
+
+  <if condition='Boolean.parseBoolean(property("logstash-enabled"))'>
+    <then>
+      <!-- additional properties (tenant, appName and appEnvironment) to be sent to logstash, scope must be context -->
+      <springProperty scope="context" name="tenant" source="logging.logback.logstash.tenant" />
+      <springProperty scope="context" name="appName" source="logging.logback.logstash.appName" />
+      <springProperty scope="context" name="appEnvironment" source="logging.logback.logstash.appEnvironment" />
+
+      <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${logstash-destination}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        </encoder>
+      </appender>
+
+      <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGSTASH"/>
+      </root>
+    </then>
+    <else>
+      <root level="info">
+        <appender-ref ref="STDOUT"/>
+      </root>
+    </else>
+  </if>
+
+</configuration>

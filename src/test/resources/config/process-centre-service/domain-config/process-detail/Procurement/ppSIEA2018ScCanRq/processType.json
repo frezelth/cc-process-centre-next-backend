@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppSIEA2018ScCanRq",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Request for Procedure Cancellation"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_OPSYS_PP_SIEA2018_SC_CAN_RQ_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_OPSYS_PP_SIEA2018_SC_CAN_RQ_ViewProcess",
+        "scopeTypeId": "PROCEDURE",
+        "scopeId": "${processVariables.PROCEDURE_ID}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

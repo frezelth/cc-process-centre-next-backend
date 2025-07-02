@@ -1,0 +1,33 @@
+{
+	"name": {
+		"urn": null,
+		"translations": {
+			"en": "Timesheet Validation DAC7"
+		},
+		"defaultLanguage": "en"
+	},
+	"secundaTask": null,
+	"accessRights": {
+		"VIEW": [
+			{
+				"permissionId": "PC_PM_REGIO_ViewProcess_VTS_DAC7",
+				"scoped": false,
+				"scopeTypeId": null,
+				"variableName": null,
+				"responsibleOrganisationId": null
+			}
+		],
+		"CREATE": [
+			{
+				"permissionId": "PC_PM_REGIO_StartProcess_VTS",
+				"scoped": false,
+				"scopeTypeId": null,
+				"variableName": null,
+				"responsibleOrganisationId": null
+			}
+		]
+	},
+	"defaultBusinessDomainId": "31114891",
+	"specificAttributesDefinitions": [],
+	"hideSubprocessOfTheSameType": null
+}

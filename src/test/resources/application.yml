@@ -1,0 +1,15 @@
+server:
+  port: 8080
+logging:
+  level:
+    eu.europa.ec.cc.processcentre: DEBUG
+
+spring:
+  cloud:
+    config:
+      enabled: false
+    consul:
+      enabled: false
+
+mybatis:
+  mapper-locations: classpath:/mappers/*

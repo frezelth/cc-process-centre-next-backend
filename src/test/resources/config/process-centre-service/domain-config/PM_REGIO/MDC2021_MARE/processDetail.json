@@ -1,0 +1,176 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "${processTypeName} <#if (processVariables.CCI)?has_content> - ${processVariables.CCI}</#if> <#if (processVariables.ccis)?has_content> - ${processVariables.ccis?replace(',',', ')}</#if>"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Description",
+                      "fr": "Description"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "The purpose of decommitment is to encourage financial discipline in the MS implementation of their OPs (see recital 75 of the Regulation (EU) No 2021/1060, the CPR). In this respect, Art 105 (Decommitment principles and rules) of the CPR define the arrangements for decommitment",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process type",
+                      "fr": "Type process"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processTypeName!}",
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on",
+                      "fr": "Commence le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on",
+                      "fr": "Termine le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Provider",
+                      "fr": "Provider"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${providerId!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible",
+                      "fr": "Responsable"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${responsible!}"
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process variables",
+                      "fr": "Variables du process"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "<#list processVariables?keys?sort as key><#if key == \"ccis\"> ${key}: ${processVariables.ccis?replace(',',', ')}<#sep>, </#sep><#else>${key}: ${processVariables[key]}<#sep>, </#sep></#if></#list>"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "metroline"
+              },
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showCancelledTasks": true,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": false,
+                  "flatView": false,
+                  "fullTree": true
+                }
+              }
+            ]
+          },
+          {
+            "id": "relatedItems",
+            "label": "Related items",
+            "blocks": [
+              {
+                "type": "relatedItems"
+              }
+            ]
+          },
+          {
+            "id": "relatedProcesses",
+            "label": "Related processes",
+            "blocks": [
+              {
+                "type": "relatedProcesses"
+              }
+            ]
+          },
+          {
+            "id": "documentList",
+            "label": "Document list",
+            "blocks": [
+              {
+                "type": "documentList"
+              }
+            ]
+          },
+          {
+            "id": "internal_communication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "internalCommunication",
+                "config": {
+                  "useModal": true,
+                  "maxLength": 250
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

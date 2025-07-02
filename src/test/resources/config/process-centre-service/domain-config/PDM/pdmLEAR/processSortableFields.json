@@ -1,0 +1,48 @@
+{
+	"sortableFields": [
+		{
+			"field": "startedOn",
+			"propertyOrder": 0,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Create date"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.STATUS",
+			"propertyOrder": 2,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Workflow status"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.REGISTRATION_COUNTRY",
+			"propertyOrder": 6,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Country"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.IMPORTANCE",
+			"propertyOrder": 8,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Importance"
+				}
+			]
+		}
+	]
+}

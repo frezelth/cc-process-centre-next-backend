@@ -1,0 +1,114 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "START DATE"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ProcessReference",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ACRONYM",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Acronym"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_KEY",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project Id"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.CALL_ABBREVIATION_WITH_CUTOFF_DATE",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_UNIT",
+      "propertyOrder": 7,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Unit"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_OFFICER_FULL_NAME",
+      "propertyOrder": 8,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "PO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.FINANCIAL_OFFICER_FULL_NAME",
+      "propertyOrder": 9,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "FO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.LEGAL_OFFICER_FULL_NAME",
+      "propertyOrder": 10,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "LO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ORIGINAL_RANKING_RESULT",
+      "propertyOrder": 11,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Ranking"
+        }
+      ]
+    }
+  ]
+}

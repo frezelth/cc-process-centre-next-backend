@@ -1,0 +1,55 @@
+{
+  "header": {
+    "title": "${processTypeName}<#if (processVariables.ccis)?has_content> <#if processVariables.ccis == processVariables.CCI> - CCI: ${processVariables.CCI}<#else> - ${processVariables.CCI}, ${processVariables.ccis}</#if> <#else> ${processVariables.CCI}</#if>- V ${processVariables.version}.${processVariables.workVersion} - ${processVariables.enacCode}",
+    "subtitle": {
+      "value": "<#if (processVariables.ccis)?has_content> <#if processVariables.ccis == processVariables.CCI> ${processVariables.CCI}<#else> ${processVariables.CCI}, ${processVariables.ccis}</#if> <#else> ${processVariables.CCI}</#if>",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "CCI(s)"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "CCI"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.CCI}",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        },
+        {
+          "type": "COUNTRY",
+          "label": {
+            "translations": {
+              "en": "Country"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "<#if processVariables.cciMs == 'TC'>EU<#else>${processVariables.cciMs}</#if>",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

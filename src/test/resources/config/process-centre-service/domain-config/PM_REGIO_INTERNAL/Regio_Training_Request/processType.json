@@ -1,0 +1,33 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Regio Training Request Process"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_PM_REGIO_StartProcess_Training",
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_StartProcess_Training",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_PM_REGIO_StartProcess_Training",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114891",
+  "specificAttributesDefinitions": [],
+  "hideSubprocessOfTheSameType": null
+}

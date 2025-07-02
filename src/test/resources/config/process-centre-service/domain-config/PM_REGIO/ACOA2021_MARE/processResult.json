@@ -1,0 +1,55 @@
+{
+  "header": {
+    "title": "${processTypeName} <#if (processVariables.leadMS)?has_content> - ${processVariables.leadMS}</#if> <#if (processVariables.accountingYear)?has_content> - ${processVariables.accountingYear}</#if>",
+    "subtitle": {
+      "value": "ACOA MARE",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Process"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "CCI"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.CCI}",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        },
+        {
+          "type": "COUNTRY",
+          "label": {
+            "translations": {
+              "en": "Country"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "<#if processVariables.cciMs == 'TC'>EU<#else>${processVariables.cciMs}</#if>",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

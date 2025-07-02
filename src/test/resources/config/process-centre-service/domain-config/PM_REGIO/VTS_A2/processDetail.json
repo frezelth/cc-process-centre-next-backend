@@ -1,0 +1,127 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Consultant",
+											"fr": "Consultant"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.consultantFullName!'-'}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Login",
+											"fr": "Login"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.consultant!'-'}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Month",
+											"fr": "Mois"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.month!'-'}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Year",
+											"fr": "Année"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.year!'-'}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								}
+							]
+						}	
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "metroline"
+							},
+							{
+								"type": "processHistory",
+								"config": {
+									"showServiceTasks": false,
+									"showServiceTasksToggle": false,
+									"showProcessDescription": true,
+									"showEmptyProcesses": false,
+									"flatView": false
+								}
+							}
+						]
+					},
+					{
+						"id": "documentList",
+						"label": "Document list",
+						"blocks": [
+							{
+								"type": "documentList"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

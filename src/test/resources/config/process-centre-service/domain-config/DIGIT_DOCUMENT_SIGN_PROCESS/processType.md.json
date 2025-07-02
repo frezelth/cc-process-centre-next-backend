@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context": {
+    "providerId": "camundadigit",
+    "domainKey": "digit",
+    "processTypeKey": "DIGIT_DOCUMENT_SIGN_PROCESS"
+  }
+}

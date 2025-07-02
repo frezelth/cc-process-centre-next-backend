@@ -1,0 +1,43 @@
+{
+	"providerProcessTypeKey": "FPF2021",
+	"variables": [
+		{
+			"name": "cc:processTypeKey",
+			"value": "FPF2021_MARE",
+			"type": "STRING"
+		},
+		{
+			"name": "process",
+			"value": "FPF2021_MARE",
+			"type": "STRING"
+		},
+		{
+			"name": "fund",
+			"value": null,
+			"type": "STRING"
+		}
+	],
+	"formDefinition": [
+		{
+			"fieldType": "formControl",
+			"context": {
+				"inputs": {
+					"disabled": false,
+					"maxLengthValidationErrorMessage": "Too many characters",
+					"label": "Fund",
+					"maxLengthCounter": true,
+					"required": true,
+					"maxLength": 10
+				},
+				"type": "_uxTextInput",
+				"key": "fund"
+			},
+			"layout": {
+				"class": "col-12"
+			}
+		}
+	],
+	"formModel": {
+		"fund": ""
+	}
+}

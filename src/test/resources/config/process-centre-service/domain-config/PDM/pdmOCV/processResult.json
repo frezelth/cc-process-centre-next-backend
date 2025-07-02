@@ -1,0 +1,175 @@
+{
+	"header": {
+		"title": "Ownership control validation",
+		"subtitle": {
+			"value": "${processVariables.PIC}",
+			"label": {
+				"urn": null,
+				"translations": {
+					"en": "Ownership control validation"
+				},
+				"defaultLanguage": "en"
+			}
+		}
+	},
+	"details": {
+		"rows": [
+			{
+				"columns": [
+					{
+						"value": "${processVariables.PO_NAME}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Project Officer"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.RESPONSIBLE_UNIT}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "DG"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.PO_DEPARTMENT}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Department"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.LEGAL_NAME}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Organization"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CALL}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.PROJECT_NUMBER}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Project number"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CONTEXT}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Context"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.DESIRED_DATE}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Desired date"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.REQUEST_DATE}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Context"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.COUNTRY_CODE}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Country code"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.LAST_VALIDATOR}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Last validator"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.LAST_VERIFIER}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Last verifier"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			}
+		]
+	}
+}

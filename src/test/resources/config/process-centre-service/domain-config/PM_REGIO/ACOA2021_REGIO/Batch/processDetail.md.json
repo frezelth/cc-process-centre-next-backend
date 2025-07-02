@@ -1,0 +1,8 @@
+{
+  "configurationType": "processDetail",
+  "context": {
+    "providerId": "camundapm",
+    "domainKey": "PM_REGIO",
+    "processTypeKey": "ACOA2021_BATCH_REGIO"
+  }
+}

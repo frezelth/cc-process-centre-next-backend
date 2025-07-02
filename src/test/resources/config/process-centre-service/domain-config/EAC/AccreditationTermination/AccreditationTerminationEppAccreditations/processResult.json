@@ -1,0 +1,148 @@
+{
+  "header": {
+    "title": "Terminate accreditation - v${processVariables.VERSION} - ${processVariables.TITLE}",
+    "subtitle": {
+      "value": "${processVariables.TITLE}",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Project title"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "order": 0,
+          "label": {
+            "translations": {
+              "en": "Project title"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.TITLE}"
+        },
+        {
+          "type": "TEXT",
+          "order": 1,
+          "label": {
+            "translations": {
+              "en": "Project code"
+            },
+            "defaultLanguage": "en"
+          },
+          "link": "/eac-tools/project/${processVariables.PROJECT_ID}",
+          "value": "${processVariables.PROJECT_CODE}"
+        },
+        {
+          "type": "TEXT",
+          "order": 2,
+          "label": {
+            "translations": {
+              "en": "Form ID"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.FORM_ID}"
+        },
+        {
+          "type": "TEXT",
+          "order": 3,
+          "label": {
+            "translations": {
+              "en": "Action type"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.KEY_ACTION}"
+        },
+        {
+          "type": "TEXT",
+          "order": 4,
+          "label": {
+            "translations": {
+              "en": "Submission ID"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.SUBMISSION_ID}"
+        },
+        {
+          "type": "TEXT",
+          "order": 5,
+          "label": {
+            "translations": {
+              "en": "Project Owner"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.PROJECT_OWNER_NAME}"
+        },
+        {
+          "type": "TEXT",
+          "order": 6,
+          "label": {
+            "translations": {
+              "en": "Status"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.STATUS}"
+        },
+        {
+          "type": "TEXT",
+          "order": 7,
+          "label": {
+            "translations": {
+              "en": "OID"
+            },
+            "defaultLanguage": "en"
+          },
+          "link": "/eac-tools/organisation/${processVariables.ORGANIZATION_ID}",
+          "value": "${processVariables.ORGANIZATION_ID}"
+        }
+      ]
+    },
+    "expanded": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "order": 0,
+          "label": {
+            "translations": {
+              "en": "Lifecycle stage"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.STAGE}"
+        },
+        {
+          "type": "TEXT",
+          "order": 1,
+          "label": {
+            "translations": {
+              "en": "Legal name (original language)"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.BUSINESS_NAME}"
+        },
+        {
+          "type": "TEXT",
+          "order": 2,
+          "label": {
+            "translations": {
+              "en": "Legal name (English)"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.LEGAL_NAME}"
+        }
+      ]
+    }
+  }
+}

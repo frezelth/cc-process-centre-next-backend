@@ -1,0 +1,180 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": true,
+				"header": {
+					"title": "Contract Preparation: ${processVariables.CONTRACT_NO!}",
+					"subtitle": {
+						"value": "${processVariables.CONTRACT_TITLE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Contract Title"
+							},
+							"defaultLanguage": "en"
+						}
+					}
+				},
+				"showAttributes": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Start date",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "End date",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Status",
+											"fr": "Status"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processStatus!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Service",
+											"fr": "Responsable Service"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_ORGANIZATION_FOR_DOC_FILING!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Unit",
+											"fr": "Responsable Unit"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_UNIT!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Procedure Reference"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.PROCEDURE_BUSINESS_ID!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Procedure Type"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.PROCEDURE_TYPE!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "FWC Contract ID",
+											"fr": "FWC Contract ID"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.FWC_CONTRACT_NO!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "LOT Identifier",
+											"fr": "LOT Identifier"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.LOT_IDENTIFIER!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					},
+					{
+						"id": "metroline",
+						"label": "Metroline",
+						"blocks": [
+							{
+								"type": "metroline"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication",
+								"config": {
+									"useModal": true,
+									"maxLength": 250
+								}
+							}
+						]
+					},
+					{
+						"id": "relatedItems",
+						"label": "Related items",
+						"blocks": [
+							{
+								"type": "relatedItems"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

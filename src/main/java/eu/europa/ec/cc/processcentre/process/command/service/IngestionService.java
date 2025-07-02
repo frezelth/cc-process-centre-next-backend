@@ -4,6 +4,7 @@ import eu.europa.ec.cc.processcentre.event.ProcessModelChanged;
 import eu.europa.ec.cc.processcentre.event.ProcessRegistered;
 import eu.europa.ec.cc.processcentre.event.ProcessVariablesChanged;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
+import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.model.VariableType;
 import eu.europa.ec.cc.processcentre.process.command.converter.EventConverter;
 import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
@@ -171,6 +172,11 @@ public class IngestionService {
 
     eventPublisher.publishEvent(
         new ProcessModelChanged(event.getProcessInstanceId(), Collections.singleton(Model.CANCEL_DATE)));
+
+    eventPublisher.publishEvent(
+        new eu.europa.ec.cc.processcentre.event.ProcessRunningStatusChanged(event.getProcessInstanceId(),
+            ProcessStatus.CANCELLED
+        ));
   }
 
   @Transactional
@@ -357,6 +363,11 @@ public class IngestionService {
 
     eventPublisher.publishEvent(
         new ProcessModelChanged(event.getProcessInstanceId(), Set.of(Model.STATUS, Model.END_DATE)));
+
+    eventPublisher.publishEvent(
+        new eu.europa.ec.cc.processcentre.event.ProcessRunningStatusChanged(event.getProcessInstanceId(),
+            eventConverter.mapToStatus(event.getNewStatus())
+            ));
   }
 
   @Transactional

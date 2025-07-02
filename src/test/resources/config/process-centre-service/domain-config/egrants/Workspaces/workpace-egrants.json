@@ -1,0 +1,32 @@
+{
+  "subset": {
+    "includes": [
+      { "providerId": "GRANTSCompass", "domainKey": "Grants"},
+      { "providerId": "GRANTSCompass", "domainKey": "Audits"},
+      { "providerId": "SEPCompass", "domainKey": "SEP Submission"},
+      { "providerId": "SEPCompass", "domainKey": "SEP Evaluation"}
+    ],
+    "excludes": [
+    ]
+  },
+  "filters": {
+    "options": [
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": false,
+    "portfolio": {
+      "hidden": false,
+      "collapsed": false
+    }
+  },
+  "navigation": {
+    "hidden": false,
+    "collapsed": false,
+    "dynamicFilters": {
+      "hidden": false,
+      "collapsed": false
+    }
+  }
+}

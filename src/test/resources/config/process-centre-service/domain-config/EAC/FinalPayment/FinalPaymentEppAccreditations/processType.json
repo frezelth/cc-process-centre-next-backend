@@ -1,0 +1,21 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Project closure"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Project closure"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": "PMM_FP.FINAL_PAYMENT_PROCESS",
+  "accessRights": null,
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

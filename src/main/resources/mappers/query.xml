@@ -198,7 +198,7 @@
       <if test="statuses != null and statuses.size() > 0">
         AND p.STATUS IN
         <foreach item="status" collection="statuses" separator="," open="(" close=")">
-          #{runningStatus}
+          #{status}::process_status
         </foreach>
       </if>
       <if test="taxonomyPath == null or taxonomyPath == ''">

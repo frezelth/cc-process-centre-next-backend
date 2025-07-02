@@ -1,0 +1,70 @@
+{
+	"sortableFields": [
+		{
+			"field": "startedOn",
+			"propertyOrder": 0,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Create date"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.CONTEXT",
+			"propertyOrder": 2,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Context"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.REQUESTED_SYSTEM_LABEL",
+			"propertyOrder": 1,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Requested by"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.LAST_VALIDATOR",
+			"propertyOrder": 3,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Last Validator"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.LAST_VERIFIER",
+			"propertyOrder": 4,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Last Verifier"
+				}
+			]
+		},
+		{
+			"field": "specificAttributes.COUNTRY_CODE",
+			"propertyOrder": 5,
+			"label": [
+				{
+					"defaultTranslation": true,
+					"language": "en",
+					"value": "Country Code"
+				}
+			]
+		}
+	]
+}

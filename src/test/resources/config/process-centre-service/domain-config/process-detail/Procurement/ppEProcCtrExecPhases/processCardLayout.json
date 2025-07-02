@@ -1,0 +1,71 @@
+{
+"header": {
+      "title": "Contract next phase",
+      "subtitle": {
+        "value": "${processVariables.CONTRACT_NO!}",
+        "label": {
+          "urn": null,
+          "translations": {
+            "en": "Number"
+          },
+          "defaultLanguage": "en"
+        }
+      }
+    },
+    "details": {
+      "rows": [
+        {
+          "columns": [
+            {
+              "value": "${responsible!} ${processVariables.RESPONSIBLE_UNIT!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Responsible service"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 9
+            },
+            {
+              "value": "${startDate!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Start date"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 3
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.PROCEDURE_BUSINESS_ID!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Procedure Reference"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 9
+            },
+            {
+              "value": "${processVariables.INITIATOR_USER_ID!}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Assigned to"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 3
+            }
+          ]
+        }
+      ]
+    }
+}

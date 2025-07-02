@@ -34,9 +34,6 @@ public class KafkaSender {
   @Value("${kafka.event-topic.name}")
   private String eventTopic;
 
-  @Value("${kafka.sse-bridge-event-topic.name}")
-  private String sseAddressedMessageTopic;
-
   /**
    * Send a message to a given topic without waiting for the ACK
    * Callback will be available on the producer's network thread to check if

@@ -1,0 +1,2 @@
+it i just a placeholder for git folder
+delete this file if the containing folder is not empty

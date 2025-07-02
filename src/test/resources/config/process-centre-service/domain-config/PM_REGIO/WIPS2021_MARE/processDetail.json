@@ -1,0 +1,193 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "${processTypeName} - CCI: ${processVariables.CCI} Case number: ${processVariables.caseNumber}"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "CCI(s)",
+                      "fr": "CCI(s)"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "<#if (processVariables.ccis)?has_content> <#if processVariables.ccis == processVariables.CCI> ${processVariables.CCI}<#else> ${processVariables.CCI}, ${processVariables.ccis}</#if> <#else> ${processVariables.CCI}</#if>",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible",
+                      "fr": "Responsable"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${responsible!}"
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Fund",
+                      "fr": "Fond"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "<#if (processVariables.fund)?has_content>  ${processVariables.fund} <#else>NA</#if>",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on",
+                      "fr": "Commence le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Version",
+                      "fr": "Version"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "<#if (processVariables.version)?has_content>  ${processVariables.version} <#else>NA</#if>",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on",
+                      "fr": "Termine le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Work Version",
+                      "fr": "Work Version"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "<#if (processVariables.workVersion)?has_content>  ${processVariables.workVersion} <#else>NA</#if>",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process ID",
+                      "fr": "ID Process"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processInstanceId}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "metroline"
+              },
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showCancelledTasks": true,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": false,
+                  "flatView": false,
+                  "fullTree": true
+                }
+              }
+            ]
+          },
+          {
+            "id": "relatedItems",
+            "label": "Related items",
+            "blocks": [
+              {
+                "type": "relatedItems"
+              }
+            ]
+          },
+          {
+            "id": "relatedProcesses",
+            "label": "Related processes",
+            "blocks": [
+              {
+                "type": "relatedProcesses"
+              }
+            ]
+          },
+          {
+            "id": "documentList",
+            "label": "Document list",
+            "blocks": [
+              {
+                "type": "documentList"
+              }
+            ]
+          },
+          {
+            "id": "internal_communication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "internalCommunication",
+                "config": {
+                  "useModal": true,
+                  "maxLength": 250
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

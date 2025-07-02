@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context": {
+    "providerId": "camundaeac",
+    "domainKey": "erasmusplus",
+    "processTypeKey": "SelectionContractingProcessSimplificationEscAccreditations"
+  }
+}

@@ -1,0 +1,26 @@
+{
+"processTypeKey": "ppEProcLesu",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Legal Entity Status Update"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_EPROC_LESU_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_EPROC_LESU_ViewProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

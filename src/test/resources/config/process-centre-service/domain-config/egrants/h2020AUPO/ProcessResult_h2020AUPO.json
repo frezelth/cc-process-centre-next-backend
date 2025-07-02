@@ -1,0 +1,167 @@
+{
+  "header": {
+    "title": "Outsourced Audit"
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Process Reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ProcessReference!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Acronym"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ACRONYM!}"
+        }
+      ]
+    },
+    "expanded": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Framework Programme"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.FRAMEWORK_DISPLAY_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audit Domain"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.RESPONSIBLE_DG_DISPLAY_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audit Batch"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.AUDIT_BATCH!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audit Id"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.AUDIT_FILE_ID!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audit Reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.AUDIT_REFERENCE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audit Type"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.AUDIT_TYPE_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Audited Pic"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.AUDITED_PIC!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Legal Name"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.LEGAL_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Communication Mode"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.COMMUNICATION_MODE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Lead Auditor"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.LEAD_AUDITOR_FULL_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Secondary Auditor"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.SECONDARY_AUDITOR_FULL_NAME!}"
+        },
+        {
+          "type": "TIMESTAMP",
+          "label": {
+            "translations": {
+              "en": "Start date"
+            },
+            "defaultLanguage": "en"
+          },
+          "displayFormat": "DATE",
+          "value": "${startDate!}"
+        },
+        {
+          "type": "TIMESTAMP",
+          "label": {
+            "translations": {
+              "en": "End date"
+            },
+            "defaultLanguage": "en"
+          },
+          "displayFormat": "DATE",
+          "value": "${endDate!}"
+        }
+      ]
+    }
+  }
+}

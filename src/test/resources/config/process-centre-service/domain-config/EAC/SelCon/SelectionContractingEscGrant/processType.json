@@ -1,0 +1,21 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Selection and Contracting"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Selection and Contracting"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": "PMM_SELECTION.SELECTION_PROCESS",
+  "accessRights": null,
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

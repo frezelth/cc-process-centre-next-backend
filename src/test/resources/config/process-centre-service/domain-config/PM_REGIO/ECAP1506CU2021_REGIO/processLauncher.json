@@ -1,0 +1,108 @@
+{
+  "providerProcessTypeKey": "ECAP1506CU2021_REGIO",
+  "variables": [
+    {
+      "name": "cc:processTypeKey",
+      "value": "ECAP1506CU2021_REGIO",
+      "type": "STRING"
+    },
+    {
+      "name": "enacCode",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "process",
+      "value": "ECAP1506CU2021_REGIO",
+      "type": "STRING"
+    },
+    {
+      "name": "objectType",
+      "value": "EC",
+      "type": "STRING"
+    },
+    {
+      "name": "serviceTasksTopic",
+      "value": "regio-process-manager",
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "required": true,
+          "selectOptions": [
+            {
+              "id": "HEC 1",
+              "value": "HEC 1"
+            },
+            {
+              "id": "HEC 2",
+              "value": "HEC 2"
+            },
+            {
+              "id": "HEC 3",
+              "value": "HEC 3"
+            },
+            {
+              "id": "HEC 4",
+              "value": "HEC 4"
+            },
+            {
+              "id": "TEC 1.1",
+              "value": "TEC 1.1"
+            },
+            {
+              "id": "TEC 1.2",
+              "value": "TEC 1.2"
+            },
+            {
+              "id": "TEC 2.1",
+              "value": "TEC 2.1"
+            },
+            {
+              "id": "TEC 2.2",
+              "value": "TEC 2.2"
+            },
+            {
+              "id": "TEC 2.3",
+              "value": "TEC 2.3"
+            },
+            {
+              "id": "TEC 2.4",
+              "value": "TEC 2.4"
+            },
+            {
+              "id": "TEC 2.5",
+              "value": "TEC 2.5"
+            },
+            {
+              "id": "TEC 2.6",
+              "value": "TEC 2.6"
+            },
+            {
+              "id": "TEC 2.7",
+              "value": "TEC 2.7"
+            },
+            {
+              "id": "TEC 3.1",
+              "value": "TEC 3.1"
+            }
+          ],
+          "label": "Enabling Condition"
+        },
+        "type": "_uxSelectInput",
+        "key": "enacCode"
+      },
+      "fieldType": "formControl"
+    }
+  ],
+  "formModel": {
+    "enacCode": ""
+  },
+  "portfolioItemRequired": true
+}

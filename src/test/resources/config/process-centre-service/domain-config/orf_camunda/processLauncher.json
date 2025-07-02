@@ -1,0 +1,30 @@
+{
+  "variables": [
+    {
+      "name": "PROJECT_ID",
+      "value": "PROJECT_ID",
+      "type": "STRING",
+      "required": true
+    }
+  ],
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "PROJECT_ID",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Project ID",
+          "placeHolder": "Please enter project ID"
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "PROJECT_ID": "camundaRefFlow"
+  }
+}

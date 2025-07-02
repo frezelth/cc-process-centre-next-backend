@@ -14,6 +14,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.ProcessMapper;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessConfigQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.UpdateResolvedConfigQueryParam;
+import eu.europa.ec.cc.processcentre.proto.command.RefreshProcessConfig;
 import eu.europa.ec.cc.processcentre.template.TemplateConverter;
 import eu.europa.ec.cc.processcentre.template.TemplateExtractor;
 import eu.europa.ec.cc.processcentre.template.TemplateModel;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 @Service
@@ -59,11 +61,25 @@ public class ProcessConfigService {
     this.translationService = translationService;
   }
 
+  @Transactional
+  public void handle(RefreshProcessConfig command){
+    processMapper.findContextById(command.getProcessInstanceId()).ifPresent(
+        p -> {
+          Map<String, String> context = Context.context(p.providerId(), p.domainKey(), p.processTypeKey());
+          refreshConfig(command.getProcessInstanceId(), context);
+        }
+    );
+  }
+
   @EventListener
   @SneakyThrows
   public void handle(ProcessRegistered event){
-
     Map<String, String> context = Context.context(event.providerId(), event.domainKey(), event.processTypeKey());
+    refreshConfig(event.processInstanceId(), context);
+  }
+
+  @SneakyThrows
+  private void refreshConfig(String processInstanceId, Map<String, String> context) {
     // load the process type config
     ProcessTypeConfig processTypeConfig = configService.fetchProcessTypeConfig(context).orElse(null);
 
@@ -78,20 +94,20 @@ public class ProcessConfigService {
     // create translations for the type name / process title, initially based on type name
     // it will be overridden later by the
     translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
-        event.processInstanceId(), TranslationAttribute.PROCESS_TYPE_NAME,
+        processInstanceId, TranslationAttribute.PROCESS_TYPE_NAME,
         processTypeConfig.name());
 
     // create translations for the type name
     translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
-        event.processInstanceId(), TranslationAttribute.PROCESS_TITLE,
+        processInstanceId, TranslationAttribute.PROCESS_TITLE,
         processTypeConfig.name());
 
     processMapper.insertOrUpdateProcessConfig(
         new InsertOrUpdateProcessConfigQueryParam(
-            event.processInstanceId(), objectMapper.writeValueAsString(processTypeConfig), resultCardLayoutConfig)
+            processInstanceId, objectMapper.writeValueAsString(processTypeConfig), resultCardLayoutConfig)
     );
 
-    persistResolvedConfiguration(event.processInstanceId(), processTypeConfig, resultCardLayoutConfig);
+    persistResolvedConfiguration(processInstanceId, processTypeConfig, resultCardLayoutConfig);
   }
 
   @EventListener
@@ -118,7 +134,7 @@ public class ProcessConfigService {
             ProcessTypeConfig processTypeConfig = objectMapper.readValue(processConfigById.type(),
                 ProcessTypeConfig.class);
 
-            // try to see if the first VIEW access rights contains any changed variable
+            // try to see if the first VIEW access right contains any changed variable
             boolean scopeIdMatches = Optional.ofNullable(processTypeConfig.accessRights())
                 .orElse(Map.of())
                 .getOrDefault(Right.VIEW, Collections.emptyList()).stream()
@@ -195,7 +211,7 @@ public class ProcessConfigService {
 
     String resolvedCard = templateConverter.convert("cardLayout_"+ processInstanceId, resultCardConfig, model);
 
-    // if needed update the title
+    // if needed, update the title
     if (resolvedTitle != null){
       translationService.insertOrUpdateTranslations(TranslationObjectType.PROCESS,
           processInstanceId,

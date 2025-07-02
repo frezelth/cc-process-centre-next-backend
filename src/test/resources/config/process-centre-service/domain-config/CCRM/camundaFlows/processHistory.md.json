@@ -1,0 +1,11 @@
+{
+  "configurationType" : "processHistory",
+  "startValidDate" : "2024-05-14T17:07:32.237+00:00",
+  "path" : "CCRM/camundaFlows/processHistory.json",
+  "metadataPath" : "CCRM/camundaFlows/processHistory.md.json",
+  "context" : {
+    "domainKey" : "CCRM",
+    "processTypeKey" : "camundaFlows",
+    "providerId": "xlr"
+  }
+}

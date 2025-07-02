@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processResult",
+  "context" : {
+    "providerId": "SEPCompass",
+    "domainKey" : "SEP Redress",
+    "processTypeKey" : "RedressProposalProcess"
+  }
+}

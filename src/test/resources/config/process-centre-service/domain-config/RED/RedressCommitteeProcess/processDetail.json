@@ -1,0 +1,145 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": false,
+				"header": {
+					"title": "${processTypeName!}",
+					"subtitle": {
+              "value": " ${processVariables.CALL_ABBREVIATION!}",
+              "label": {
+                  "urn": null,
+                  "translations": {
+                      "en": "Call"
+                  },
+                  "defaultLanguage": "en"
+              }
+          }
+				},
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"value": "${processVariables.COMMITTEE_ID!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Redress Committee ID"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+								  "value": "${processVariables.CALL_IDENTIFIER!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Call"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+								  "value": "${processVariables.CALL_DESCRIPTION!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Call Description"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								},
+								{
+								  "value": "${processVariables.CALL_DEADLINE!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Call Deadline"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+								  "value": "${processVariables.RESPONSIBLE_UNIT!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Unit"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commence le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Termine le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+					"id": "metroline",
+					"label": "Metroline",
+					"blocks": [
+						  {
+							"type": "metroline"
+						  }
+						]
+					},
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

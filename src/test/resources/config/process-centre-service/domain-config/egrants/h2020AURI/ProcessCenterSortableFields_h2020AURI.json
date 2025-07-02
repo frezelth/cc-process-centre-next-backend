@@ -1,0 +1,125 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "START DATE"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ProcessReference",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ACRONYM",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Acronym"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.Call",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_KEY",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project Id"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDITED_PIC",
+      "propertyOrder": 8,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Pic"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDITED_LEGAL_NAME",
+      "propertyOrder": 9,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Organisation"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_UNIT",
+      "propertyOrder": 10,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Unit"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_OFFICER_FULL_NAME",
+      "propertyOrder": 11,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "PO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.FINANCIAL_OFFICER_FULL_NAME",
+      "propertyOrder": 12,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "FO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.LEGAL_OFFICER_FULL_NAME",
+      "propertyOrder": 13,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "LO"
+        }
+      ]
+    }
+  ]
+}

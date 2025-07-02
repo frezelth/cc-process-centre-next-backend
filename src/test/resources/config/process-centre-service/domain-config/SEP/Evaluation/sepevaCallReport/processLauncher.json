@@ -1,0 +1,302 @@
+{
+  "variables": [
+    {
+      "name": "CALL_ID",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_ABBREVIATION",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_CLOSURE_IDENTIFIER",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_EVALUATION_SESSION_NAME",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_EVALUATION_STAGE",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_PROGRAMME_ABBREVIATION",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_PROGRAMME_ID",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_SUBMISSION_DEADLINE",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_WRITE_ACTORS",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_CONSULTATION_ACTORS",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_VERIFY_ACTORS",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "CALL_SIGN_ACTORS",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "REQUEST_ID",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "RESPONSIBLE_UNIT",
+      "value": null,
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_ID",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Call Id",
+          "placeHolder": "Please enter the call id"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_ABBREVIATION",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Call abbreviation",
+          "placeHolder": "Please enter the call abbreviation"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_CLOSURE_IDENTIFIER",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Closure Identifier",
+          "placeHolder": "Please enter the closure identifier"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_EVALUATION_SESSION_NAME",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Evaluation session",
+          "placeHolder": "Please enter the evaluation session name"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_EVALUATION_STAGE",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Evaluation stage",
+          "placeHolder": "Please enter the evaluation stage"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_PROGRAMME_ABBREVIATION",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Programme abbreviation",
+          "placeHolder": "Please enter the programme abbreviation"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_PROGRAMME_ID",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Programme id",
+          "placeHolder": "Please enter the programme id"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_SUBMISSION_DEADLINE",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Submission deadline",
+          "placeHolder": "Please enter the submission deadline"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_WRITE_ACTORS",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Write actor(s)",
+          "placeHolder": "Please enter the write actor(s)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_CONSULTATION_ACTORS",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Consultation actor(s)",
+          "placeHolder": "Please enter the consultation actor(s)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_VERIFY_ACTORS",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Verify actor(s)",
+          "placeHolder": "Please enter the verify actor(s)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "CALL_SIGN_ACTORS",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Sign actor(s)",
+          "placeHolder": "Please enter the sign actor(s)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "REQUEST_ID",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Request Id",
+          "placeHolder": "Please enter the request id (something unique)"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12",
+        "style": {}
+      },
+      "context": {
+        "key": "RESPONSIBLE_UNIT",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Responsible unit",
+          "placeHolder": "Please enter the responsible unit"
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "CALL_ID": "43494855",
+    "CALL_ABBREVIATION": "H2020-IBA-SC3-EED-2021",
+    "CALL_CLOSURE_IDENTIFIER": "H2020-IBA-SC3-EED-2021",
+    "CALL_EVALUATION_SESSION_NAME": "H2020-IBA-SC3-EED-2021_test",
+    "CALL_EVALUATION_STAGE": "",
+    "CALL_PROGRAMME_ABBREVIATION": "H2020",
+    "CALL_PROGRAMME_ID": "31045243",
+    "CALL_SUBMISSION_DEADLINE": "30/04/2032",
+    "CALL_WRITE_ACTORS": "kieuhuu",
+    "CALL_CONSULTATION_ACTORS": "kieuhuu",
+    "CALL_VERIFY_ACTORS": "kieuhuu",
+    "CALL_SIGN_ACTORS": "kieuhuu",
+    "REQUEST_ID": "",
+    "RESPONSIBLE_UNIT": "DIGIT"
+  }
+}

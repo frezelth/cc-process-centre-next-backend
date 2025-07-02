@@ -1,0 +1,15 @@
+{
+  "accessRights": {},
+  "replaceBlockIdWithParticipantId": false,
+  "showServiceTasks": false,
+  "showServiceTasksToggle": true,
+  "showCancelledTasks": false,
+  "showActions": true,
+  "showProcessDescription": false,
+  "showEmptyProcesses": true,
+  "showTaskComments": true,
+  "flatView": false,
+  "fullTree": true,
+  "showMyTasks": true,
+  "creationDateSorting": "ASC"
+}

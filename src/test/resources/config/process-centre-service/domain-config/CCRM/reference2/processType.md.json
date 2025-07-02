@@ -1,0 +1,11 @@
+{
+  "configurationType" : "processType",
+  "startValidDate" : "2024-05-22T14:20:36.542+00:00",
+  "path" : "CCRM/reference2/processType.json",
+  "metadataPath" : "CCRM/reference2/processType.md.json",
+  "context" : {
+    "domainKey" : "CCRM",
+    "processTypeKey" : "reference2",
+    "providerId": "xlr"
+  }
+}

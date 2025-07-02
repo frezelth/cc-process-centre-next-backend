@@ -1,0 +1,8 @@
+{
+  "configurationType": "processDetail",
+  "context": {
+    "providerId": "camundapm",
+    "domainKey": "PM_REGIO",
+    "processTypeKey": "MTR2021_REGIO"
+  }
+}

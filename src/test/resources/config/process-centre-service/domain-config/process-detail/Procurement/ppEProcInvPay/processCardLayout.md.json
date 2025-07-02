@@ -1,0 +1,8 @@
+{
+  "configurationType": "processResult",
+  "context" : {
+    "domainKey" : "Procurement",
+    "providerId" : "OPSYSCompass",
+	"processTypeKey" : "ppEProcInvPay"
+  }
+}

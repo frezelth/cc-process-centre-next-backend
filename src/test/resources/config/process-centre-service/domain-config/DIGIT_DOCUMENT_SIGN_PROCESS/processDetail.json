@@ -1,0 +1,145 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Description",
+                      "fr": "Description"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${description!}",
+                  "size": 6
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process type",
+                      "fr": "Type process"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processTypeName!}",
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on",
+                      "fr": "Commencé le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on",
+                      "fr": "Terminé le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Provider",
+                      "fr": "Provider"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${providerId!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible",
+                      "fr": "Responsable"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${responsible!}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "ddsp_metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline",
+                "validityCheckRequired": true,
+                "config": {
+                  "replaceBlockIdWithParticipantId": true
+                }
+              }
+            ]
+          },
+          {
+            "id": "ddsp_processHistory",
+            "label": "Workflow",
+            "blocks": [
+              {
+                "type": "processHistory",
+                "validityCheckRequired": false,
+                "config": {
+                  "replaceBlockIdWithParticipantId": false,
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": true,
+                  "showCancelledTasks": true,
+                  "showActions": true,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": true,
+                  "showTaskComments": true,
+                  "flatView": false,
+                  "fullTree": false,
+                  "showMyTasks": false,
+                  "creationDateSorting": "ASC",
+                  "highlightedOutcomes": {
+                    "success": [
+
+                    ],
+                    "warning": [
+
+                    ],
+                    "danger": [
+
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

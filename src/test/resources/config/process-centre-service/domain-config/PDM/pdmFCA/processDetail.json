@@ -1,0 +1,270 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": false,
+				"header": {
+					"title": "FCA Validation",
+					"subtitle": {
+						"value": "${processVariables.PIC!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "PIC"
+							},
+							"defaultLanguage": "en"
+						}
+					}
+				},
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"value": "${processVariables.PO_NAME!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "PROJECT OFFICER"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.DG!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "DG"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.PO_DEPARTMENT!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "DEPARTMENT"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.LEGAL_NAME!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "ORGANISATION"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.CALL!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "CALL"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.PROJECT_NUMBER!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "PROJECT NUMBER"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.REQUESTED_SYSTEM!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "REQUESTED BY"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.CONTEXT!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "CONTEXT"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.DESIRED_DATE!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "DESIRED DATE"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.REQUEST_DATE!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "REQUEST DATE"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.LAST_VALIDATOR!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "LAST VALIDATOR"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.LAST_VERIFIER!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "LAST VERIFIER"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.COUNTRY_CODE!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "COUNTRY CODE"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.RE_ASSESSMENT!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "RE ASSESSMENT"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+								"value": "${(startedOn?datetime)!}",
+								"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+									
+								},
+								{
+								"value": "${(endedOn?datetime)!}",
+								"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "documentList",
+						"label": "Documents",
+						"blocks": [
+							{
+								"type": "documentList"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication"
+							}
+						]
+					},
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

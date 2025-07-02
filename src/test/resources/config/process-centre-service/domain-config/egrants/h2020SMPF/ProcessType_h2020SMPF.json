@@ -1,0 +1,17 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "SMP Food Budget Review"
+    },
+    "defaultLanguage": "en"
+  },
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC.COMP.GM.egrants-access"
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114889"
+}

@@ -1,0 +1,73 @@
+{
+  "subset": {
+    "includes": [
+      {
+        "processTypeKey": "ACOA2021_MARE"
+      },
+      {
+        "processTypeKey": "CBA2021_MARE"
+      },
+      {
+        "processTypeKey": "CPR2021_MARE"
+      },
+      {
+        "processTypeKey": "ECAP2021_MARE"
+      },
+      {
+        "processTypeKey": "IP2021_MARE"
+      },
+      {
+        "processTypeKey": "MAC2021_MARE"
+      },
+      {
+        "processTypeKey": "PRAM2021_MARE"
+      },
+      {
+        "processTypeKey": "RP2021_MARE"
+      },
+      {
+        "processTypeKey": "TOD2021_MARE"
+      },
+      {
+        "processTypeKey": "WIPS2021_MARE"
+      },
+      {
+        "processTypeKey": "FPF2021_MARE"
+      },
+      {
+        "processTypeKey": "PRAD2021_MARE"
+      },
+      {
+        "processTypeKey": "MPF2021_MARE"
+      },
+      {
+        "processTypeKey": "MDC2021_MARE"
+      },
+      {
+        "processTypeKey": "WIPS2021_MARE"
+      }
+    ],
+    "excludes": [
+    ]
+  },
+  "filters": {
+    "options": [
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": false,
+    "portfolio": {
+      "hidden": false,
+      "collapsed": false
+    }
+  },
+  "navigation": {
+    "hidden": false,
+    "collapsed": false,
+    "dynamicFilters": {
+      "hidden": false,
+      "collapsed": false
+    }
+  }
+}

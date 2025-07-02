@@ -1,0 +1,13 @@
+{
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_ViewProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  }
+}

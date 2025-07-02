@@ -7,6 +7,7 @@ import eu.europa.ec.cc.processcentre.process.command.repository.model.DeleteProc
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FavouriteQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessByIdQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessConfigByIdQueryResponse;
+import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessContextQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryParam;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessVariableQueryResponse;
 import eu.europa.ec.cc.processcentre.process.command.repository.model.InsertOrUpdateProcessConfigQueryParam;
@@ -29,6 +30,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ProcessMapper {
 
   Optional<FindProcessByIdQueryResponse> findById(String id);
+
+  Optional<FindProcessContextQueryResponse> findContextById(String id);
 
   void insertOrUpdateProcess(InsertProcessQueryParam process);
 
@@ -69,4 +72,8 @@ public interface ProcessMapper {
   void setAsFavourite(FavouriteQueryParam param);
 
   void deleteFromFavourites(FavouriteQueryParam param);
+
+  void snapshotOnComplete(String processInstanceId);
+
+  void removeSnapshotOnReopen(String processInstanceId);
 }

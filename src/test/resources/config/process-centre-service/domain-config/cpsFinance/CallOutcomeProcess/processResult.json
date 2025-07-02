@@ -1,0 +1,39 @@
+{
+  "header": {
+    "title": "${description} - ${processVariables.CALL_ABBREVIATION}"
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${processVariables.CALL_ID!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Call CCM2 ID"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${processVariables.CALL_IDENTIFIER!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Identifier"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

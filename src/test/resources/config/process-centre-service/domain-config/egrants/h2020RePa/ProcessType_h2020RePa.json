@@ -1,0 +1,17 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Reporting and Payment"
+    },
+    "defaultLanguage": "en"
+  },
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC.COMP.GM.egrants-access"
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114889"
+}

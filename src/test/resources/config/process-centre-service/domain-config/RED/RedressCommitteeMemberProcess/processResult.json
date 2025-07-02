@@ -1,0 +1,87 @@
+{
+	"header": {
+		"title": "${description} - ${processVariables.CALL_ABBREVIATION}"
+	},
+	"details": {
+		"rows": [
+			{
+				"columns": [
+					{
+						"value": "${processVariables.COMMITTEE_ID}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Committee ID"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.CALL_IDENTIFIER}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CALL_DESCRIPTION}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call Description"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.CALL_DEADLINE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call Deadline"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			},
+			{
+				"columns": [
+					{
+						"value": "${processVariables.CALL_ABBREVIATION}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Call Identifier"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.RESPONSIBLE_UNIT}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Responsible unit"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			}
+		]
+	}
+}

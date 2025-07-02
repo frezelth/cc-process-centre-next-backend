@@ -1,0 +1,24 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Redress - Proposal Flow"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "RED_PROP_FLOW.PROCESS_VIEW",
+  "defaultBusinessDomainId": "43413752",
+  "accessRights": {
+    "VIEW": [
+              {
+              "permissionId": "RED_PROP_FLOW.PROCESS_VIEW",
+              "scoped": false,
+              "scopeTypeId": null,
+              "variableName": null,
+              "responsibleOrganisationId": null
+              }
+        ]
+  },
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

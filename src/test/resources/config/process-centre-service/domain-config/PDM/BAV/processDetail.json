@@ -1,0 +1,178 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Description",
+											"fr": "Description"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${description!}",
+									"size": 6
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process type",
+											"fr": "Type process"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processTypeName!}",
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commenc� le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Termin� le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Provider",
+											"fr": "Provider"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${providerId!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.PIC}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "PIC"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.LEGAL_NAME}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Legal Name"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.PO_NAME}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "PO"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.PROCESS_STATUS}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process Status"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.FEL}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "FEL"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"value": "${processVariables.JAG_BAF_REQUEST_ID}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "JAG Key"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					},
+					{
+						"id": "metroline",
+						"label": "Metroline",
+						"blocks": [
+							{
+								"type": "metroline"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

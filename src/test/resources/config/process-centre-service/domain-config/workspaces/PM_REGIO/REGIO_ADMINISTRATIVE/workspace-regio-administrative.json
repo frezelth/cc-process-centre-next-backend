@@ -1,0 +1,104 @@
+{
+  "subset": {
+    "includes": [
+      {
+        "processTypeKey": "VTS"
+      },
+      {
+        "processTypeKey": "VTS_A2"
+      },
+      {
+        "processTypeKey": "VTS_BPT"
+      },
+      {
+        "processTypeKey": "VTS_DAC7"
+      },
+      {
+        "processTypeKey": "HELLO"
+      },
+      {
+        "processTypeKey": "BYE"
+      },
+      {
+        "processTypeKey": "Regio_Training_Request"
+      }
+    ],
+    "excludes": []
+  },
+  "filters": {
+    "options": [
+      {
+        "field": "consultantFullName",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Consultant"
+      },
+      {
+        "field": "month",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Month"
+      },
+      {
+        "field": "year",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Year"
+      },
+      {
+        "field": "taxonomyPaths",
+        "dynamic": false,
+        "type": "LIST",
+        "localizedLabel": "Type",
+        "options": {
+          "data": [
+            {
+              "label": "VTS",
+              "value": "/TimeManagement/VTS"
+            },
+            {
+              "label": "VTS A2",
+              "value": "/TimeManagement/VTS_A2"
+            },
+            {
+              "label": "VTS BPT",
+              "value": "/TimeManagement/VTS_BPT"
+            },
+            {
+              "label": "VTS DAC7",
+              "value": "/TimeManagement/VTS_DAC7"
+            },
+            {
+              "label": "Regio OnBoarding",
+              "value": "/Administrative/HELLO"
+            },
+            {
+              "label": "Regio OffBoarding",
+              "value": "/Administrative/BYE"
+            },
+            {
+              "label": "Regio Training Request",
+              "value": "/Administrative/Regio_Training_Request"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": "true",
+    "portfolio": {
+      "hidden": true,
+      "collapsed": "true"
+    }
+  },
+  "navigation": {
+    "hidden": false,
+    "collapsed": "true",
+    "dynamicFilters": {
+      "hidden": false,
+      "collapsed": "true"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "configurationType" : "processLauncher",
+  "startValidDate" : "2024-05-14T17:07:32.231+00:00",
+  "path" : "CGRM/greenPostDeploy/processLauncher.json",
+  "metadataPath" : "CGRM/greenPostDeploy/processLauncher.md.json",
+  "context" : {
+    "domainKey" : "CGRM",
+    "processTypeKey" : "greenPostDeploy",
+    "providerId": "xlr"
+  }
+}

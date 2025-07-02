@@ -1,0 +1,33 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "DIGIT Document Sign process"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_ADMIN_DIGIT_EUSS_DOCUMENT_SIGN_START",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_ADMIN_DIGIT_EUSS_DOCUMENT_SIGN_START",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "hideSubprocessOfTheSameType": null
+}

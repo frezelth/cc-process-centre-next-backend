@@ -1,7 +1,6 @@
 package eu.europa.ec.cc.processcentre.process.command.converter;
 
 import com.google.protobuf.Timestamp;
-import eu.europa.ec.cc.processcentre.config.AccessRight;
 import eu.europa.ec.cc.processcentre.model.ProcessAction;
 import eu.europa.ec.cc.processcentre.model.ProcessStatus;
 import eu.europa.ec.cc.processcentre.model.VariableType;
@@ -29,7 +28,6 @@ import eu.europa.ec.cc.provider.proto.ProcessRestored;
 import eu.europa.ec.cc.provider.proto.ProcessRunningStatusChanged;
 import eu.europa.ec.cc.provider.proto.ProcessRunningStatusChanged.Status;
 import eu.europa.ec.cc.provider.proto.ProcessStateChanged;
-import eu.europa.ec.cc.variables.proto.VariableValue;
 import eu.europa.ec.cc.variables.proto.VariableValue.KindCase;
 import java.time.Instant;
 import org.mapstruct.Mapper;
@@ -50,6 +48,11 @@ public interface EventConverter {
 
   default Instant toInstant(Timestamp timestamp) {
     return ProtoUtils.timestampToInstant(timestamp);
+  }
+
+  // protobuf never deserializes to empty strings, handle it here
+  default String mapEmptyString(String string) {
+    return string != null && !string.isEmpty() ? string : null;
   }
 
   UpdateBusinessStatusQueryParam toUpdateBusinessStatus(ProcessBusinessStatusChanged event);

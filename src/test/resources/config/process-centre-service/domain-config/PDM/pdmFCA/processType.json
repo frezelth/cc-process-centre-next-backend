@@ -1,0 +1,20 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "FCA Validation"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask":null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PDM_FCA.VIEW"
+      }
+    ]
+  },
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

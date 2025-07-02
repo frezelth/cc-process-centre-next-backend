@@ -1,0 +1,188 @@
+{
+  "monitoredVariableNames": "responsibleOrganization",
+   "editors": [
+    {
+      "type": "role",
+      "role": "INVBO.V1.00.NON_ELECTRONIC_INVOICE.START",
+      "scopeTypeId": "CRF-Hierarchy",
+      "scopeId": "${processVariables.leadDG}",
+      "secundaApplicationId": "PROCESS_CENTRE",
+      "organisation": null
+    }
+  ],
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "expandable": true,
+        "header": {
+          "collapsed": false,
+          "title": "Invoices and Payments Workflow",
+          "subtitle": null
+        },
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process type",
+                      "fr": "Type process"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "Invoices and Payments Workflow",
+                  "size": 6
+                },
+                {
+                  "type": "TIMESTAMP",
+                  "label": {
+                    "translations": {
+                      "en": "Due date"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "displayFormat": "DATE",
+                  "value": "<#if processVariables.due_date??><#if processVariables.due_date?is_number>${processVariables.due_date?c}<#else><#if !processVariables.due_date?contains('-')>${processVariables.due_date?number?c}<#else><#if processVariables.due_date?contains('T')>${processVariables.due_date?datetime.iso?long?c}<#else>${processVariables.due_date?date.iso?long?c}</#if></#if></#if></#if>",
+                  "styleValues": [
+                    {
+                      "field": "VALUE",
+                      "parameter": "COLOR",
+                      "value": "${(processVariables.due_date <= .now?date?long + 10 * 24 * 60 * 60 * 1000)?then('danger', 'default')}"
+                    }
+                  ]
+                }
+
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on",
+                      "fr": "Commencé le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on",
+                      "fr": "Terminé le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible",
+                      "fr": "Responsable"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${responsible!}"
+                },
+                {
+                  "type": "TEXT",
+                  "label": {
+                    "translations": {
+                      "en":"Previous task outcome"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(processVariables.BUSINESS_OUTCOME)!}",
+                  "styleValues": [
+                    {
+                      "field": "VALUE",
+                      "parameter": "COLOR",
+                      "value": null
+                    }
+                  ]
+                }
+
+
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "invbo_metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline",
+                "title": "Invoices and Payments Workflow",
+                "collapsed": false,
+                "config": {
+                  "replaceBlockIdWithParticipantId": true
+                }
+              }
+            ]
+          },
+          {
+            "id": "processHistory",
+            "label": "Completed tasks",
+            "blocks": [
+              {
+                "type": "processHistory",
+                "config": {
+                  "replaceBlockIdWithParticipantId": false,
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": true,
+                  "showCancelledTasks": false,
+                  "showActions": true,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": true,
+                  "showTaskComments": true,
+                  "flatView": false,
+                  "fullTree": false,
+                  "creationDateSorting": "ASC",
+                  "highlightedOutcomes": {
+                    "success": [
+                      "Continue"
+                    ],
+                    "warning": [
+                      "Return To Previous Tasks"
+                    ],
+                    "danger": [
+                      "Return To Beginning"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "invbo_support_form",
+            "label": "Support",
+            "blocks": [
+              {
+                "type": "form",
+                "validityCheckRequired": false,
+                "config": {
+                  "replaceBlockIdWithParticipantId": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

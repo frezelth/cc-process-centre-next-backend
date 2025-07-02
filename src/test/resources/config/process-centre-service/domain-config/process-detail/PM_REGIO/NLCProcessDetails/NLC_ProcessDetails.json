@@ -1,0 +1,198 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"header": {
+					"title": "${processTypeName!}"
+				},
+				"expandable": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Description",
+											"fr": "Description"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${description!}",
+									"size": 6
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process type",
+											"fr": "Type process"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processTypeName!}",
+									"size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Provider",
+											"fr": "Provider"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${providerId!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible",
+											"fr": "Responsable"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${responsible!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process variables",
+											"fr": "Variables du process"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariablesString!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "metroline"
+							},
+							{
+								"type": "processHistory",
+								"config": {
+									"showServiceTasks": false,
+									"showServiceTasksToggle": false,
+									"showProcessDescription": true,
+									"showEmptyProcesses": false,
+									"flatView": false
+								}
+							}
+						]
+					},
+					{
+						"id": "relatedItems",
+						"label": "Related items",
+						"blocks": [
+							{
+								"type": "relatedItems"
+							}
+						]
+					},
+					{
+						"id": "relatedProcesses",
+						"label": "Related processes",
+						"blocks": [
+							{
+								"type": "relatedProcesses"
+							}
+						]
+					},
+					{
+						"id": "documentList",
+						"label": "Document list",
+						"blocks": [
+							{
+								"type": "documentList"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication",
+								"config": {
+									"useModal": true,
+									"maxLength": 250
+								}
+							}
+						]
+					},
+					{
+						"id": "decideisc",
+						"label": "Interservice Consultation",
+						"blocks": [
+							{
+								"type": "decideisc",
+								"config": {
+									"useModal": false
+								}
+							}
+						]
+					},
+					{
+						"id": "esifcons",
+						"label": "Internal Consultations",
+						"blocks": [
+							{
+								"type": "esifcons",
+								"config": {
+									"useModal": false
+								}
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

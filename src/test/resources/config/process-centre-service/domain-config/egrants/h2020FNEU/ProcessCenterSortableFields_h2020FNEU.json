@@ -1,0 +1,125 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "START DATE"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ProcessReference",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ACRONYM",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Acronym"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.Call",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.Programme",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Programme"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_UNIT",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Responsible Unit"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_ID",
+      "propertyOrder": 8,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project ID"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_OFFICER_FULL_NAME",
+      "propertyOrder": 10,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "PO"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PIC_LEGAL_NAME",
+      "propertyOrder": 11,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Organisation"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PIC",
+      "propertyOrder": 12,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "PIC"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_CASE_TYPE_DISPLAY_NAME",
+      "propertyOrder": 13,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Business Case Type"
+        }
+      ]
+    }
+  ]
+}

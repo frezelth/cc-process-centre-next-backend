@@ -1,0 +1,222 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "GAP Framework Partnership Agreement - ${processVariables.ProcessReference}"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.BUSINESS_KEY!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Project Id"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.ACRONYM!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Acronym"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.CALL_ABBREVIATION_WITH_CUTOFF_DATE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Call"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.RESPONSIBLE_UNIT!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Unit"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.PROJECT_OFFICER_FULL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "PO"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.FINANCIAL_OFFICER_FULL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "FO"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.LEGAL_OFFICER_FULL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "LO"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.ORIGINAL_RANKING_RESULT!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ranking"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "clock",
+      "blocks": [
+        {
+          "type": "clock",
+          "config": {
+            "entityId": "${CLOCK_ID}"
+          }
+        }
+      ]
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showCancelledTasks": true,
+                  "showProcessDescription": false,
+                  "showEmptyProcesses": false,
+                  "flatView": false,
+                  "creationDateSorting": "DESC"
+                }
+              }
+            ]
+          },
+          {
+            "id": "metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline"
+              }
+            ]
+          },
+          {
+            "id": "documents",
+            "label": "Documents",
+            "blocks": [
+              {
+                "type": "documentList"
+              }
+            ]
+          },
+          {
+            "id": "internal_communication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "internalCommunication",
+                "config": {
+                  "useModal": true,
+                  "maxLength": 250
+                }
+              }
+            ]
+          },
+          {
+            "id": "relatedItems",
+            "label": "Related items",
+            "blocks": [
+              {
+                "type": "relatedItems"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "monitoredVariableNames": "ProcessReference,CLOCK_ID,COMMISSION_DECISION_ARES_REF,RESPONSIBLE_UNIT,PROJECT_ID"
+}

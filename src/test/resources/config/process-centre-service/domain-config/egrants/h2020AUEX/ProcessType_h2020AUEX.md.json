@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context": {
+    "domainKey": "Audits",
+    "providerId": "GRANTSCompass",
+    "processTypeKey": "h2020AUEX"
+  }
+}

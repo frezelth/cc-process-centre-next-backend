@@ -1,0 +1,87 @@
+{
+  "header": {
+    "title": "Evaluation Result Letter Batch"
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Process Reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ProcessReference!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Acronym"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ACRONYM!}"
+        }
+      ]
+    },
+    "expanded": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Batch Reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.BATCH_REFERENCE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Batch Type"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.BATCH_TYPE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Unit"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.RESPONSIBLE_UNIT!}"
+        },
+        {
+          "type": "TIMESTAMP",
+          "label": {
+            "translations": {
+              "en": "Start date"
+            },
+            "defaultLanguage": "en"
+          },
+          "displayFormat": "DATE",
+          "value": "${startDate!}"
+        },
+        {
+          "type": "TIMESTAMP",
+          "label": {
+            "translations": {
+              "en": "End date"
+            },
+            "defaultLanguage": "en"
+          },
+          "displayFormat": "DATE",
+          "value": "${endDate!}"
+        }
+      ]
+    }
+  }
+}

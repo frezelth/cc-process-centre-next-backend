@@ -1,0 +1,158 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"header": {
+					"title": "Legacy Procedure: ${processVariables.ProcessReference!}",
+					"subtitle": {
+						"value": "${processVariables.PROCEDURE_TITLE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Title"
+							},
+							"defaultLanguage": "en"
+						}
+					}
+				},
+				"showAttributes": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Start date",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "End date",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Status",
+											"fr": "Status"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processStatus!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Implementation Plan Id",
+											"fr": "Implementation Plan Id"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.IMPLEMENTATION_PLAN_ID!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Implementation Plan Reference",
+											"fr": "Implementation Plan Reference"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.IMPLEMENTATION_PLAN_SLOT_REF_ID!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process Type"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.PROCESS_TYPE_ABBREVIATION!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Implementing System",
+											"fr": "Implementing System"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.IMPLEMENTING_SYSTEM!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					},
+					{
+						"id": "metroline",
+						"label": "Metroline",
+						"blocks": [
+							{
+								"type": "metroline"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication",
+								"config": {
+									"useModal": true,
+									"maxLength": 250
+								}
+							}
+						]
+					},
+					{
+						"id": "relatedItems",
+						"label": "Related items",
+						"blocks": [
+							{
+								"type": "relatedItems"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

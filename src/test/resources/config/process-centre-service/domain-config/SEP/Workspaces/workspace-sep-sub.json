@@ -1,0 +1,86 @@
+{
+  "subset": {
+    "includes": [
+      { "domainKey": "SEP Submission" }
+    ],
+    "excludes": []
+  },
+  "workload": {
+    "processTypeIds": [
+      "SEPCompass:SEP Submission:sepsubCallSetup"
+    ],
+    "sorting": [
+      {
+        "field": "startedOn",
+        "ascending": true,
+        "localizedLabel": "Start date"
+      }
+    ]
+  },
+  "filters": {
+    "options": [
+      {
+        "field": "CALL_ABBREVIATION",
+        "type": "TEXT",
+        "localizedLabel": "Call"
+      },
+      {
+        "field": "CALL_PROGRAMME_ID",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Programme"
+      },
+      {
+        "field": "CALL_TWO_STAGES",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Two stages?"
+      },
+      {
+        "field": "CALL_MULTIPLE_CUTOFF",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Multiple cut-offs?"
+      },
+      {
+        "field": "CALL_COORDINATOR",
+        "type": "TEXT",
+        "localizedLabel": "Coordinator"
+      },
+      {
+        "field": "CALL_COORDINATOR_BACKUP",
+        "type": "TEXT",
+        "localizedLabel": "Coordinator backup"
+      },
+      {
+        "field": "DEVELOPMENT_NEEDED",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Customisation needed?"
+      },
+      {
+        "field": "FILL_IN_ANNEX_COMPLETED",
+        "dynamic": true,
+        "type": "LIST",
+        "localizedLabel": "Customisation completed?"
+      }
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": "true",
+    "portfolio": {
+      "hidden": true,
+      "collapsed": "true"
+    }
+  },
+  "navigation": {
+    "hidden": true,
+    "collapsed": "true",
+    "dynamicFilters": {
+      "hidden": true,
+      "collapsed": "true"
+    }
+  }
+}
+

@@ -1,0 +1,45 @@
+{
+  "header": {
+    "title": "${processTypeName} - CCI Title: ${processVariables.CCI}",
+    "subtitle": {
+      "value": "${processVariables.CCI} ",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": ""
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${processVariables.CCI}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "CCI"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${processVariables.currentResponsibleUnit}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Responsible Unit"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

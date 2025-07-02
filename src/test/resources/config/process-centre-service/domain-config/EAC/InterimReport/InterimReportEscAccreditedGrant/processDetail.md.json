@@ -1,0 +1,8 @@
+{
+  "context" : {
+    "providerId" : "camundaeac",
+    "domainKey" : "erasmusplus",
+    "processTypeKey" : "InterimReportEscAccreditedGrant"
+  },
+  "configurationType" : "processDetail"
+}

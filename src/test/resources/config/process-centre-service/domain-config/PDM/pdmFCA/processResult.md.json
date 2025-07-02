@@ -1,0 +1,8 @@
+{
+	"configurationType": "processResult",
+	"context": {
+		"providerId": "PDMCompass",
+		"domainKey": "Compass Processes PDM",
+		"processTypeKey": "pdmFCA"
+	}
+}

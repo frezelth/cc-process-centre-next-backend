@@ -1,0 +1,34 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Register all documents"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_HiddenProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_PM_REGIO_HiddenProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114891",
+  "specificAttributesDefinitions": [],
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

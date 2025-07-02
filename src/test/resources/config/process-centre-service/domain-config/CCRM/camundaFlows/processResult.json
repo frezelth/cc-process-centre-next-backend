@@ -1,0 +1,55 @@
+{
+  "header" : {
+    "title" : "Release ${processVariables.RELEASE_NAME!}"
+  },
+  "sections" : {
+    "header" : {
+      "properties" : [
+     {
+        "type" : "TIMESTAMP",
+        "label" : {
+          "translations" : {
+            "en" : "Start date"
+          },
+          "defaultLanguage" : "en"
+        },
+        "value" : "${startDate!}"
+      },
+      {
+         "type" : "TEXT",
+         "label" : {
+           "translations" : {
+             "en" : "Environment"
+           },
+           "defaultLanguage" : "en"
+         },
+         "value" : "${processVariables.CURRENT_ENVIRONMENT!}"
+       }
+     ]
+    },
+    "expanded" : {
+      "properties" : [
+      {
+        "type" : "TEXT",
+        "label" : {
+          "translations" : {
+            "en" : "Business domain"
+          },
+          "defaultLanguage" : "en"
+        },
+        "value" : "${processVariables.BUSINESS_DOMAIN!}"
+      },
+      {
+        "type" : "TEXT",
+        "label" : {
+          "translations" : {
+            "en" : "Jira issues"
+          },
+          "defaultLanguage" : "en"
+        },
+        "value" : "${processVariables.JIRA_ISSUES!}"
+      }
+    ]
+    }
+  }
+}

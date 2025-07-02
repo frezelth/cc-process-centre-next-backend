@@ -1,0 +1,12 @@
+{
+  "accessRights" : { },
+  "showServiceTasks" : true,
+  "showServiceTasksToggle" : true,
+  "showCancelledTasks" : true,
+  "showActions" : true,
+  "showProcessDescription" : false,
+  "showEmptyProcesses" : false,
+  "showTaskComments" : true,
+  "flatView" : false,
+  "fullTree" : true
+}

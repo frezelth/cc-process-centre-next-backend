@@ -26,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;
@@ -50,7 +51,8 @@ public class ECHierarchyService {
   // Incidentally, the EH Hierarchy size is currently close to 4,000 entries (as of 2025).
   private static final int CACHE_INITIAL_CAPACITY = 4096;
 
-  public ECHierarchyService(CcmRestService ccmRestService) {
+  public ECHierarchyService(
+      @Autowired(required = false) CcmRestService ccmRestService) {
     this.ccmRestService = ccmRestService;
   }
 

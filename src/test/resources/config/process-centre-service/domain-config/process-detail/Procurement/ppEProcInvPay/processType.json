@@ -1,0 +1,26 @@
+{
+"processTypeKey": "ppEProcInvPay",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Invoice & Payment"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_EPROC_INVPAY_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_EPROC_INVPAY_ViewProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

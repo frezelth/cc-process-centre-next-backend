@@ -1,0 +1,8 @@
+{
+  "configurationType": "processLauncher",
+  "context": {
+    "providerId": "camundadigit",
+    "domainKey": "digit",
+    "processTypeKey": "orf_camunda"
+  }
+}

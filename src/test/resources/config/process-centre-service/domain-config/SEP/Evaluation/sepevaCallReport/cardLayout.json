@@ -1,0 +1,71 @@
+{
+  "header": {
+    "title": "${description}",
+    "subtitle": {
+      "value": "${(processVariables.CALL_EVALUATION_SESSION_NAME)!}",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Evaluation session"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${(processVariables.CALL_ABBREVIATION)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Call"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(processVariables.CALL_SUBMISSION_DEADLINE)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Submission deadline"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${(processVariables.CALL_PROGRAMME_ABBREVIATION)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Programme"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(processVariables.CALL_EVALUATION_STAGE)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Evaluation stage"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

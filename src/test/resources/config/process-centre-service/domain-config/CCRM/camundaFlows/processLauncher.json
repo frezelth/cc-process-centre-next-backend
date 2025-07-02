@@ -1,0 +1,105 @@
+{
+  "responsibleUserDisplayed" : false,
+  "portfolioItemHidden": true,
+  "variables": [
+    {
+      "name": "releaseTitle",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "backend-artifact-id",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "backend-artifact-version",
+      "value": "0.0.0",
+      "type": "STRING"
+    },
+    {
+      "name": "nexus-artifact-id",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "nexus-group-id",
+      "value": "eu.europa.ec.cc",
+      "type": "STRING"
+    }
+  ],
+  "portfolioItemRequired" : false,
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "releaseTitle",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Release title"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "backend-artifact-id",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "BPMN Bundle"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "backend-artifact-version",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "BPMN Bundle Version"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "nexus-artifact-id",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Nexus artifactId"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "nexus-group-id",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Nexus groupId"
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "remoteId": "",
+    "prodDeploymentMode": "",
+    "doAutomatic": ""
+  },
+  "portfolioItemCriteria" : { }
+}

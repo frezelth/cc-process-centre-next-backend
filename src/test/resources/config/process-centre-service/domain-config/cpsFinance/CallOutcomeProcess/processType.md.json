@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context": {
+    "providerId": "camundaegrants",
+    "domainKey": "eGrants",
+    "processTypeKey": "CallOutcomeProcess"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "header": {
+    "title": "Legal Entity Status Update",
+    "subtitle": {
+      "value": "${processVariables.CONTRACT_TITLE}",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Title"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${processVariables.CONTRACT_NO!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Contract number"
+              },
+              "defaultLanguage": "en"
+            }
+          },
+          {
+            "value": "${responsible!} ${processVariables.RESPONSIBLE_UNIT!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Responsible service"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 9
+          },
+          {
+            "value": "${startDate!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Start date"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 3
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${processVariables.PROCEDURE_BUSINESS_ID!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Procedure Reference"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 9
+          }
+        ]
+      }
+    ]
+  }
+}

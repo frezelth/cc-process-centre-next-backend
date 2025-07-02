@@ -1,0 +1,59 @@
+{
+  "sortableFields": [
+    {
+      "field": "specificAttributes.summa_inv_reference_for_representation",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Invoice number/reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.due_date",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Due date"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_OUTCOME",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Previous task outcome"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.header_text",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Header Text"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.bp_name",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Business partner"
+        }
+      ]
+    }
+  ]
+}

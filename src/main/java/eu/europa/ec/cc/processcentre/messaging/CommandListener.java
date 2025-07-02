@@ -1,8 +1,9 @@
 package eu.europa.ec.cc.processcentre.messaging;
 
-import eu.europa.ec.cc.configadmin.event.proto.RefreshConfiguration;
+import com.google.protobuf.InvalidProtocolBufferException;
 import eu.europa.ec.cc.message.proto.CCMessage;
 import eu.europa.ec.cc.processcentre.process.command.service.ProcessConfigService;
+import eu.europa.ec.cc.processcentre.proto.command.RefreshProcessConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,13 +21,14 @@ public class CommandListener {
   }
 
   @KafkaListener(
-      topics = "${kafka.event-topic.name}",
-      id = "processcentre.ccevent.listener",
+      topics = "${kafka.command-topic.name}",
+      id = "processcentre.command.listener",
       idIsGroup = false
   )
-  public void on(CCMessage record){
-    if (record.getPayload().is(RefreshConfiguration.class)){
-
+  public void on(CCMessage record) throws InvalidProtocolBufferException {
+    if (record.getPayload().is(RefreshProcessConfig.class)){
+      RefreshProcessConfig refreshProcessConfig = record.getPayload().unpack(RefreshProcessConfig.class);
+      processConfigService.handle(refreshProcessConfig);
     }
   }
 

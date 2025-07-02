@@ -1,0 +1,54 @@
+{
+  "variables": [
+    {
+      "name": "process",
+      "value": "CLO2000",
+      "type": "STRING"
+    },
+    {
+      "name": "fpTechnicalDomain",
+      "value": "SHAREDMANAGEMENT",
+      "type": "STRING"
+    },
+    {
+      "name": "fund",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "serviceTasksTopic",
+      "value": "regio-process-manager",
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "context": {
+        "inputs": {
+          "selectOptions": [
+            {
+              "id": "ERDF",
+              "value": "ERDF"
+            },
+            {
+              "id": "CF",
+              "value": "CF"
+            }
+          ],
+          "disabled": false,
+          "label": "Fund",
+          "required": true
+        },
+        "type": "_uxSelectInput",
+        "key": "fund"
+      },
+      "layout": {
+        "class": "col-12"
+      }
+    }
+  ],
+  "formModel": {
+    "fund": ""
+  }
+}

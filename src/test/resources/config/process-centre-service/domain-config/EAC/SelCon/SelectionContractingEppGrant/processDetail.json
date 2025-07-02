@@ -1,0 +1,289 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "expandable": true,
+        "header": {
+          "title": "Project details - ${processVariables.PROJECT_CODE}",
+          "subtitle": null
+        },
+        "sections": {
+          "main": {
+            "properties": [
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Project Code"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.PROJECT_CODE)!'-'}",
+                "link": "/eac-tools/project/${processVariables.PROJECT_ID}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Title"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.TITLE)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Submission ID"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.SUBMISSION_ID)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Form ID"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.FORM_ID)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Status"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.STATUS)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Lifecycle stage"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.STAGE)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Action type"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.KEY_ACTION)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Organisation ID"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.ORGANIZATION_ID)!'-'}",
+                "link": "/eac-tools/organisation/${processVariables.ORGANIZATION_ID}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Legal name (original language)"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.BUSINESS_NAME)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Legal name (English)"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.LEGAL_NAME)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Submission date"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.SUBMISSION_DATE)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Duration"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.DURATION)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Call"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.CALL)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Round"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.ROUND)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Project Owner"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.PROJECT_OWNER_NAME)!'-'}"
+              },
+              {
+                "type": "TEXT",
+                "label": {
+                  "urn": null,
+                  "translations": {
+                    "en": "Organisation risk level"
+                  },
+                  "defaultLanguage": "en"
+                },
+                "value": "${(processVariables.RISK_LEVEL_DESCRIPTION)!'-'}"
+              }
+            ]
+          },
+          "supplementary": {
+            "properties": []
+          }
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline"
+              }
+            ]
+          },
+          {
+            "id": "application-details",
+            "label": "Application",
+            "blocks": [
+              {
+                "type": "pmm-application-details",
+                "config": {
+                  "qualifier": "pmm-application-details01"
+                }
+              }
+            ]
+          },
+          {
+            "id": "documents",
+            "label": "Annexes",
+            "blocks": [
+              {
+                "type": "pmm-data-capture",
+                "config": {
+                  "qualifier": "pmm-data-capture00",
+                  "component": "cc-pmm-documents",
+                  "businessKey": "PROJECT_ID",
+                  "type": "project"
+                }
+              }
+            ]
+          },
+          {
+            "id": "internalCommunication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "pmm-data-capture",
+                "config": {
+                  "qualifier": "pmm-data-capture01",
+                  "component": "cc-pmm-internal-communication",
+                  "businessKey": "PROJECT_ID",
+                  "type": "project"
+                }
+              }
+            ]
+          },
+          {
+            "id": "amendment",
+            "label": "Amendment",
+            "blocks": [
+              {
+                "type": "pmm-data-capture",
+                "config": {
+                  "qualifier": "pmm-data-capture02",
+                  "component": "cc-pmm-process-history",
+                  "businessKey": "PROJECT_ID",
+                  "historyType": "amendment"
+                }
+              }
+            ]
+          },
+          {
+            "id": "processHistory",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "pmm-data-capture",
+                "config": {
+                  "qualifier": "pmm-data-capture03",
+                  "component": "cc-pmm-process-history",
+                  "businessKey": "PROJECT_ID",
+                  "historyType": "project"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "responsibleUserDisplayed": false,
+  "variables": [
+    {
+      "name": "FLOW_TYPE",
+      "value": null,
+      "type": "LIST",
+      "required": true
+    },
+    {
+      "name": "document_id",
+      "value": null,
+      "type": "STRING",
+      "required": true
+    }
+  ],
+  "portfolioItemRequired": false,
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "context": {
+        "inputs": {
+          "selectOptions": [
+            {
+              "id": "RSO_EUSS",
+              "value": "OIA/OVA Signature"
+            },
+            {
+              "id": "DIGIT_SM",
+              "value": "PM/OIA/OVA Signature"
+            }
+          ],
+          "disabled": false,
+          "label": "Flow type",
+          "required": false
+        },
+        "type": "_uxSelectInput",
+        "key": "FLOW_TYPE"
+      },
+      "layout": {
+        "class": "col-12"
+      }
+    },{
+      "fieldType": "formControl",
+      "context": {
+        "inputs": {
+          "disabled": false,
+          "maxLengthValidationErrorMessage": "Too many characters",
+          "label": "PDF File name",
+          "maxLengthCounter": true,
+          "required": true,
+          "maxLength": 100
+        },
+        "type": "_uxTextInput",
+        "key": "document_id",
+        "validators": {
+          "validatorFn": [
+            {
+              "valFnId": "required"
+            }
+          ]
+        }
+      },
+      "layout": {
+        "class": "col-12"
+      }
+    }
+  ],
+  "portfolioItemHidden": true,
+  "formModel": {
+    "document_id": "",
+    "FLOW_TYPE": ""
+  }
+}
+

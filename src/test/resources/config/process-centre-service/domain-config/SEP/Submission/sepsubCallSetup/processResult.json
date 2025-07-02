@@ -1,0 +1,123 @@
+{
+  "header": {
+    "title": "Call Setup - ${processVariables.CALL_ABBREVIATION!}",
+    "subtitle": {
+      "value": "${processVariables.CALL_DESCRIPTION!}",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Description"
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${(processVariables.CALL_PROGRAMME_ID)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Call programme"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(processVariables.CALL_OPENING_DATE)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Opening date"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${(processVariables.CALL_MULTIPLE_CUTOFF)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Multiple cutoffs"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(processVariables.CALL_TWO_STAGES)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Two stages"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${(processVariables.DEVELOPMENT_NEEDED)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Responsible Unit"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(processVariables.RESPONSIBLE_UNIT)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Responsible Unit"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${(startedOn?datetime)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Started on"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${(endedOn?datetime)!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Ended on"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

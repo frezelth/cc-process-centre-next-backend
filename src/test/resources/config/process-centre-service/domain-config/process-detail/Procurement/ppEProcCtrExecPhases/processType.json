@@ -1,0 +1,26 @@
+{
+"processTypeKey": "ppEProcCtrExecPhases",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Contract next phase"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_EPROC_CTR_CLS_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_EPROC_CTR_CLS_ViewProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

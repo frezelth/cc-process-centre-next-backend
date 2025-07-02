@@ -1,0 +1,8 @@
+{
+  "configurationType": "processLauncher",
+  "context": {
+    "providerId": "camundapm",
+    "domainKey": "PM_REGIO",
+    "processTypeKey": "CLO2000"
+  }
+}

@@ -5,6 +5,7 @@ import static java.util.Collections.emptyList;
 import eu.europa.ec.cc.processcentre.security.SecundaScope;
 import eu.europa.ec.cc.processcentre.security.SecurityRepository;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +23,8 @@ public class MockSecurityRepositoryImpl implements SecurityRepository {
     return emptyList();
   }
 
+  @Override
+  public Set<String> findTasks(String username) {
+    return Set.of();
+  }
 }

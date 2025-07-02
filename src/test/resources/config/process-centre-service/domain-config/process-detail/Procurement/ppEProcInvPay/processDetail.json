@@ -1,0 +1,147 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"header": {
+					"title": "Invoice & Payment: ${processVariables.ProcessReference!}",
+					"subtitle": {
+						"value": "${processVariables.ProcessReference!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Process Reference"
+							},
+							"defaultLanguage": "en"
+						}
+					}
+				},
+				"showAttributes": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Start date",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "End date",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Status",
+											"fr": "Status"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processStatus!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Unit",
+											"fr": "Responsable Unit"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_UNIT!}"
+								}
+							]
+						},
+						{
+							"columns": [
+							{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Process Reference"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.ProcessReference!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Invoice Number",
+											"fr": "Facture Numero"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.INVOICE_NUMBER!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					},
+					{
+						"id": "metroline",
+						"label": "Metroline",
+						"blocks": [
+							{
+								"type": "metroline"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication",
+								"config": {
+									"useModal": true,
+									"maxLength": 250
+								}
+							}
+						]
+					},
+					{
+						"id": "relatedItems",
+						"label": "Related items",
+						"blocks": [
+							{
+								"type": "relatedItems"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

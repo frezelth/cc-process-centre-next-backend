@@ -1,0 +1,34 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Amend Programme for REGIO "
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_ViewProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_PM_REGIO_CreateProcess_PRAM_REGIO",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114891",
+  "specificAttributesDefinitions": [],
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

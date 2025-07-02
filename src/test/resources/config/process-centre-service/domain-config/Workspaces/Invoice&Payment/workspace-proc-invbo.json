@@ -1,0 +1,54 @@
+{
+  "subset": {
+    "includes": [
+      { "providerId": "camundacumulus", "domainKey": "cumulus", "processTypeKey": "EPROC.NON_ELECTRONIC_INVOICE_FLOW" }
+    ],
+    "excludes": []
+  },
+  "workload": {
+    "processTypeIds": [
+      "camundacumulus:cumulus:EPROC.NON_ELECTRONIC_INVOICE_FLOW"
+    ],
+    "sorting": [
+      {
+        "field": "startedOn",
+        "ascending": true,
+        "localizedLabel": "Start date"
+      }
+    ]
+  },
+  "filters": {
+    "options": [
+      {
+        "field": "taxonomyPaths",
+        "dynamic": false,
+        "type": "LIST",
+        "localizedLabel": "Type",
+        "options": {
+          "data": [
+            {
+              "label": "Invoices and Payments Workflow",
+              "value": "/ProcessCentre/RELEX/ppNonEProcInvPay"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "quickFilters": {
+    "hidden": false,
+    "collapsed": "false",
+    "portfolio": {
+      "hidden": true,
+      "collapsed": "true"
+    }
+  },
+  "navigation": {
+    "hidden": false,
+    "collapsed": "true",
+    "dynamicFilters": {
+      "hidden": false,
+      "collapsed": "true"
+    }
+  }
+}

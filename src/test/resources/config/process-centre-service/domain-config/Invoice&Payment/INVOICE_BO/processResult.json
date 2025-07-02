@@ -1,0 +1,70 @@
+{
+  "header": {
+    "title": "${processTypeName!}"
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TIMESTAMP",
+          "label": {
+            "translations": {
+              "en": "Due date"
+            },
+            "defaultLanguage": "en"
+          },
+          "displayFormat": "DATE",
+          "value": "<#if processVariables.due_date??><#if processVariables.due_date?is_number>${processVariables.due_date?c}<#else><#if !processVariables.due_date?contains('-')>${processVariables.due_date?number?c}<#else><#if processVariables.due_date?contains('T')>${processVariables.due_date?datetime.iso?long?c}<#else>${processVariables.due_date?date.iso?long?c}</#if></#if></#if></#if>",
+          "styleValues": [
+            {
+              "field": "VALUE",
+              "parameter": "COLOR",
+              "value": "${(processVariables.due_date <= .now?date?long + 10 * 24 * 60 * 60 * 1000)?then('danger', 'default')}"
+            }
+          ]
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Invoice number/reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${(processVariables.summa_inv_reference_for_representation)!}"
+        },{
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Business partner"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${(processVariables.bp_name)!}"
+        },{
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Header text"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${(processVariables.header_text)!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en":"Previous task outcome"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${(processVariables.BUSINESS_OUTCOME)!}"
+        }
+      ]
+    },
+    "expanded": {
+      "properties": []
+    }
+  }
+}

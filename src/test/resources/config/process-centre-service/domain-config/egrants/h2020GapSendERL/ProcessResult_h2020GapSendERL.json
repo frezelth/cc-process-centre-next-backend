@@ -1,0 +1,115 @@
+{
+  "header": {
+    "title": "GAP Send Evaluation Result Letter"
+  },
+  "sections": {
+    "header": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Process Reference"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ProcessReference!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Acronym"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.ACRONYM!}"
+        }
+      ]
+    },
+    "expanded": {
+      "properties": [
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Project Id"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.PROJECT_ID!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Call"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.CALL_ABBREVIATION_WITH_CUTOFF_DATE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Unit"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.RESPONSIBLE_UNIT!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "PO"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.PROJECT_OFFICER_FULL_NAME!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Submission stage"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.SUBMISSION_STAGE!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Evaluation step"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${processVariables.EVALUATION_STEP!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "Start date"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${startDate!}"
+        },
+        {
+          "type": "TEXT",
+          "label": {
+            "translations": {
+              "en": "End date"
+            },
+            "defaultLanguage": "en"
+          },
+          "value": "${endDate!}"
+        }
+      ]
+    }
+  }
+}

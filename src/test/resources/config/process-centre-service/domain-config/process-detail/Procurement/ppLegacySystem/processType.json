@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppLegacySystem",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Legacy systems"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_LEGACY_SYSTEM_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_LEGACY_SYSTEM_ViewProcess",
+        "scopeTypeId": "PROCEDURE",
+        "scopeId": "${processVariables.PROCEDURE_ID}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

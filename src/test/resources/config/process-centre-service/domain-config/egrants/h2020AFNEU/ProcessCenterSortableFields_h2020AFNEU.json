@@ -1,0 +1,136 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "START DATE"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ProcessReference",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ACRONYM",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Acronym"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.FRAMEWORK_DISPLAY_NAME",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Framework Programme"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_DG_DISPLAY_NAME",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "RDG"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDIT_BATCH",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Audit Batch"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDIT_FILE_ID",
+      "propertyOrder": 8,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Audit Id"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDIT_REFERENCE",
+      "propertyOrder": 9,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Audit Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDIT_TYPE_NAME",
+      "propertyOrder": 10,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Audit Type"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.AUDITED_PIC",
+      "propertyOrder": 11,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Audited Pic"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.LEGAL_NAME",
+      "propertyOrder": 12,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Legal Name"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_CASE_TYPE_DISPLAY_NAME",
+      "propertyOrder": 13,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Business Case Type"
+        }
+      ]
+    }
+  ]
+}

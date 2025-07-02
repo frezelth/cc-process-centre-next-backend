@@ -1,0 +1,8 @@
+{
+  "context": {
+    "providerId": "camundacumulus",
+    "domainKey": "cumulus",
+    "processTypeKey": "EPROC.NON_ELECTRONIC_INVOICE_FLOW"
+  },
+  "configurationType": "processDetail"
+}

@@ -1,0 +1,24 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Call Outcome Flow"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "CallOutcomeProcess.PROCESS_VIEW",
+  "defaultBusinessDomainId": "43413752",
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "CallOutcomeProcess.PROCESS_VIEW",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

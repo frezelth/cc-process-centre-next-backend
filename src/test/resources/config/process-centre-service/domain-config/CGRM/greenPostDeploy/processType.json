@@ -1,0 +1,30 @@
+{
+  "name" : {
+    "urn" : null,
+    "translations" : {
+      "en" : "Compass Green WLS Post-deployment"
+    },
+    "defaultLanguage" : "en"
+  },
+  "secundaTask": "MONITOR_GREEN_RELEASE_PROCESSES",
+  "accessRights" : {
+    "VIEW": [
+      {
+        "permissionId": "MONITOR_GREEN_RELEASE_PROCESSES",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "MONITOR_GREEN_RELEASE_PROCESSES",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  }
+}

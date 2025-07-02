@@ -1,0 +1,8 @@
+{
+  "configurationType": "processResult",
+  "context": {
+    "providerId": "camundapm",
+    "domainKey": "PM_REGIO",
+    "processTypeKey": "WIPS2021_REGIO"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Call Setup"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Call Setup - ${processVariables.CALL_ABBREVIATION!}"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "SEP_SUB_CALL_SETUP.ADMIN",
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "SEP_SUB_CALL_SETUP.VIEW",
+        "scopeTypeId": "CALL_SETUP",
+        "scopeId": "${processVariables.REQUEST_ID}"
+      },
+      {
+        "permissionId": "SEP_SUB_CALL_SETUP.ADMIN"
+      }
+    ]
+  },
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [
+    {
+      "name": "CALL_ABBREVIATION",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Call"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 10,
+      "filtering": true
+    },
+    {
+      "name": "CALL_PROGRAMME_ID",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Call programme"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    },
+    {
+      "name": "CALL_OPENING_DATE",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Opening date"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    },
+    {
+      "name": "CALL_MULTIPLE_CUTOFF",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Multiple cutoffs"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    },
+    {
+      "name": "CALL_TWO_STAGES",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Two stages"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    },
+    {
+      "name": "DEVELOPMENT_NEEDED",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Customisation needed"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    },
+    {
+      "name": "RESPONSIBLE_UNIT",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Responsible Unit"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    }
+  ],
+  "context": {
+    "providerId": "SEPCompass",
+    "domainKey": "SEP Submission",
+    "processTypeKey": "sepsubCallSetup"
+  },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

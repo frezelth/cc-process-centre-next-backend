@@ -1,0 +1,45 @@
+{
+  "header": {
+    "title": "Regio KPI Monitoring Process - ${processVariables.CCI}",
+    "subtitle": {
+      "value": "",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": ""
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${processVariables.CCI}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "CCI"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 36
+          },
+          {
+            "value": "${processVariables.month}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Month"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

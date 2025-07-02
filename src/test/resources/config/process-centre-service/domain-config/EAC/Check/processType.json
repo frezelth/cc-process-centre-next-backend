@@ -1,0 +1,21 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Check"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Check"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": "PMM_CH.CHECK_PROCESS",
+  "accessRights": null,
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

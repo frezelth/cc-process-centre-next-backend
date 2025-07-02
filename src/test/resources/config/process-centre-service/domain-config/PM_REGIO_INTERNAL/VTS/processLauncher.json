@@ -1,0 +1,287 @@
+{
+	"providerProcessTypeKey": "VTS",
+	"variables": [
+		{
+			"name": "cc:processTypeKey",
+			"value": "VTS",
+			"type": "STRING"
+		},
+		{
+			"name": "consultant",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "consultantFullName",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "team",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "month",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "year",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+			"name": "skipPm",
+			"value": "false",
+			"type": "BOOLEAN"
+		},
+		{
+			"name": "dlFileOwner",
+			"value": "REGIO.A.4.001",
+			"type": "STRING"
+		},
+		{
+			"name": "dlFilePlan",
+			"value": "10.02.01.16",
+			"type": "STRING"
+		},
+		{
+			"name": "dlFileType",
+			"value": "004",
+			"type": "STRING"
+		},
+		{
+			"name": "dlResponsibleOrganization",
+			"value": "REGIO.A.4.001",
+			"type": "STRING"
+		},
+		{
+			"name": "dlSpecificCode",
+			"value": "2022_TIMESHEET_A4",
+			"type": "STRING"
+		}
+	],
+	"formDefinition": [
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"maxLengthValidationErrorMessage": "Too many characters",
+					"label": "Consultant logon",
+					"maxLengthCounter": true,
+					"maxLength": 20
+				},
+				"type": "_uxTextInput",
+				"key": "consultant"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"label": "Consultant full name"
+				},
+				"type": "_uxTextInput",
+				"key": "consultantFullName"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "MyWorkPlace",
+							"value": "MyWorkPlace"
+						},
+						{
+							"id": "Wave",
+							"value": "Wave"
+						},
+						{
+							"id": "BackOffice",
+							"value": "BackOffice"
+						},
+						{
+							"id": "KM",
+							"value": "KM"
+						},
+						{
+							"id": "Reporting",
+							"value": "Reporting"
+						},
+						{
+							"id": "Guidance",
+							"value": "Guidance"
+						},
+						{
+							"id": "A2",
+							"value": "A2"
+						},
+						{
+							"id": "A3",
+							"value": "A3"
+						},
+						{
+							"id": "B1",
+							"value": "B1"
+						},
+						{
+							"id": "BPT",
+							"value": "BPT"
+						},
+						{
+							"id": "DAC7",
+							"value": "DAC7"
+						},
+						{
+							"id": "IRM",
+							"value": "IRM"
+						},
+						{
+							"id": "PMO",
+							"value": "PMO"
+						},
+						{
+							"id": "QEA",
+							"value": "QEA"
+						},
+						{
+							"id": "REFORM",
+							"value": "REFORM"
+						}
+					],
+					"label": "Team"
+				},
+				"type": "_uxSelectInput",
+				"key": "team"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "January",
+							"value": "January"
+						},
+						{
+							"id": "February",
+							"value": "February"
+						},
+						{
+							"id": "March",
+							"value": "March"
+						},
+						{
+							"id": "April",
+							"value": "April"
+						},
+						{
+							"id": "May",
+							"value": "May"
+						},
+						{
+							"id": "June",
+							"value": "June"
+						},
+						{
+							"id": "July",
+							"value": "July"
+						},
+						{
+							"id": "August",
+							"value": "August"
+						},
+						{
+							"id": "September",
+							"value": "September"
+						},
+						{
+							"id": "October",
+							"value": "October"
+						},
+						{
+							"id": "November",
+							"value": "November"
+						},
+						{
+							"id": "December",
+							"value": "December"
+						}
+					],
+					"label": "Month"
+				},
+				"type": "_uxSelectInput",
+				"key": "month"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "2021",
+							"value": "2021"
+						},
+						{
+							"id": "2022",
+							"value": "2022"
+						},
+						{
+							"id": "2023",
+							"value": "2023"
+						},
+						{
+							"id": "2024",
+							"value": "2024"
+						},
+						{
+							"id": "2025",
+							"value": "2025"
+						},
+						{
+							"id": "2026",
+							"value": "2026"
+						},
+						{
+							"id": "2027",
+							"value": "2027"
+						},
+						{
+							"id": "2028",
+							"value": "2028"
+						}
+					],
+					"label": "Year"
+				},
+				"type": "_uxSelectInput",
+				"key": "year"
+			},
+			"fieldType": "formControl"
+		}
+	],
+	"formModel": {
+		"consultant": "",
+		"consultantFullName": "",
+		"month": "",
+		"year": ""
+	}
+}

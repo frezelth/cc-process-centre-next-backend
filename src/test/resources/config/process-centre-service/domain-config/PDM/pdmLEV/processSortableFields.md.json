@@ -1,0 +1,7 @@
+{
+	"context": {
+		"providerId": "PDMCompass",
+		"domainKey": "Compass Processes PDM"
+	},
+	"configurationType": "processSortableFields"
+}

@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processDetail",
+  "context" : {
+    "domainKey" : "Procurement",
+    "providerId" : "OPSYSCompass",
+	"processTypeId" : "ppEProcPpmtProcPrep"
+  }
+}

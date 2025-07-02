@@ -1,0 +1,8 @@
+{
+  "configurationType": "processDetail",
+  "context": {
+    "domainKey": "Audits",
+    "providerId": "GRANTSCompass",
+    "processTypeKey": "h2020AIFN"
+  }
+}

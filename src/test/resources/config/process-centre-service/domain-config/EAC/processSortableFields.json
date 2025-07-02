@@ -1,0 +1,212 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Create date"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Date de création"
+        }
+      ]
+    },
+    {
+      "field": "processTypeKey",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Type"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Type de Processus"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_CODE",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project Code"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Code Projet"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.TITLE",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project title"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Titre du Projet"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.SUBMISSION_ID",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Submission ID"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Identifiant de soumission"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.STATUS",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Status"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Statut"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.KEY_ACTION",
+      "propertyOrder": 7,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Action type"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Type d'action"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BUSINESS_NAME",
+      "propertyOrder": 8,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Legal name (original language)"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Nom société"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.FORM_ID",
+      "propertyOrder": 9,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Form ID"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Identifiant formulaire"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.STAGE",
+      "propertyOrder": 10,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Lifecycle stage"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "étape cycle de vie"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ORGANIZATION_ID",
+      "propertyOrder": 11,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "OID"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Identifiant Organisation"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.LEGAL_NAME",
+      "propertyOrder": 12,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Legal name (English)"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Nom légal"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.PROJECT_OWNER_NAME",
+      "propertyOrder": 13,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Project Owner"
+        },
+        {
+          "defaultTranslation": false,
+          "language": "fr",
+          "value": "Propriétaire du projet"
+        }
+      ]
+    }
+  ]
+}

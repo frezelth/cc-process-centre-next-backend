@@ -1,0 +1,31 @@
+{
+  "name" : {
+    "urn" : null,
+    "translations" : {
+      "en" : "CC Camunda BPMNs"
+    },
+    "defaultLanguage" : "en"
+  },
+  "secundaTask": "MONITOR_RELEASE_PROCESSES",
+  "defaultBusinessDomainId" : "31114891",
+  "accessRights" : {
+    "VIEW": [
+      {
+        "permissionId": "MONITOR_RELEASE_PROCESSES",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "MONITOR_RELEASE_PROCESSES",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  }
+}

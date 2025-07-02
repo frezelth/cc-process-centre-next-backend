@@ -1,0 +1,66 @@
+{
+  "providerProcessTypeKey": "regioMonitoringProcess",
+  "variables": [
+    {
+      "name": "cc:processTypeKey",
+      "value": "Regio_KPI_Monitoring",
+      "type": "STRING"
+    },
+    {
+      "name": "CCI",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "autoCompleteTimer",
+      "value": "PT15M",
+      "type": "STRING"
+    },
+    {
+      "name": "autoCompleteUser",
+      "value": "a00012jd",
+      "type": "STRING"
+    },
+    {
+      "name": "tagIds",
+      "value": "AcceptedByEC",
+      "type": "STRING"
+    },
+    {
+      "name": "dgName",
+      "value": "REGIO",
+      "type": "STRING"
+    },
+    {
+      "name": "version",
+      "value": "1",
+      "type": "STRING"
+    },
+    {
+      "name": "objectType",
+      "value": "PRG",
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "maxLengthValidationErrorMessage": "Too many characters",
+          "label": "CCI (UUID)",
+          "maxLengthCounter": true,
+          "maxLength": 40
+        },
+        "type": "_uxTextInput",
+        "key": "CCI"
+      },
+      "fieldType": "formControl"
+    }
+  ],
+  "formModel": {
+    "CCI (UUID)": ""
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "sortableFields": [
+    {
+      "field": "specificAttributes.CALL_OPENING_DATE_SORTABLE",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call opening date"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.CALL_PROGRAMME_ID",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call programme"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.CALL_ABBREVIATION",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Call"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.CALL_MULTIPLE_CUTOFF",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Multiple cutoffs"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.CALL_TWO_STAGES",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Two stages"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.DEVELOPMENT_NEEDED",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Customisation needed"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_UNIT",
+      "propertyOrder": 7,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Responsible Unit"
+        }
+      ]
+    }
+  ]
+}

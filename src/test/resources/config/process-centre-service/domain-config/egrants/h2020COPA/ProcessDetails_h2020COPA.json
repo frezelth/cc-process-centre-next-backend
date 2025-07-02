@@ -1,0 +1,248 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "Complementary Payment - ${processVariables.ProcessReference}"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.Call!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Call"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.Programme!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Programme"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.RESPONSIBLE_UNIT!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Responsible Unit"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.ProcessReference!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Process Reference"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.PROJECT_ID!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Project ID"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.ACRONYM!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Acronym"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.PROJECT_OFFICER_FULL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "PO"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.PIC_LEGAL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Organisation"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.PIC!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "PIC"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.COPA_TYPE_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Complementary Payment Type"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "clock",
+      "blocks": [
+        {
+          "type": "clock",
+          "config": {
+            "entityId": "${CLOCK_ID}"
+          }
+        }
+      ]
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showCancelledTasks": true,
+                  "showProcessDescription": false,
+                  "showEmptyProcesses": false,
+                  "flatView": false,
+                  "creationDateSorting": "DESC"
+                }
+              }
+            ]
+          },
+          {
+            "id": "metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline"
+              }
+            ]
+          },
+          {
+            "id": "documents",
+            "label": "Documents",
+            "blocks": [
+              {
+                "type": "documentList"
+              }
+            ]
+          },
+          {
+            "id": "internal_communication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "internalCommunication",
+                "config": {
+                  "useModal": true,
+                  "maxLength": 250
+                }
+              }
+            ]
+          },
+          {
+            "id": "relatedItems",
+            "label": "Related items",
+            "blocks": [
+              {
+                "type": "relatedItems"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "monitoredVariableNames": "ProcessReference,PARENT_PROCESS_REFERENCE,CLOCK_ID,RESPONSIBLE_UNIT"
+}

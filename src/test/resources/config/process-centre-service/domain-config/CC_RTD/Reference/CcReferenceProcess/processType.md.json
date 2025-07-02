@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processType",
+  "context" : {
+    "providerId": "OPSYSCompass",
+    "domainKey": "Reference",
+    "processTypeKey": "CcReferenceProcess"
+  }
+}

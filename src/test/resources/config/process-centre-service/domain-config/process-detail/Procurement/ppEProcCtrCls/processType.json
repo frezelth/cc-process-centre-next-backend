@@ -1,0 +1,25 @@
+{
+    "processTypeKey": "ppEProcCtrCls",
+      "name": {
+        "urn": null,
+        "translations": {
+          "en": "Contract Closure"
+        },
+        "defaultLanguage": "en"
+      },
+      "secundaTask": "PC_EPROC_CTR_CLS_ViewProcess",
+      "defaultBusinessDomainId": null,
+      "specificAttributesDefinitions": [],
+      "accessRights": {
+        "view": [
+          {
+            "permissionId": "PC_EPROC_CTR_CLS_ViewProcess",
+            "scopeTypeId": "PROJECT",
+            "scopeId": "${processVariables.CONTRACT_NO}",
+            "responsibleOrganisationId": null
+          }
+        ]
+       },
+      "localActionMenu": null,
+      "hideSubprocessOfTheSameType": null
+    }

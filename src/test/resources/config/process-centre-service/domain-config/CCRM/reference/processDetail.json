@@ -1,0 +1,111 @@
+{
+  "accessRights": {
+		"view": {
+			"permissionId": "MONITOR_RELEASE_PROCESSES",
+			"scoped": false
+		}
+	},
+  "blockList" : [ {
+    "type" : "infoHeader",
+    "config" : {
+      "expandable" : true,
+      "header" : {
+        "collapsed" : false,
+        "title" : "Release ${processVariables.RELEASE_NAME!}",
+        "subtitle" : null
+      },
+      "layout" : {
+        "rows" : [
+          {
+          "columns" : [
+            {
+            "label" : {
+              "urn" : null,
+              "translations" : {
+                "en" : "Environment"
+              },
+              "defaultLanguage" : "en"
+            },
+            "value" : "${processVariables.CURRENT_ENVIRONMENT!}",
+            "size" : 12
+          },
+          {
+          "label" : {
+            "urn" : null,
+            "translations" : {
+              "en" : "Release train"
+            },
+            "defaultLanguage" : "en"
+          },
+          "value" : "${processVariables.DELIVERY_NAME!}",
+          "size" : 12
+        }
+        ]
+      },
+      {
+        "columns" : [
+        {
+        "label" : {
+          "urn" : null,
+          "translations" : {
+            "en" : "Jira issues"
+          },
+          "defaultLanguage" : "en"
+        },
+        "value" : "${processVariables.JIRA_ISSUES!}",
+        "size" : 12
+      }
+      ]
+      }
+      ]
+      }
+    }
+  }, {
+    "type" : "clock",
+    "blocks" : [ {
+      "type" : "clock",
+      "config" : {
+        "qualifier" : "processClock",
+        "description" : "Process Clock",
+        "processVariableNameToHoldParticipantId" : "processClockId"
+      }
+    } ]
+  }, {
+    "type" : "tabs",
+    "config" : {
+      "tabs" : [
+      {
+        "id": "history",
+        "label": "History",
+        "blocks": [
+          {
+            "type": "processHistory",
+            "title": "Release worlflow",
+            "collapsed": false,
+            "config": {
+              "showServiceTasks" : true,
+              "showServiceTasksToggle" : true,
+              "showCancelledTasks" : true,
+              "showActions" : true,
+              "showProcessDescription" : false,
+              "showEmptyProcesses" : false,
+              "showTaskComments" : true,
+              "flatView" : false,
+              "fullTree" : true
+            }
+          }
+        ]
+      },
+       {
+         "id": "metroline",
+         "label": "Metroline",
+         "blocks": [
+           {
+             "type": "metroline"
+           }
+         ]
+       }
+      ]
+    }
+  } ]
+}

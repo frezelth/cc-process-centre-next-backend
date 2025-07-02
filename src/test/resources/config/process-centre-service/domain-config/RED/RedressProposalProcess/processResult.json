@@ -1,0 +1,87 @@
+{
+  "header": {
+    "title": "${description} - ${processVariables.CALL_ABBREVIATION}"
+  },
+"details": {
+      "rows": [
+        {
+          "columns": [
+            {
+              "value": "${processVariables.PROPOSAL_ID}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Project No"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.REDRESS_CASE_REFERENCE}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Redress Case Reference"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.CALL_ABBREVIATION}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Call"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.CALL_DEADLINE}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Call Deadline"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.REDRESS_SUBMISSION_DATE}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Redress Submission Date"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.RESPONSIBLE_UNIT}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Unit"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        }
+      ]
+    }
+}

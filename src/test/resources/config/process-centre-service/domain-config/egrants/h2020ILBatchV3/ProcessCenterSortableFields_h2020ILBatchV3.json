@@ -1,0 +1,70 @@
+{
+  "sortableFields": [
+    {
+      "field": "startedOn",
+      "propertyOrder": 1,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "START DATE"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ProcessReference",
+      "propertyOrder": 2,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Process Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.ACRONYM",
+      "propertyOrder": 3,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Acronym"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BATCH_REFERENCE",
+      "propertyOrder": 4,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Batch Reference"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.BATCH_TYPE",
+      "propertyOrder": 5,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Batch Type"
+        }
+      ]
+    },
+    {
+      "field": "specificAttributes.RESPONSIBLE_UNIT",
+      "propertyOrder": 6,
+      "label": [
+        {
+          "defaultTranslation": true,
+          "language": "en",
+          "value": "Unit"
+        }
+      ]
+    }
+  ]
+}

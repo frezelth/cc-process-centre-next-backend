@@ -1,0 +1,8 @@
+{
+  "context": {
+    "providerId": "camundaeac",
+    "domainKey": "erasmusplus",
+    "processTypeKey": "PaymentEppAccreditedGrant"
+  },
+  "configurationType": "processDetail"
+}

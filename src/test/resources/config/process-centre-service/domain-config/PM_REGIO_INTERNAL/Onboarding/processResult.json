@@ -1,0 +1,45 @@
+{
+	"header": {
+		"title": "${processTypeName} - ${processVariables.consultantFullName}",
+		"subtitle": {
+			"value": "",
+			"label": {
+				"urn": null,
+				"translations": {
+					"en": ""
+				},
+				"defaultLanguage": "en"
+			}
+		}
+	},
+	"details": {
+		"rows": [
+			{
+				"columns": [
+					{
+						"value": "${processVariables.consultantFullName}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Consultant"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					},
+					{
+						"value": "${processVariables.day} ${processVariables.month} ${processVariables.year}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Start Date"
+							},
+							"defaultLanguage": "en"
+						},
+						"size": 6
+					}
+				]
+			}
+		]
+	}
+}

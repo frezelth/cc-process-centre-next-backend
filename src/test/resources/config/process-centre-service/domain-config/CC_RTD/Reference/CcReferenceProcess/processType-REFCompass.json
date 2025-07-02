@@ -1,0 +1,19 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "CC Reference Process"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "QA_VIEW_PROCESS",
+        "scoped": false
+      }
+    ]
+  },
+  "defaultBusinessDomainId": null
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "graphElementKey": "station-GFO",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:GFO",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-CSP",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:CSP",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-RITE",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:RITE",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-SWI",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:SWI",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-RS",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:RS",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-PC",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:PC",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-IOIB",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:IOIB",
+    "processState": null
+  },
+  {
+    "graphElementKey": "station-Completed",
+    "category": "PROCESS_STATE",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": null,
+    "processState": "COMPLETED"
+  },
+  {
+    "graphElementKey": "station-GTA",
+    "category": "TASK",
+    "processTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding",
+    "taskTypeId": "camundapm:PM_REGIO_INTERNAL:Onboarding:GTA",
+    "processState": null
+  }
+]

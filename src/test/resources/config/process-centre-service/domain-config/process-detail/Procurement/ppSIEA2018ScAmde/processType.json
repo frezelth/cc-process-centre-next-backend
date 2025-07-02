@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppSIEA2018ScAmde",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Amendment By Contract Authority"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_OPSYS_PP_SIEA2018_SC_AMDE_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_OPSYS_PP_SIEA2018_SC_AMDE_ViewProcess",
+        "scopeTypeId": "PROJECT",
+        "scopeId": "${processVariables.CONTRACT_NO}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

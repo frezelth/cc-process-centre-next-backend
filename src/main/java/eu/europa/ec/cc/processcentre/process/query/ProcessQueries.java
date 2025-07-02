@@ -195,6 +195,12 @@ public class ProcessQueries {
         .findFirst().orElseThrow();
 
     long totalCount = objectMapper.readTree(totalCountJson).get("total_count").longValue();
+
+    if (totalCount == 0){
+      return new SearchProcessResponseDto(0,
+          Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+    }
+
     List<String> processes = search.stream()
         .filter(s -> s.getType() == SearchProcessQueryResponseType.data)
         .map(SearchProcessQueryResponse::getPayload)
@@ -203,7 +209,7 @@ public class ProcessQueries {
     String contextKeysAsString = search.stream()
         .filter(s -> s.getType() == SearchProcessQueryResponseType.agg)
         .map(SearchProcessQueryResponse::getPayload)
-        .findFirst().orElseThrow();
+        .findFirst().orElse("{[]}");
 
     Set<Map<String,String>> contexts = objectMapper.readValue(contextKeysAsString,
         new TypeReference<>() {

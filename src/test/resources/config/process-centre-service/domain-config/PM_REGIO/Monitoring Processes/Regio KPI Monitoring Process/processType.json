@@ -1,0 +1,33 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Regio KPI Monitoring Process"
+    },
+    "defaultLanguage": "en"
+  },
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_PM_REGIO_ViewProcess_RMP",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_PM_REGIO_StartProcess_RMP",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": "31114891",
+  "specificAttributesDefinitions": [],
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

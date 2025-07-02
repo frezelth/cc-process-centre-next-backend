@@ -331,6 +331,19 @@ public class ProcessCentreEventTypeRegistry {
 
   }
 
+  public static Message unpackMessage(CCMessage message){
+    return TYPES.stream()
+        .filter(message.getPayload()::is)
+        .map(
+        t -> {
+          try {
+            return message.getPayload().unpack(t);
+          } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+          }
+        }).findFirst().orElseThrow();
+  }
+
   /**
    * Check if the message is part of the list of known process centre messages
    * @param message

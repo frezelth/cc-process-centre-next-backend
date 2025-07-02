@@ -1,0 +1,8 @@
+{
+  "configurationType": "processSortableFields",
+  "context": {
+    "domainKey": "Audits",
+    "providerId": "GRANTSCompass",
+    "processTypeKey": "h2020AUPO"
+  }
+}

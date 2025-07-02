@@ -25,7 +25,7 @@ public class EventListener {
   )
   public void on(CCMessage record){
     if (ProcessCentreEventTypeRegistry.isProcessCentreMessage(record)){
-      eventPublisher.publishEvent(record);
+      eventPublisher.publishEvent(ProcessCentreEventTypeRegistry.unpackMessage(record));
     }
   }
 

@@ -1,0 +1,97 @@
+{
+  "header": {
+    "title": "${description} - ${processVariables.CALL_ABBREVIATION}",
+    "subtitle": {
+        "value": "${processVariables.CALL_ABBREVIATION!}",
+        "label": {
+          "urn": null,
+          "translations": {
+            "en": "Description"
+          },
+          "defaultLanguage": "en"
+        }
+      }
+  },
+"details": {
+      "rows": [
+        {
+          "columns": [
+            {
+              "value": "${processVariables.REDRESS_CASE_ID}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Redress case ID"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.REDRESS_CASE_REFERENCE}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Redress Case Reference"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.PROPOSAL_ID}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Proposal ID"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.CALL_ID}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Call CCM2 ID"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        },
+        {
+          "columns": [
+            {
+              "value": "${processVariables.CALL_ABBREVIATION}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Call Identifier"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            },
+            {
+              "value": "${processVariables.RESPONSIBLE_UNIT}",
+              "label": {
+                "urn": null,
+                "translations": {
+                  "en": "Responsible unit"
+                },
+                "defaultLanguage": "en"
+              },
+              "size": 6
+            }
+          ]
+        }
+      ]
+    }
+}

@@ -1,0 +1,60 @@
+{
+  "header": {
+    "title": "${processTypeName} - ${processVariables.consultantFullName} - ${processVariables.trainingName}",
+    "subtitle": {
+      "value": "",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": ""
+        },
+        "defaultLanguage": "en"
+      }
+    }
+  },
+  "details": {
+    "rows": [
+      {
+        "columns": [
+          {
+            "value": "${processVariables.consultantFullName}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Consultant"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      },
+      {
+        "columns": [
+          {
+            "value": "${processVariables.trainingName}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Training Name"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          },
+          {
+            "value": "${processVariables.numberOfHours}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Hours"
+              },
+              "defaultLanguage": "en"
+            },
+            "size": 6
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -60,6 +60,24 @@
     <collection property="portfolioItemIds" javaType="java.util.ArrayList" resultMap="portfolioItem"/>
   </resultMap>
 
+  <update id="snapshotOnComplete">
+    UPDATE T_PROCESS set RESPONSIBLE_ORGANISATION_CODE = T_ORGANISATION.code
+      FROM T_ORGANISATION
+      WHERE T_ORGANISATION.ID = T_PROCESS.RESPONSIBLE_ORGANISATION_ID AND
+      T_PROCESS.PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <update id="removeSnapshotOnReopen">
+    UPDATE T_PROCESS set RESPONSIBLE_ORGANISATION_CODE = null WHERE
+      PROCESS_INSTANCE_ID = #{processInstanceId}
+  </update>
+
+  <select id="findContextById" resultType="eu.europa.ec.cc.processcentre.process.command.repository.model.FindProcessContextQueryResponse">
+    SELECT domain_key as domainKey, provider_id as providerId, process_type_key as processTypeKey
+    FROM T_PROCESS
+      WHERE process_instance_id = #{processInstanceId}
+  </select>
+
   <select id="findById" resultMap="process">
     SELECT
       p.PROCESS_INSTANCE_ID as process_instance_id,

@@ -1,0 +1,92 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "${processTypeName} - ${processVariables.consultantFullName} - ${processVariables.trainingName}"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Consultant",
+                      "fr": "Consultant"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.consultantFullName!'-'}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "User logon"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.consultant!'-'}"
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Training name"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.trainingName!'-'}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Number of hours"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.numberOfHours!'-'}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "metroline"
+              },
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": false,
+                  "flatView": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

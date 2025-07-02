@@ -1,0 +1,21 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Payment"
+    },
+    "defaultLanguage": "en"
+  },
+  "titleTemplate": {
+    "urn": null,
+    "translations": {
+      "en": "Payment"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": "PMM_PA.PAYMENT_PROCESS",
+  "accessRights": null,
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

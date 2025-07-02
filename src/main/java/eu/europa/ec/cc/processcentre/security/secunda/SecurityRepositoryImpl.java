@@ -4,9 +4,12 @@ import static eu.europa.ec.cc.processcentre.exception.ApplicationExceptionHandle
 import static eu.europa.ec.cc.processcentre.exception.Severity.WARNING;
 import static eu.europa.ec.cc.processcentre.util.Perf.trace;
 import static java.lang.String.join;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toUnmodifiableSet;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import eu.europa.ec.cc.processcentre.exception.ApplicationException;
 import eu.europa.ec.cc.processcentre.security.Scope;
@@ -116,6 +119,24 @@ public class SecurityRepositoryImpl implements SecurityRepository {
           }
         });
       }
+    }
+  }
+
+  @NonNull
+  @Override
+  public Set<String> findTasks(String username) {
+    if (isBlank(username)) {
+      return emptySet();
+    }
+
+    try {
+      return findTaskRights(TaskRightCriteria.builder().userId(username).applicationId(APPLICATION_ID_PROCESS_CENTRE))
+          .stream()
+          .map(TaskRight::getTaskId)
+          .collect(toUnmodifiableSet());
+    } catch (Exception ex) {
+      log(ex, true, "Cannot obtain the Secunda tasks for user {}", username);
+      return emptySet();
     }
   }
 

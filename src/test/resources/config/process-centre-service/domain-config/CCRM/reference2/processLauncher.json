@@ -1,0 +1,235 @@
+{
+  "responsibleUserDisplayed" : false,
+  "portfolioItemHidden": true,
+  "variables": [
+    {
+      "name": "elementName",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "elementVersion",
+      "value": "0.0.0",
+      "type": "STRING"
+    },
+    {
+      "name": "releaseType",
+      "value": "TARGETED",
+      "type": "STRING"
+    },
+    {
+      "name": "hotfix-target-INT",
+      "value": "NONE",
+      "type": "LIST"
+    },
+    {
+      "name": "hotfix-target-ACC",
+      "value": "NONE",
+      "type": "LIST"
+    },
+    {
+      "name": "hotfix-target-DLT",
+      "value": "NONE",
+      "type": "LIST"
+    },
+    {
+      "name": "hotfix-target-PPD",
+      "value": "NONE",
+      "type": "LIST"
+    },
+    {
+      "name": "hotfix-target-PRD",
+      "value": "NONE",
+      "type": "LIST"
+    },
+    {
+      "name": "hotfix-target-TRN",
+      "value": "NONE",
+      "type": "LIST"
+    }
+  ],
+  "portfolioItemRequired" : false,
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "elementName",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Remote ID"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-INT",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Integration",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-ACC",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Acceptance",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-DLT",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Data Load Test",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-PPD",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Preprod",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-PRD",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Production",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "hotfix-target-TRN",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Deploy to Training",
+          "selectOptions": [
+            {
+              "id": "NONE",
+              "value": "No"
+            },
+            {
+              "id": "MANUAL",
+              "value": "Yes, manually"
+            },
+            {
+              "id": "AUTOMATIC",
+              "value": "Yes, automatically"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "remoteId": "",
+    "prodDeploymentMode": "",
+    "doAutomatic": ""
+  },
+  "portfolioItemCriteria" : { }
+}

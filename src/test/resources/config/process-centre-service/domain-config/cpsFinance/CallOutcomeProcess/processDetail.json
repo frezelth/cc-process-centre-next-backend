@@ -1,0 +1,119 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "expandable": false,
+        "header": {
+          "title": "${processTypeName!}",
+          "subtitle": {
+            "value": " ${processVariables.CALL_ABBREVIATION!}",
+            "label": {
+              "urn": null,
+              "translations": {
+                "en": "Call"
+              },
+              "defaultLanguage": "en"
+            }
+          }
+        },
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.CALL_ID!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Call CCM2 ID"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.CALL_IDENTIFIER!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Identifier"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.PROPOSAL_SUBMISSION_DEADLINE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Submission deadline"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on",
+                      "fr": "Commence le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on",
+                      "fr": "Termine le"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline"
+              }
+            ]
+          },
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "processHistory"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

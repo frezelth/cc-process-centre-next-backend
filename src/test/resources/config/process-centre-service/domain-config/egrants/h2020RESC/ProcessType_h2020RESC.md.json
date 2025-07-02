@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context": {
+    "domainKey": "Grants",
+    "providerId": "GRANTSCompass",
+    "processTypeKey": "h2020RESC"
+  }
+}

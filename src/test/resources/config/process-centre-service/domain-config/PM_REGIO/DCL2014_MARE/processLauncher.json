@@ -1,0 +1,73 @@
+{
+  "providerProcessTypeKey": "DCL2014",
+  "variables": [
+    {
+      "name": "processTypeKey",
+      "value": "DCL2014_MARE",
+      "type": "STRING"
+    },
+    {
+      "name": "process",
+      "value": "DCL2014_MARE",
+      "type": "STRING"
+    },
+    {
+      "name": "version",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "serviceTasksTopic",
+      "value": "regio-process-manager",
+      "type": "STRING"
+    },
+    {
+      "name": "startedBy",
+      "value": "processLauncher",
+      "type": "STRING"
+    },
+    {
+      "name": "objectType",
+      "value": "DCLE",
+      "type": "STRING"
+    },
+    {
+      "name": "processName",
+      "value": "MARE - Draft Closure Letter and execute the Final Balance",
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "context": {
+        "inputs": {
+          "selectOptions": [
+            {
+              "id": "2023",
+              "value": "2023"
+            }
+          ],
+          "disabled": false,
+          "label": "AccountingYear",
+          "required": true
+        },
+        "type": "_uxSelectInput",
+        "key": "version"
+      },
+      "layout": {
+        "class": "col-12"
+      }
+    }
+  ],
+  "formModel": {
+    "version": ""
+  },
+  "portfolioItemRequired": true,
+  "portfolioItemCriteria": {
+    "typeId": [
+      "SFC-2014-2020-PROGRAMME",
+      "SFC-PROGRAMME"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "configurationType" : "processLauncher",
+  "startValidDate" : "2024-05-14T17:07:32.231+00:00",
+  "path" : "CCRM/camundaFlows/processLauncher.json",
+  "metadataPath" : "CCRM/camundaFlows/processLauncher.md.json",
+  "context" : {
+    "domainKey" : "CCRM",
+    "processTypeKey" : "camundaFlows",
+    "providerId": "xlr"
+  }
+}

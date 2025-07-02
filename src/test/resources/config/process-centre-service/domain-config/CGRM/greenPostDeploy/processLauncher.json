@@ -1,0 +1,175 @@
+{
+  "responsibleUserDisplayed" : false,
+  "portfolioItemHidden": true,
+  "variables": [
+    {
+      "name": "deployableIdVariable",
+      "value": "XLR_application",
+      "type": "STRING"
+    },
+    {
+      "name": "environmentIdVariable",
+      "value": "XLR_environment",
+      "type": "STRING"
+    },
+    {
+      "name": "releaseTitle",
+      "value": null,
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_application",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_version",
+      "value": "0.0.0",
+      "type": "STRING"
+    },
+    {
+      "name": "XLR_domain",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_environment",
+      "value": "eu.europa.ec.cc",
+      "type": "LIST"
+    },
+    {
+      "name": "XLR_build",
+      "value": "eu.europa.ec.cc",
+      "type": "STRING"
+    }
+  ],
+  "portfolioItemRequired" : false,
+  "formDefinition": [
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-2"
+      },
+      "context": {
+        "key": "releaseTitle",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Release title"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_application",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Application",
+          "selectOptions": [
+            {
+              "id": "compass-processes-gm-h2020",
+              "value": "compass-processes-gm-h2020"
+            },
+            {
+              "id": "compass-processes-next",
+              "value": "compass-processes-next"
+            },
+            {
+              "id": "compass-processes-pdm",
+              "value": "compass-processes-pdm"
+            },
+            {
+              "id": "compass-processes-sepsub",
+              "value": "compass-processes-sepsub"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_version",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Version"
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_domain",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Target domain",
+          "selectOptions": [
+            {
+              "id": "egrants",
+              "value": "eGrants"
+            },
+            {
+              "id": "sep",
+              "value": "SEP"
+            },
+            {
+              "id": "pdm",
+              "value": "PDM"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_environment",
+        "type": "_uxSelectInput",
+        "inputs": {
+          "label": "Target environment",
+          "selectOptions": [
+            {
+              "id": "dev",
+              "value": "Development"
+            },
+            {
+              "id": "int",
+              "value": "Integration"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fieldType": "formControl",
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "key": "XLR_build",
+        "type": "_uxTextInput",
+        "inputs": {
+          "label": "Build number"
+        }
+      }
+    }
+  ],
+  "formModel": {
+    "remoteId": "",
+    "prodDeploymentMode": "",
+    "doAutomatic": ""
+  },
+  "portfolioItemCriteria" : { }
+}

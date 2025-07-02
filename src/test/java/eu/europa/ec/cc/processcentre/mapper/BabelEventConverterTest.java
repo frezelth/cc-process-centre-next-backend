@@ -34,6 +34,6 @@ public class BabelEventConverterTest {
     Assertions.assertEquals(command.getDomainKey(), queryParam.domainKey());
     Assertions.assertEquals(command.getProcessTypeKey(), queryParam.processTypeKey());
     Assertions.assertEquals(command.getProviderId(), queryParam.providerId());
-    Assertions.assertEquals(command.getProcessTypeId(), queryParam.processTypeId());
+    Assertions.assertNull(queryParam.processTypeId());
   }
 }

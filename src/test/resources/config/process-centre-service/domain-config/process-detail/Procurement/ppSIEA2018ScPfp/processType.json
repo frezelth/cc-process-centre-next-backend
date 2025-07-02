@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppSIEA2018ScPfp",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Pre Financing"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_OPSYS_PP_SIEA2018_SC_PFP_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_OPSYS_PP_SIEA2018_SC_PFP_ViewProcess",
+        "scopeTypeId": "PROJECT",
+        "scopeId": "${processVariables.CONTRACT_NO}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

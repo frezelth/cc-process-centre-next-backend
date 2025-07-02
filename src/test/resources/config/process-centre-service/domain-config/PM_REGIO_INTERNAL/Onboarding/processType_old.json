@@ -1,0 +1,33 @@
+{
+	"name": {
+		"urn": null,
+		"translations": {
+			"en": "Regio OnBoarding Process"
+		},
+		"defaultLanguage": "en"
+	},
+	"secundaTask": null,
+	"accessRights": {
+		"VIEW": [
+			{
+				"permissionId": "PC_PM_REGIO_ViewProcess_HELLO",
+				"scoped": false,
+				"scopeTypeId": null,
+				"variableName": null,
+				"responsibleOrganisationId": null
+			}
+		],
+		"CREATE": [
+			{
+				"permissionId": "NOT_NEEDED_ANYMORE",
+				"scoped": false,
+				"scopeTypeId": null,
+				"variableName": null,
+				"responsibleOrganisationId": null
+			}
+		]
+	},
+	"defaultBusinessDomainId": "31114891",
+	"specificAttributesDefinitions": [],
+	"hideSubprocessOfTheSameType": null
+}

@@ -1,0 +1,20 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Legal entity validation"
+    },
+    "defaultLanguage": "en"
+  },
+  "defaultBusinessDomainId": null,
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PDM_LEV.VIEW"
+      }
+    ]
+  },
+  "hideSubprocessesOfTheSameType": true,
+  "specificAttributesDefinitions": []
+}

@@ -69,6 +69,10 @@ public class CommonColumnsQueriesImpl implements CommonColumnsQueries {
           .map(SearchProcessQueryResponse::getPayload)
           .findFirst();
 
+      if (allAvailableContexts.isEmpty()){
+        return;
+      }
+
       Set<Map<String,String>> allContexts = objectMapper.readValue(allAvailableContexts.get(), new TypeReference<>() {});
 
       if (LOG.isDebugEnabled()){

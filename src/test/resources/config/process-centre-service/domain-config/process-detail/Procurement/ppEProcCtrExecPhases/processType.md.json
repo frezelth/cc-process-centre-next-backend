@@ -1,0 +1,8 @@
+{
+  "configurationType": "processType",
+  "context" : {
+    "domainKey" : "Procurement",
+    "providerId" : "OPSYSCompass",
+	"processTypeKey" : "ppEProcCtrExecPhases"
+  }
+}

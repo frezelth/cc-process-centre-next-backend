@@ -1,0 +1,33 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "On boarding reference flow"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "PC_ADMIN_DIGIT_StartProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "PC_ADMIN_DIGIT_StartProcess",
+        "scoped": false,
+        "scopeTypeId": null,
+        "variableName": null,
+        "responsibleOrganisationId": null
+      }
+    ]
+  },
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "hideSubprocessOfTheSameType": null
+}

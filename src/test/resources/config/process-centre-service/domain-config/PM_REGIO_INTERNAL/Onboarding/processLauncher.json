@@ -1,0 +1,535 @@
+{
+  	"providerProcessTypeKey": "Onboarding",
+	"variables": [
+      	{
+      		"name": "cc:processTypeKey",
+      		"value": "Onboarding",
+      		"type": "STRING"
+    	},
+		{
+			"name": "consultantFullName",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "day",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "month",
+			"value": null,
+			"type": "STRING"
+		},
+		{
+			"name": "year",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+			"name": "sector",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+			"name": "team",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+			"name": "job",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+			"name": "l4d",
+			"value": null,
+			"type": "LIST"
+		},
+		{
+      		"name": "SCREENING",
+      		"value": false,
+      		"type": "BOOLEAN"
+    	},
+		{
+			"name": "contractType",
+			"value": null,
+			"type": "STRING"
+		}
+		
+	],
+	"formDefinition": [
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"label": "Consultant full name"
+				},
+				"type": "_uxTextInput",
+				"key": "consultantFullName"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "1",
+							"value": "1"
+						},
+						{
+							"id": "2",
+							"value": "2"
+						},
+						{
+							"id": "3",
+							"value": "3"
+						},
+						{
+							"id": "4",
+							"value": "4"
+						},
+						{
+							"id": "5",
+							"value": "5"
+						},
+						{
+							"id": "6",
+							"value": "6"
+						},
+						{
+							"id": "7",
+							"value": "7"
+						},
+						{
+							"id": "8",
+							"value": "8"
+						},
+						{
+							"id": "9",
+							"value": "9"
+						},
+						{
+							"id": "10",
+							"value": "10"
+						},
+						{
+							"id": "11",
+							"value": "11"
+						},
+						{
+							"id": "12",
+							"value": "12"
+						},
+						{
+							"id": "13",
+							"value": "13"
+						},
+						{
+							"id": "14",
+							"value": "14"
+						},
+						{
+							"id": "15",
+							"value": "15"
+						},
+						{
+							"id": "16",
+							"value": "16"
+						},
+						{
+							"id": "17",
+							"value": "17"
+						},
+						{
+							"id": "18",
+							"value": "18"
+						},
+						{
+							"id": "19",
+							"value": "19"
+						},
+						{
+							"id": "20",
+							"value": "20"
+						},
+						{
+							"id": "21",
+							"value": "21"
+						},
+						{
+							"id": "22",
+							"value": "22"
+						},
+						{
+							"id": "23",
+							"value": "23"
+						},
+						{
+							"id": "24",
+							"value": "24"
+						},
+						{
+							"id": "25",
+							"value": "25"
+						},
+						{
+							"id": "26",
+							"value": "26"
+						},
+						{
+							"id": "27",
+							"value": "27"
+						},
+						{
+							"id": "28",
+							"value": "28"
+						},
+						{
+							"id": "29",
+							"value": "29"
+						},
+						{
+							"id": "30",
+							"value": "30"
+						},
+						{
+							"id": "31",
+							"value": "31"
+						}
+					],
+					"label": "Day"
+				},
+				"type": "_uxSelectInput",
+				"key": "day"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "January",
+							"value": "January"
+						},
+						{
+							"id": "February",
+							"value": "February"
+						},
+						{
+							"id": "March",
+							"value": "March"
+						},
+						{
+							"id": "April",
+							"value": "April"
+						},
+						{
+							"id": "May",
+							"value": "May"
+						},
+						{
+							"id": "June",
+							"value": "June"
+						},
+						{
+							"id": "July",
+							"value": "July"
+						},
+						{
+							"id": "August",
+							"value": "August"
+						},
+						{
+							"id": "September",
+							"value": "September"
+						},
+						{
+							"id": "October",
+							"value": "October"
+						},
+						{
+							"id": "November",
+							"value": "November"
+						},
+						{
+							"id": "December",
+							"value": "December"
+						}
+					],
+					"label": "Month"
+				},
+				"type": "_uxSelectInput",
+				"key": "month"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "2021",
+							"value": "2021"
+						},
+						{
+							"id": "2022",
+							"value": "2022"
+						},
+						{
+							"id": "2023",
+							"value": "2023"
+						},
+						{
+							"id": "2024",
+							"value": "2024"
+						},
+						{
+							"id": "2025",
+							"value": "2025"
+						},
+						{
+							"id": "2026",
+							"value": "2026"
+						},
+						{
+							"id": "2027",
+							"value": "2027"
+						}
+					],
+					"label": "Year"
+				},
+				"type": "_uxSelectInput",
+				"key": "year"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "DEVOPS",
+							"value": "DEVOPS"
+						},
+						{
+							"id": "FGP",
+							"value": "FGP"
+						},
+						{
+							"id": "REPORTING",
+							"value": "REPORTING"
+						}
+					],
+					"label": "Sector"
+				},
+				"type": "_uxSelectInput",
+				"key": "sector"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "Compass Corporate MyWorkplace",
+							"value": "Compass Corporate MyWorkplace"
+						},
+						{
+							"id": "Finance",
+							"value": "Finance"
+						},
+						{
+							"id": "Guidance",
+							"value": "Guidance"
+						},
+						{
+							"id": "IRM",
+							"value": "IRM"
+						},
+						{
+							"id": "KM & Collab",
+							"value": "KM & Collab"
+						},
+						{
+							"id": "Launchpad",
+							"value": "Launchpad"
+						},
+						{
+							"id": "Operations",
+							"value": "Operations"
+						},
+						{
+							"id": "Other IS/Legacy",
+							"value": "Other IS/Legacy"
+						},
+						{
+							"id": "PMO",
+							"value": "PMO"
+						},
+						{
+							"id": "QEA",
+							"value": "QEA"
+						},
+						{
+							"id": "Reporting",
+							"value": "Reporting"
+						},
+						{
+							"id": "SFC",
+							"value": "SFC"
+						},
+						{
+							"id": "SFC2021",
+							"value": "SFC2021"
+						},
+						{
+							"id": "WAVE",
+							"value": "WAVE"
+						}
+					],
+					"label": "Team"
+				},
+				"type": "_uxSelectInput",
+				"key": "team"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "Business analyst",
+							"value": "Business analyst"
+						},
+						{
+							"id": "Business intelligence/DWH",
+							"value": "Business intelligence/DWH"
+						},
+						{
+							"id": "App Architect/Developer",
+							"value": "App Architect/Developer"
+						},
+						{
+							"id": "Enterprise architect",
+							"value": "Enterprise architect"
+						},
+						{
+							"id": "IRM-infra",
+							"value": "IRM-infra"
+						},
+						{
+							"id": "Operation specialist",
+							"value": "Operation specialist"
+						},
+						{
+							"id": "Support Manager",
+							"value": "Support Manager"
+						},
+						{
+							"id": "Tester",
+							"value": "Tester"
+						},
+						{
+							"id": "Data Scientist",
+							"value": "Data Scientist"
+						}
+					],
+					"label": "Job"
+				},
+				"type": "_uxSelectInput",
+				"key": "job"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "L4D Configuration A",
+							"value": "L4D Configuration A"
+						},
+						{
+							"id": "L4D Configuration B",
+							"value": "L4D Configuration B"
+						},
+                      	{
+							"id": "ZBook Win 10",
+							"value": "ZBook Win 10"
+						},
+						{
+							"id": "No",
+							"value": "No"
+						}
+					],
+					"label": "Special equipment needed"
+				},
+				"type": "_uxSelectInput",
+				"key": "l4d"
+			},
+			"fieldType": "formControl"
+		},
+		{
+			"layout": {
+				"class": "col-12"
+			},
+			"context": {
+				"inputs": {
+					"selectOptions": [
+						{
+							"id": "PXE",
+							"value": "PXE"
+						},
+						{
+							"id": "PPW",
+							"value": "PPW"
+						}
+					],
+					"label": "Contract type"
+				},
+				"type": "_uxSelectInput",
+				"key": "contractType"
+			},
+			"fieldType": "formControl"
+		}
+	],
+	"formModel": {
+		"consultantFullName": "",
+		"day": "",
+		"month": "",
+		"year": "",
+		"sector": "",
+		"team": "",
+		"job": "",
+		"l4d": "",
+		"contractType":""
+	}
+}

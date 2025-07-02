@@ -1,0 +1,76 @@
+{
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Call Evaluation Report"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": null,
+  "accessRights": {
+    "VIEW": [
+      {
+        "permissionId": "SEP_EVA_CALL_REPORT.VIEW",
+        "scopeTypeId": "CALL",
+        "scopeId": "${processVariables.CALL_ID}"
+      }
+    ],
+    "CREATE": [
+      {
+        "permissionId": "SEP_EVA_CALL_REPORT.CREATE"
+      }
+    ]
+  },
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [
+    {
+      "name": "CALL_ABBREVIATION",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Call"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 10,
+      "filtering": true
+    },
+    {
+      "name": "CALL_EVALUATION_SESSION_NAME",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Evaluation session"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 20,
+      "filtering": true
+    },
+    {
+      "name": "CALL_PROGRAMME_ID",
+      "label": {
+        "urn": null,
+        "translations": {
+          "en": "Call programme"
+        },
+        "defaultLanguage": "en"
+      },
+      "valueType": "STRING",
+      "representation": "STRING",
+      "order": 30,
+      "filtering": true
+    }
+  ],
+  "context": {
+    "providerId": "SEPCompass",
+    "domainKey": "SEP Evaluation",
+    "processTypeKey": "sepevaCallReport"
+  },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}

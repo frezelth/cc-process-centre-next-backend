@@ -1,0 +1,169 @@
+{
+  "providerProcessTypeKey": "WIPS2021",
+  "variables": [
+    {
+      "name": "cc:processTypeKey",
+      "value": "WIPS2021_REGIO",
+      "type": "STRING"
+    },
+    {
+      "name": "memberState",
+      "value": null,
+      "type": "LIST"
+    },
+    {
+      "name": "process",
+      "value": "WIPS2021_REGIO",
+      "type": "STRING"
+    },
+    {
+      "name": "serviceTasksTopic",
+      "value": "regio-process-manager",
+      "type": "STRING"
+    }
+  ],
+  "formDefinition": [
+    {
+      "layout": {
+        "class": "col-12"
+      },
+      "context": {
+        "inputs": {
+          "selectOptions": [
+            {
+              "id": "AT",
+              "value": "Austria"
+            },
+            {
+              "id": "BE",
+              "value": "Belgium"
+            },
+            {
+              "id": "BG",
+              "value": "Bulgaria"
+            },
+            {
+              "id": "CY",
+              "value": "Cyprus"
+            },
+            {
+              "id": "CZ",
+              "value": "Czechia"
+            },
+            {
+              "id": "DE",
+              "value": "Germany"
+            },
+            {
+              "id": "DK",
+              "value": "Denmark"
+            },
+            {
+              "id": "EE",
+              "value": "Estonia"
+            },
+            {
+              "id": "EL",
+              "value": "Greece"
+            },
+            {
+              "id": "ES",
+              "value": "Spain"
+            },
+            {
+              "id": "FI",
+              "value": "Finland"
+            },
+            {
+              "id": "FR",
+              "value": "France"
+            },
+            {
+              "id": "HR",
+              "value": "Croatia"
+            },
+            {
+              "id": "HU",
+              "value": "Hungary"
+            },
+            {
+              "id": "IE",
+              "value": "Ireland"
+            },
+            {
+              "id": "IT",
+              "value": "Italy"
+            },
+            {
+              "id": "LT",
+              "value": "Lithuania"
+            },
+            {
+              "id": "LU",
+              "value": "Luxembourg"
+            },
+            {
+              "id": "LV",
+              "value": "Latvia"
+            },
+            {
+              "id": "MT",
+              "value": "Malta"
+            },
+            {
+              "id": "NL",
+              "value": "Netherlands"
+            },
+            {
+              "id": "PL",
+              "value": "Poland"
+            },
+            {
+              "id": "PT",
+              "value": "Portugal"
+            },
+            {
+              "id": "RO",
+              "value": "Romania"
+            },
+            {
+              "id": "SE",
+              "value": "Sweden"
+            },
+            {
+              "id": "SI",
+              "value": "Slovenia"
+            },
+            {
+              "id": "SK",
+              "value": "Slovakia"
+            },
+            {
+              "id": "TC",
+              "value": "Territorial co-operation"
+            }
+          ],
+          "label": "Member State"
+        },
+        "type": "_uxSelectInput",
+        "key": "memberState"
+      },
+      "fieldType": "formControl"
+    }
+  ],
+  "formModel": {
+    "memberState": ""
+  },
+  "portfolioItemRequired": true,
+  "portfolioItemCriteria": {
+    "typeId": [
+      "SFC-2021-2027-CROSS_BORDER",
+      "SFC-2021-2027-OUTERMOST_REGIONS",
+      "SFC-2021-2027-PEACE",
+      "SFC-2021-2027-PROGRAMME",
+      "SFC-2021-2027-TNC_PROJECT",
+      "SFC-2021-2027-INTERREGIONAL_COOPERATION",
+      "SFC-2021-2027-TRANSNATIONAL_COOPERATION"
+    ]
+  }
+}

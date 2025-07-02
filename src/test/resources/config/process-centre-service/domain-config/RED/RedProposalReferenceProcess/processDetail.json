@@ -1,0 +1,155 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"expandable": false,
+				"header": {
+					"title": "${processTypeName!}",
+					"subtitle": {
+              "value": "${processVariables.CALL_ABBREVIATION!}",
+              "label": {
+                  "urn": null,
+                  "translations": {
+                      "en": "Call"
+                  },
+                  "defaultLanguage": "en"
+              }
+          }
+				},
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"value": "${processVariables.REDRESS_CASE_ID!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Redress case ID"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+								  "value": "${processVariables.REDRESS_CASE_REFERENCE!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Redress Case Reference"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+									{
+									"value": "${processVariables.PROPOSAL_ID!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Proposal ID"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+								  "value": "${processVariables.CALL_ID!}",
+								  "label": {
+									"urn": null,
+									"translations": {
+									  "en": "Call CCM2 ID"
+									},
+									"defaultLanguage": "en"
+								  },
+								  "size": 6
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"value": "${processVariables.CALL_ABBREVIATION!}",
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Call Identifier"
+										},
+										"defaultLanguage": "en"
+									},
+									"size": 6
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Unit"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_UNIT!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Started on",
+											"fr": "Commence le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Ended on",
+											"fr": "Termine le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+					"id": "metroline",
+					"label": "Metroline",
+					"blocks": [
+						  {
+							"type": "metroline"
+						  }
+						]
+					},
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

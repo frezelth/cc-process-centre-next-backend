@@ -1,0 +1,55 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "CCI",
+                      "fr": "CCI"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${processVariables.CCI!'-'}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "metroline"
+              },
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showProcessDescription": true,
+                  "showEmptyProcesses": false,
+                  "flatView": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

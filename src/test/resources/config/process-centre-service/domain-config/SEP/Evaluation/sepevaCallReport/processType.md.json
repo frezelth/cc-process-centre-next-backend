@@ -1,0 +1,8 @@
+{
+  "configurationType" : "processType",
+  "context" : {
+    "providerId": "SEPCompass",
+    "domainKey" : "SEP Evaluation",
+    "processTypeKey" : "sepevaCallReport"
+  }
+}

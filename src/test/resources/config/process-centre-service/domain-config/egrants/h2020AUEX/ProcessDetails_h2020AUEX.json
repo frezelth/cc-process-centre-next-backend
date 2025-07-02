@@ -1,0 +1,237 @@
+{
+  "blockList": [
+    {
+      "type": "infoHeader",
+      "config": {
+        "header": {
+          "title": "Audit Extension - ${processVariables.ProcessReference}"
+        },
+        "expandable": true,
+        "layout": {
+          "rows": [
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.FRAMEWORK_DISPLAY_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Framework Programme"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.RESPONSIBLE_DG_DISPLAY_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "RDG"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.AUDIT_FILE_ID!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Audit Id"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.AUDIT_REFERENCE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Audit Reference"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.AUDIT_TYPE_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Audit Type"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.AUDITED_PIC!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Audited Pic"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.LEGAL_NAME!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Legal Name"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                },
+                {
+                  "value": "${processVariables.COMMUNICATION_MODE!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Communication Mode"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "value": "${processVariables.AUDITED_ABAC_KEY!}",
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Audit ABAC Key"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "size": 6
+                }
+              ]
+            },
+            {
+              "columns": [
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Started on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(startedOn?datetime)!}"
+                },
+                {
+                  "label": {
+                    "urn": null,
+                    "translations": {
+                      "en": "Ended on"
+                    },
+                    "defaultLanguage": "en"
+                  },
+                  "value": "${(endedOn?datetime)!}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "clock",
+      "blocks": [
+        {
+          "type": "clock",
+          "config": {
+            "entityId": "${CLOCK_ID}"
+          }
+        }
+      ]
+    },
+    {
+      "type": "tabs",
+      "config": {
+        "tabs": [
+          {
+            "id": "history",
+            "label": "History",
+            "blocks": [
+              {
+                "type": "processHistory",
+                "config": {
+                  "showServiceTasks": false,
+                  "showServiceTasksToggle": false,
+                  "showCancelledTasks": true,
+                  "showProcessDescription": false,
+                  "showEmptyProcesses": false,
+                  "flatView": false,
+                  "creationDateSorting": "DESC"
+                }
+              }
+            ]
+          },
+          {
+            "id": "metroline",
+            "label": "Metroline",
+            "blocks": [
+              {
+                "type": "metroline"
+              }
+            ]
+          },
+          {
+            "id": "documents",
+            "label": "Documents",
+            "blocks": [
+              {
+                "type": "documentList"
+              }
+            ]
+          },
+          {
+            "id": "internal_communication",
+            "label": "Internal communication",
+            "blocks": [
+              {
+                "type": "internalCommunication",
+                "config": {
+                  "useModal": true,
+                  "maxLength": 250
+                }
+              }
+            ]
+          },
+          {
+            "id": "relatedItems",
+            "label": "Related items",
+            "blocks": [
+              {
+                "type": "relatedItems"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "monitoredVariableNames": "AUDIT_FILE_ID,ProcessReference,CLOCK_ID,RESPONSIBLE_UNIT,AUDITED_PIC"
+}

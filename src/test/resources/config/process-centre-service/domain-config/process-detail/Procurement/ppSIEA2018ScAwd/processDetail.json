@@ -1,0 +1,147 @@
+{
+	"blockList": [
+		{
+			"type": "infoHeader",
+			"config": {
+				"header": {
+					"title": "Awarding: ${processVariables.PROCEDURE_BUSINESS_ID!}",
+					"subtitle": {
+						"value": "${processVariables.PROCEDURE_TITLE!}",
+						"label": {
+							"urn": null,
+							"translations": {
+								"en": "Procedure Title"
+							},
+							"defaultLanguage": "en"
+						}
+					}
+				},
+				"showAttributes": true,
+				"layout": {
+					"rows": [
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Start date",
+											"fr": "Commencé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(startedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "End date",
+											"fr": "Terminé le"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${(endedOn?datetime)!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Status",
+											"fr": "Status"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processStatus!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Service",
+											"fr": "Responsable Service"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_ORGANIZATION_FOR_DOC_FILING!}"
+								},
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Responsible Unit",
+											"fr": "Responsable Unit"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.RESPONSIBLE_UNIT!}"
+								}
+							]
+						},
+						{
+							"columns": [
+								{
+									"label": {
+										"urn": null,
+										"translations": {
+											"en": "Procedure Type"
+										},
+										"defaultLanguage": "en"
+									},
+									"value": "${processVariables.PROCEDURE_TYPE!}"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "tabs",
+			"config": {
+				"tabs": [
+					{
+						"id": "history",
+						"label": "History",
+						"blocks": [
+							{
+								"type": "processHistory"
+							}
+						]
+					},
+					{
+						"id": "metroline",
+						"label": "Metroline",
+						"blocks": [
+							{
+								"type": "metroline"
+							}
+						]
+					},
+					{
+						"id": "internal_communication",
+						"label": "Internal communication",
+						"blocks": [
+							{
+								"type": "internalCommunication",
+								"config": {
+									"useModal": true,
+									"maxLength": 250
+								}
+							}
+						]
+					},
+					{
+						"id": "relatedItems",
+						"label": "Related items",
+						"blocks": [
+							{
+								"type": "relatedItems"
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

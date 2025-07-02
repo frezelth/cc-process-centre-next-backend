@@ -1,0 +1,8 @@
+{
+  "configurationType": "processDetail",
+  "context": {
+    "providerId": "camundapm",
+    "domainKey": "PM_REGIO",
+	"processDefinitionKey": "PRAD2021_REGIO_NLCProcess"
+  }
+}

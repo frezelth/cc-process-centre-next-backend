@@ -1,0 +1,25 @@
+{
+"processTypeKey": "ppEProcPpmtProcPrep",
+  "name": {
+    "urn": null,
+    "translations": {
+      "en": "Procedure Preparation"
+    },
+    "defaultLanguage": "en"
+  },
+  "secundaTask": "PC_EPROC_PPMT_PROC_PREP_ViewProcess",
+  "defaultBusinessDomainId": null,
+  "specificAttributesDefinitions": [],
+  "accessRights": {
+    "view": [
+      {
+        "permissionId": "PC_EPROC_PPMT_PROC_PREP_ViewProcess",
+        "scopeTypeId": "PROCEDURE",
+        "scopeId": "${processVariables.PROCEDURE_ID}",
+        "responsibleOrganisationId": null
+      }
+    ]
+   },
+  "localActionMenu": null,
+  "hideSubprocessOfTheSameType": null
+}
